@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MediCare Pharma Store</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-blue-50 text-gray-800">
+
+  <!-- Header -->
+  <header class="bg-blue-700 text-white shadow-lg">
+    <div class="max-w-7xl mx-auto px-6 py-5 flex justify-between items-center">
+      <div>
+        <h1 class="text-3xl font-bold">MediCare Pharma Store</h1>
+        <p class="text-blue-100 text-sm">Wellgo Pharmaceuticals & PediaZone Products</p>
+      </div>
+
+      <div class="bg-white text-blue-700 px-4 py-2 rounded-lg font-semibold shadow">
+        Cart Items:
+        <span id="cart-count">0</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="flex flex-col md:flex-row">
+
+    <!-- Sidebar -->
+    <aside class="w-full md:w-72 bg-white border-r border-blue-100 p-6 shadow-sm">
+      <h2 class="text-xl font-bold mb-5 text-blue-700">Medicine Categories</h2>
+
+      <div class="space-y-3">
+        <label class="flex items-center gap-3">
+          <input type="checkbox" class="filter-checkbox" value="Dry Syrup" checked>
+          <span>Dry Syrup</span>
+        </label>
+
+        <label class="flex items-center gap-3">
+          <input type="checkbox" class="filter-checkbox" value="Syrup" checked>
+          <span>Syrup</span>
+        </label>
+
+        <label class="flex items-center gap-3">
+          <input type="checkbox" class="filter-checkbox" value="Capsules" checked>
+          <span>Capsules</span>
+        </label>
+
+        <label class="flex items-center gap-3">
+          <input type="checkbox" class="filter-checkbox" value="Tablets" checked>
+          <span>Tablets</span>
+        </label>
+
+        <label class="flex items-center gap-3">
+          <input type="checkbox" class="filter-checkbox" value="Injections" checked>
+          <span>Injections</span>
+        </label>
+      </div>
+
+      <div class="mt-8 bg-blue-50 p-4 rounded-lg border border-blue-100">
+        <h3 class="font-bold text-blue-700 mb-2">Professional Healthcare Store</h3>
+        <p class="text-sm text-gray-600">
+          WHO-GMP quality medicines from trusted pharmaceutical manufacturers.
+        </p>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="flex-1 p-6">
+
+      <!-- Product Grid -->
+      <div id="product-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+
+    </main>
+
+    <!-- Cart -->
+    <aside class="w-full md:w-96 bg-white border-l border-blue-100 p-6 shadow-lg">
+      <h2 class="text-2xl font-bold text-blue-700 mb-5">Shopping Cart</h2>
+
+      <div id="cart-items" class="space-y-4 max-h-[500px] overflow-y-auto"></div>
+
+      <div class="mt-6 border-t pt-5">
+        <div class="flex justify-between text-xl font-bold">
+          <span>Total:</span>
+          <span>₹<span id="cart-total">0</span></span>
+        </div>
+
+        <button class="w-full mt-5 bg-blue-700 hover:bg-blue-800 text-white py-3 rounded-lg font-semibold transition">
+          Proceed to Checkout
+        </button>
+      </div>
+    </aside>
+
+  </div>
+
+<script>
+
+function roundedRate(mrp) {
+  return Math.round((mrp * 1.35) / 10) * 10;
+}
+
+const medicines = [
+  {
+    id: 1,
+    company: "Wellgo Pharmaceuticals",
+    category: "Tablets",
+    name: "Welpanto 40",
+    formulation: "Pantoprazole 40mg",
+    mrp: 145
+  },
+  {
+    id: 2,
+    company: "Wellgo Pharmaceuticals",
+    category: "Capsules",
+    name: "Esomowel SR",
+    formulation: "Esomeprazole 40mg",
+    mrp: 180
+  },
+  {
+    id: 3,
+    company: "Wellgo Pharmaceuticals",
+    category: "Dry Syrup",
+    name: "Welcefo 50 DS",
+    formulation: "Cefixime 50mg",
+    mrp: 115
+  },
+  {
+    id: 4,
+    company: "Wellgo Pharmaceuticals",
+    category: "Syrup",
+    name: "Wbrox LS",
+    formulation: "Ambroxol + Levosalbutamol + Guaiphenesin",
+    mrp: 135
+  },
+  {
+    id: 5,
+    company: "Wellgo Pharmaceuticals",
+    category: "Injections",
+    name: "Merowel Injection",
+    formulation: "Meropenem 1gm",
+    mrp: 650
+  },
+  {
+    id: 6,
+    company: "Wellgo Pharmaceuticals",
+    category: "Tablets",
+    name: "Nimpwel Plus",
+    formulation: "Nimesulide 100mg + Paracetamol 325mg",
+    mrp: 95
+  },
+  {
+    id: 7,
+    company: "Wellgo Pharmaceuticals",
+    category: "Capsules",
+    name: "Omewel D",
+    formulation: "Omeprazole 20mg + Domperidone 10mg",
+    mrp: 160
+  },
+  {
+    id: 8,
+    company: "Wellgo Pharmaceuticals",
+    category: "Injections",
+    name: "Welmic Injection",
+    formulation: "Methylcobalamin 1500mcg",
+    mrp: 210
+  },
+
+  {
+    id: 9,
+    company: "PediaZone",
+    category: "Dry Syrup",
+    name: "Disopod 100 CV",
+    formulation: "Cefpodoxime 100mg + Clavulanic Acid 62.5mg",
+    mrp: 165
+  },
+  {
+    id: 10,
+    company: "PediaZone",
+    category: "Dry Syrup",
+    name: "Kidpenem 50",
+    formulation: "Faropenem 50mg",
+    mrp: 285
+  },
+  {
+    id: 11,
+    company: "PediaZone",
+    category: "Syrup",
+    name: "Azipol XL200",
+    formulation: "Azithromycin 200mg",
+    mrp: 195
+  },
+  {
+    id: 12,
+    company: "PediaZone",
+    category: "Syrup",
+    name: "Fexopedia-M",
+    formulation: "Fexofenadine + Montelukast",
+    mrp: 145
+  },
+  {
+    id: 13,
+    company: "PediaZone",
+    category: "Tablets",
+    name: "Metafix CV 100",
+    formulation: "Cefixime 100mg + Clavulanic Acid 62.5mg",
+    mrp: 220
+  },
+  {
+    id: 14,
+    company: "PediaZone",
+    category: "Tablets",
+    name: "Lansorange JR",
+    formulation: "Lansoprazole 15mg",
+    mrp: 125
+  },
+  {
+    id: 15,
+    company: "PediaZone",
+    category: "Injections",
+    name: "Pediacef Injection",
+    formulation: "Ceftriaxone 1gm",
+    mrp: 175
+  },
+  {
+    id: 16,
+    company: "PediaZone",
+    category: "Capsules",
+    name: "Feropedia Caps",
+    formulation: "Ferrous Ascorbate + Folic Acid",
+    mrp: 130
+  }
+];
+
+medicines.forEach(m => {
+  m.price = roundedRate(m.mrp);
+});
+
+const productGrid = document.getElementById("product-grid");
+const cartItemsContainer = document.getElementById("cart-items");
+const cartCount = document.getElementById("cart-count");
+const cartTotal = document.getElementById("cart-total");
+
+let cart = [];
+
+function renderProducts() {
+
+  const selectedCategories = [...document.querySelectorAll(".filter-checkbox:checked")]
+    .map(cb => cb.value);
+
+  productGrid.innerHTML = "";
+
+  const filtered = medicines.filter(med =>
+    selectedCategories.includes(med.category)
+  );
+
+  filtered.forEach(med => {
+
+    const card = document.createElement("div");
+
+    card.className =
+      "bg-white rounded-xl shadow-md hover:shadow-xl transition border border-blue-100 overflow-hidden";
+
+    card.innerHTML = `
+      <div class="bg-blue-700 text-white px-4 py-3">
+        <div class="flex justify-between items-center">
+          <span class="font-bold">${med.name}</span>
+          <span class="text-xs bg-white text-blue-700 px-2 py-1 rounded-full">
+            ${med.category}
+          </span>
+        </div>
+      </div>
+
+      <div class="p-5">
+
+        <p class="text-sm text-gray-500 mb-1">${med.company}</p>
+
+        <p class="text-sm text-gray-700 min-h-[48px]">
+          ${med.formulation}
+        </p>
+
+        <div class="mt-4 flex justify-between items-center">
+          <div>
+            <p class="text-sm line-through text-gray-400">
+              MRP ₹${med.mrp}
+            </p>
+            <p class="text-2xl font-bold text-blue-700">
+              ₹${med.price}
+            </p>
+          </div>
+
+          <button
+            onclick="addToCart(${med.id})"
+            class="bg-blue-700 hover:bg-blue-800 text-white px-4 py-2 rounded-lg font-semibold transition"
+          >
+            Add
+          </button>
+        </div>
+      </div>
+    `;
+
+    productGrid.appendChild(card);
+  });
+}
+
+function addToCart(id) {
+
+  const product = medicines.find(m => m.id === id);
+
+  const existing = cart.find(item => item.id === id);
+
+  if(existing) {
+    existing.quantity++;
+  } else {
+    cart.push({
+      ...product,
+      quantity: 1
+    });
+  }
+
+  renderCart();
+}
+
+function changeQty(id, amount) {
+
+  const item = cart.find(i => i.id === id);
+
+  if(!item) return;
+
+  item.quantity += amount;
+
+  if(item.quantity <= 0) {
+    cart = cart.filter(i => i.id !== id);
+  }
+
+  renderCart();
+}
+
+function renderCart() {
+
+  cartItemsContainer.innerHTML = "";
+
+  let total = 0;
+  let count = 0;
+
+  cart.forEach(item => {
+
+    total += item.price * item.quantity;
+    count += item.quantity;
+
+    const div = document.createElement("div");
+
+    div.className = "border border-blue-100 rounded-lg p-4 bg-blue-50";
+
+    div.innerHTML = `
+      <div class="flex justify-between items-start">
+
+        <div>
+          <h4 class="font-bold text-blue-700">${item.name}</h4>
+          <p class="text-sm text-gray-600">${item.formulation}</p>
+          <p class="font-semibold mt-1">₹${item.price}</p>
+        </div>
+
+        <div class="flex items-center gap-2">
+
+          <button
+            onclick="changeQty(${item.id}, -1)"
+            class="bg-red-500 text-white w-7 h-7 rounded"
+          >
+            -
+          </button>
+
+          <span class="font-bold">${item.quantity}</span>
+
+          <button
+            onclick="changeQty(${item.id}, 1)"
+            class="bg-green-600 text-white w-7 h-7 rounded"
+          >
+            +
+          </button>
+
+        </div>
+
+      </div>
+    `;
+
+    cartItemsContainer.appendChild(div);
+  });
+
+  cartTotal.innerText = total;
+  cartCount.innerText = count;
+}
+
+document.querySelectorAll(".filter-checkbox")
+  .forEach(cb => cb.addEventListener("change", renderProducts));
+
+renderProducts();
+
+</script>
+
+</body>
+</html>
