@@ -855,7 +855,7 @@ select.co-input option{background:var(--c-card)}
       <div class="co-form-grid">
         <div class="co-field">
           <label class="co-label">Full Name *</label>
-          <input class="co-input" :class="{'error': coErrors.name}" type="text" placeholder="Dr. Aarush Sharma" x-model="coForm.name" @input="coErrors.name=false"/>
+          <input class="co-input" :class="{'error': coErrors.name}" type="text" placeholder="Dr. Khan" x-model="coForm.name" @input="coErrors.name=false"/>
           <span class="co-err" :class="{'show': coErrors.name}">Please enter your name</span>
         </div>
         <div class="co-field">
@@ -865,7 +865,7 @@ select.co-input option{background:var(--c-card)}
         </div>
         <div class="co-field full">
           <label class="co-label">Clinic / Hospital / Shop Name</label>
-          <input class="co-input" type="text" placeholder="City Medical Store, Ludhiana" x-model="coForm.clinic"/>
+          <input class="co-input" type="text" placeholder="City Medical Store, Jalalabad" x-model="coForm.clinic"/>
         </div>
         <div class="co-field full">
           <label class="co-label">Delivery Address *</label>
@@ -874,12 +874,12 @@ select.co-input option{background:var(--c-card)}
         </div>
         <div class="co-field">
           <label class="co-label">City *</label>
-          <input class="co-input" :class="{'error': coErrors.city}" type="text" placeholder="Ludhiana" x-model="coForm.city" @input="coErrors.city=false"/>
+          <input class="co-input" :class="{'error': coErrors.city}" type="text" placeholder="Jalalabad" x-model="coForm.city" @input="coErrors.city=false"/>
           <span class="co-err" :class="{'show': coErrors.city}">Enter city</span>
         </div>
         <div class="co-field">
           <label class="co-label">PIN Code *</label>
-          <input class="co-input" :class="{'error': coErrors.pin}" type="text" placeholder="141001" x-model="coForm.pin" @input="coErrors.pin=false" maxlength="6"/>
+          <input class="co-input" :class="{'error': coErrors.pin}" type="text" placeholder="152024" x-model="coForm.pin" @input="coErrors.pin=false" maxlength="6"/>
           <span class="co-err" :class="{'show': coErrors.pin}">Enter valid 6-digit PIN</span>
         </div>
         <div class="co-field full">
