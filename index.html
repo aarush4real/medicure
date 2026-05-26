@@ -4,11 +4,10 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>Medicure By Aarush</title>
-
+<link rel="icon" href="https://png.pngtree.com/png-clipart/20230403/original/pngtree-medical-plus-button-symbol-png-image_9021217.png" type="image/png"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.13.5/cdn.min.js" defer></script>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
 <style>
-/* ── ROOT TOKENS ── */
 :root{
   --c-bg:#0b1628;
   --c-sidebar:#0d1e38;
@@ -35,7 +34,6 @@
   --shadow-hover:0 8px 40px rgba(26,111,196,.25);
   --r:12px;
 }
-
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
 body{
@@ -51,13 +49,9 @@ body{
   background-attachment:fixed;
   transition:background-image .05s;
 }
-
-/* ── SCROLLBAR ── */
 ::-webkit-scrollbar{width:5px;height:5px}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:var(--c-border-light);border-radius:4px}
-
-/* ── HEADER ── */
 header{
   position:sticky;top:0;z-index:200;
   background:rgba(9,18,38,.85);
@@ -73,17 +67,16 @@ header{
 .logo{display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0}
 .logo-mark{
   width:38px;height:38px;border-radius:9px;
-  background:linear-gradient(135deg,var(--c-blue) 0%,var(--c-teal) 100%);
+  overflow:hidden;
   display:flex;align-items:center;justify-content:center;
   box-shadow:0 4px 14px rgba(26,111,196,.4);
 }
-.logo-mark svg{width:20px;height:20px;fill:white}
+.logo-mark img{width:38px;height:38px;object-fit:cover;}
 .logo-text{color:var(--c-text);font-weight:700;font-size:1.2rem;letter-spacing:-.4px}
 .logo-text span{
   background:linear-gradient(90deg,var(--c-blue-light),var(--c-teal-light));
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
 }
-
 .searchbar{
   flex:1;max-width:500px;
   display:flex;align-items:center;
@@ -106,7 +99,6 @@ header{
   color:white;cursor:pointer;transition:background .2s;
 }
 .searchbar button:hover{background:var(--c-blue-mid)}
-
 .mobile-searchbar{
   display:none;
   padding:10px 12px;
@@ -114,7 +106,6 @@ header{
   border-bottom:1px solid var(--c-border);
 }
 .mobile-searchbar .searchbar{max-width:100%;flex:1;}
-
 .hd-right{display:flex;align-items:center;gap:10px;margin-left:auto}
 .badge-rx{
   background:linear-gradient(135deg,var(--c-teal),var(--c-teal-light));
@@ -142,14 +133,10 @@ header{
   display:flex;align-items:center;justify-content:center;
   border:2px solid var(--c-bg);
 }
-
-/* ── LAYOUT ── */
 .page-wrap{
   max-width:1500px;margin:0 auto;
   display:flex;gap:0;min-height:calc(100vh - 66px);
 }
-
-/* ── SIDEBAR ── */
 aside{
   width:268px;flex-shrink:0;
   background:rgba(13,30,56,.7);
@@ -165,10 +152,8 @@ aside{
   background:rgba(26,111,196,.06);
 }
 .aside-head h2{font-size:.72rem;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;color:var(--c-text-dim)}
-
 .sb-section{padding:20px 16px 8px}
 .sb-label{font-size:.68rem;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--c-text-dim);margin-bottom:10px;padding-left:4px}
-
 .filter-pill{
   display:flex;align-items:center;justify-content:space-between;
   padding:8px 10px;border-radius:8px;cursor:pointer;
@@ -188,7 +173,6 @@ aside{
   padding:2px 7px;border-radius:10px;
 }
 .filter-pill.active .fp-count{background:rgba(26,111,196,.25);color:var(--c-blue-light)}
-
 .company-card{
   display:flex;align-items:center;gap:10px;
   padding:9px 10px;border-radius:9px;cursor:pointer;
@@ -200,7 +184,6 @@ aside{
 .co-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
 .co-info .co-name{font-size:.855rem;font-weight:600}
 .co-info .co-sub{font-size:.68rem;color:var(--c-text-dim);margin-top:1px}
-
 .clear-all-btn{
   width:calc(100% - 32px);margin:8px 16px 0;
   background:transparent;border:1px solid var(--c-border-light);
@@ -208,11 +191,7 @@ aside{
   cursor:pointer;font-size:.8rem;font-family:inherit;transition:all .15s;
 }
 .clear-all-btn:hover{border-color:var(--c-blue);color:var(--c-blue-light);background:rgba(26,111,196,.08)}
-
-/* ── MAIN ── */
 main{flex:1;padding:24px;min-width:0;overflow:hidden}
-
-/* ── HERO ── */
 .hero{
   position:relative;overflow:hidden;
   background:linear-gradient(120deg,rgba(9,31,66,.95) 0%,rgba(15,50,90,.9) 50%,rgba(9,40,70,.95) 100%);
@@ -246,15 +225,12 @@ main{flex:1;padding:24px;min-width:0;overflow:hidden}
   display:flex;flex-direction:column;gap:10px;flex-shrink:0;
   opacity:.6;font-size:3.2rem;line-height:1;
 }
-
-/* ── TOP BAR ── */
 .topbar{
   display:flex;align-items:center;justify-content:space-between;
   margin-bottom:14px;flex-wrap:wrap;gap:10px;
 }
 .res-info{font-size:.83rem;color:var(--c-text-muted)}
 .res-info strong{color:var(--c-text);font-weight:700}
-
 .sort-sel{
   background:rgba(255,255,255,.06);
   border:1px solid var(--c-border-light);
@@ -264,8 +240,6 @@ main{flex:1;padding:24px;min-width:0;overflow:hidden}
 }
 .sort-sel:focus{border-color:var(--c-blue)}
 .sort-sel option{background:var(--c-card)}
-
-/* ── ACTIVE FILTER TAGS ── */
 .active-tags{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px}
 .a-tag{
   background:rgba(26,111,196,.15);border:1px solid rgba(26,111,196,.3);
@@ -273,15 +247,11 @@ main{flex:1;padding:24px;min-width:0;overflow:hidden}
   padding:4px 10px;border-radius:20px;display:flex;align-items:center;gap:6px;
 }
 .a-tag button{background:none;border:none;color:inherit;cursor:pointer;font-size:1rem;line-height:1;padding:0}
-
-/* ── PRODUCT GRID ── */
 .grid{
   display:grid;
   grid-template-columns:repeat(auto-fill,minmax(218px,1fr));
   gap:16px;
 }
-
-/* ── PRODUCT CARD ── */
 .prod-card{
   background:var(--c-card);
   border:1px solid var(--c-border);
@@ -303,7 +273,6 @@ main{flex:1;padding:24px;min-width:0;overflow:hidden}
   border-color:var(--c-blue);background:var(--c-card-hover);
 }
 .prod-card:hover::before{opacity:1}
-
 .card-img{
   position:relative;padding:22px 16px 18px;
   display:flex;align-items:center;justify-content:center;
@@ -312,7 +281,6 @@ main{flex:1;padding:24px;min-width:0;overflow:hidden}
 .card-img.wellgo-bg{background:linear-gradient(145deg,rgba(10,30,60,.8) 0%,rgba(20,50,100,.6) 100%);}
 .card-img.pedia-bg{background:linear-gradient(145deg,rgba(5,35,30,.8) 0%,rgba(10,60,50,.6) 100%);}
 .med-icon{font-size:2.4rem;filter:drop-shadow(0 2px 8px rgba(0,0,0,.5))}
-
 .cat-chip{
   position:absolute;top:8px;right:8px;
   font-size:.62rem;font-weight:800;letter-spacing:.6px;text-transform:uppercase;
@@ -325,7 +293,6 @@ main{flex:1;padding:24px;min-width:0;overflow:hidden}
 .cc-injection{background:rgba(157,23,77,.3);color:#f9a8d4;border:1px solid rgba(157,23,77,.4)}
 .cc-drop    {background:rgba(3,105,161,.3);color:#7dd3fc;border:1px solid rgba(3,105,161,.4)}
 .cc-ointment{background:rgba(30,64,175,.3);color:#a5b4fc;border:1px solid rgba(30,64,175,.4)}
-
 .brand-chip{
   position:absolute;top:8px;left:8px;
   font-size:.6rem;font-weight:800;letter-spacing:.4px;
@@ -333,12 +300,10 @@ main{flex:1;padding:24px;min-width:0;overflow:hidden}
 }
 .bc-wellgo{background:rgba(26,111,196,.3);color:#93c5fd;border:1px solid rgba(26,111,196,.35)}
 .bc-pedia {background:rgba(5,150,105,.3);color:#6ee7b7;border:1px solid rgba(5,150,105,.35)}
-
 .card-body{padding:12px 14px 10px;flex:1;z-index:1;position:relative}
 .med-name{font-size:.9rem;font-weight:700;color:var(--c-text);margin-bottom:4px;line-height:1.3}
 .med-comp{font-size:.69rem;color:var(--c-text-muted);line-height:1.45;font-family:'DM Mono',monospace;margin-bottom:5px;}
 .med-pack{font-size:.7rem;color:var(--c-text-dim)}
-
 .card-foot{padding:10px 14px 14px;border-top:1px solid var(--c-border);z-index:1;position:relative;}
 .price-block{margin-bottom:10px}
 .price-row-1{display:flex;align-items:baseline;gap:8px;margin-bottom:3px;}
@@ -348,17 +313,9 @@ main{flex:1;padding:24px;min-width:0;overflow:hidden}
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
 }
 .our-label{font-size:.68rem;color:var(--c-text-dim);font-weight:500}
-.disc-badge{
-  font-size:.66rem;font-weight:800;
-  background:rgba(34,201,114,.18);color:var(--c-green);
-  padding:2px 7px;border-radius:10px;
-  border:1px solid rgba(34,201,114,.25);margin-left:auto;
-}
 .mrp-row{display:flex;align-items:center;gap:6px;}
 .mrp-label{font-size:.68rem;color:var(--c-text-dim)}
 .mrp-val{font-size:.76rem;color:var(--c-text-dim);text-decoration:line-through;font-family:'DM Mono',monospace}
-.saving-val{font-size:.68rem;color:var(--c-green);font-weight:600;margin-left:auto}
-
 .add-btn{
   width:100%;
   background:linear-gradient(135deg,var(--c-blue-dark),var(--c-blue));
@@ -382,13 +339,9 @@ main{flex:1;padding:24px;min-width:0;overflow:hidden}
 }
 .q-btn:hover{background:rgba(26,111,196,.32)}
 .q-num{font-weight:800;font-size:.95rem;color:var(--c-text);min-width:28px;text-align:center}
-
-/* ── EMPTY STATE ── */
 .empty-state{text-align:center;padding:80px 20px;color:var(--c-text-muted)}
 .empty-state .ei{font-size:3rem;margin-bottom:12px}
 .empty-state h3{font-size:1.1rem;font-weight:700;margin-bottom:6px;color:var(--c-text)}
-
-/* ── CART OVERLAY ── */
 .cart-overlay{
   position:fixed;inset:0;z-index:300;
   background:rgba(0,0,0,.6);backdrop-filter:blur(6px);
@@ -416,7 +369,6 @@ main{flex:1;padding:24px;min-width:0;overflow:hidden}
   transition:all .15s;flex-shrink:0;
 }
 .cart-close-btn:hover{background:rgba(232,72,90,.15);border-color:var(--c-red);color:var(--c-red)}
-
 .cart-items{flex:1;overflow-y:auto;padding:12px 0}
 .cart-empty-msg{text-align:center;padding:60px 20px;color:var(--c-text-muted)}
 .cart-empty-msg .ei{font-size:2.5rem;margin-bottom:10px}
@@ -441,7 +393,6 @@ main{flex:1;padding:24px;min-width:0;overflow:hidden}
 }
 .cq-btn:hover{background:rgba(26,111,196,.32)}
 .cq-n{font-weight:800;font-size:.82rem;color:var(--c-text);min-width:20px;text-align:center}
-
 .cart-foot{
   border-top:1px solid var(--c-border);
   padding:18px 22px 22px;
@@ -451,7 +402,6 @@ main{flex:1;padding:24px;min-width:0;overflow:hidden}
   display:flex;justify-content:space-between;
   font-size:.84rem;color:var(--c-text-muted);margin-bottom:7px;
 }
-.sum-row.savings{color:var(--c-green);font-weight:700}
 .sum-row.total{
   font-size:1.08rem;font-weight:800;color:var(--c-text);
   margin-top:8px;padding-top:8px;
@@ -470,8 +420,6 @@ main{flex:1;padding:24px;min-width:0;overflow:hidden}
 }
 .checkout-btn:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(26,111,196,.45);}
 .checkout-btn:disabled{background:var(--c-border-light);box-shadow:none;cursor:not-allowed;transform:none;}
-
-/* ── ORDER SUCCESS POPUP ── */
 .receipt-overlay{
   position:fixed;inset:0;z-index:500;
   display:flex;align-items:center;justify-content:center;
@@ -486,7 +434,6 @@ main{flex:1;padding:24px;min-width:0;overflow:hidden}
   animation:popIn .35s cubic-bezier(.34,1.56,.64,1);
 }
 @keyframes popIn{from{transform:scale(.85);opacity:0}to{transform:scale(1);opacity:1}}
-
 .receipt-header{
   padding:28px 28px 20px;text-align:center;
   background:linear-gradient(135deg,rgba(26,111,196,.15),rgba(13,158,144,.15));
@@ -506,14 +453,12 @@ main{flex:1;padding:24px;min-width:0;overflow:hidden}
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:6px;
 }
 .receipt-subtitle{font-size:.85rem;color:var(--c-text-muted);line-height:1.5}
-
 .receipt-body{padding:22px 28px}
 .receipt-section-label{
   font-size:.65rem;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;
   color:var(--c-text-dim);margin-bottom:12px;display:flex;align-items:center;gap:8px;
 }
 .receipt-section-label::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,var(--c-border-light),transparent);}
-
 .receipt-items{margin-bottom:18px}
 .receipt-item{
   display:flex;align-items:flex-start;justify-content:space-between;gap:10px;
@@ -527,14 +472,12 @@ main{flex:1;padding:24px;min-width:0;overflow:hidden}
 .ri-price{text-align:right;flex-shrink:0}
 .ri-amount{font-size:.9rem;font-weight:800;color:var(--c-blue-light)}
 .ri-mrp-s{font-size:.66rem;color:var(--c-text-dim);text-decoration:line-through;font-family:'DM Mono',monospace}
-
 .receipt-totals{
   background:rgba(11,22,40,.6);border:1px solid var(--c-border);
   border-radius:12px;padding:14px 16px;margin-bottom:18px;
 }
 .rt-row{display:flex;justify-content:space-between;font-size:.84rem;color:var(--c-text-muted);margin-bottom:8px;}
 .rt-row:last-child{margin-bottom:0}
-.rt-row.savings{color:var(--c-green);font-weight:700}
 .rt-row.total-final{
   font-size:1.1rem;font-weight:800;color:var(--c-text);
   padding-top:10px;margin-top:4px;border-top:1px dashed var(--c-border-light);
@@ -543,14 +486,12 @@ main{flex:1;padding:24px;min-width:0;overflow:hidden}
   background:linear-gradient(90deg,var(--c-blue-light),var(--c-teal-light));
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
 }
-
 .receipt-order-id{
   background:rgba(26,111,196,.1);border:1px solid rgba(26,111,196,.2);
   border-radius:9px;padding:10px 14px;font-size:.75rem;color:var(--c-text-muted);
   display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;
 }
 .receipt-order-id span:last-child{font-family:'DM Mono',monospace;color:var(--c-blue-light);font-weight:700;font-size:.8rem;}
-
 .receipt-thank{
   text-align:center;padding:14px;
   background:linear-gradient(135deg,rgba(26,111,196,.08),rgba(13,158,144,.08));
@@ -559,7 +500,6 @@ main{flex:1;padding:24px;min-width:0;overflow:hidden}
 .receipt-thank .thank-emoji{font-size:1.6rem;margin-bottom:6px;display:block}
 .receipt-thank p{font-size:.82rem;color:var(--c-text-muted);line-height:1.6}
 .receipt-thank strong{color:var(--c-blue-light)}
-
 .receipt-close-btn{
   width:100%;background:linear-gradient(135deg,var(--c-blue),var(--c-teal));
   border:none;border-radius:10px;color:white;padding:13px;
@@ -567,8 +507,6 @@ main{flex:1;padding:24px;min-width:0;overflow:hidden}
   transition:all .2s;box-shadow:0 4px 20px rgba(26,111,196,.3);
 }
 .receipt-close-btn:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(26,111,196,.45);}
-
-/* ── RESPONSIVE ── */
 @media(max-width:960px){aside{display:none}.hero{padding:20px}.hero-pills{display:none}}
 @media(max-width:640px){
   main{padding:12px}
@@ -589,7 +527,7 @@ main{flex:1;padding:24px;min-width:0;overflow:hidden}
   <div class="header-inner">
     <a class="logo" href="#">
       <div class="logo-mark">
-        <svg viewBox="0 0 24 24"><path d="M19 3H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V5a2 2 0 00-2-2zm-7 3a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H8a1 1 0 110-2h3V7a1 1 0 011-1z"/></svg>
+        <img src="https://png.pngtree.com/png-clipart/20230403/original/pngtree-medical-plus-button-symbol-png-image_9021217.png" alt="Medical Plus"/>
       </div>
       <span class="logo-text">Medi<span>Cure</span></span>
     </a>
@@ -598,7 +536,7 @@ main{flex:1;padding:24px;min-width:0;overflow:hidden}
       <button><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></button>
     </div>
     <div class="hd-right">
-      <span class="badge-rx">🔥 65% OFF MRP</span>
+      <span class="badge-rx">✅ Genuine Medicines</span>
       <button class="cart-btn" @click="cartOpen=true">
         <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
         Cart
@@ -666,12 +604,12 @@ main{flex:1;padding:24px;min-width:0;overflow:hidden}
   <div class="hero">
     <div class="hero-grid">
       <div class="hero-text">
-        <h1>Genuine Medicines · 65% Off MRP</h1>
+        <h1>Genuine Medicines · Best Prices</h1>
         <p>Authorised distributor for <strong>Wellgo Pharmaceuticals</strong> (Chandigarh) &amp; <strong>PediaZone</strong> (Panchkula). All products sourced directly from manufacturer — WHO‑GMP certified, cold chain maintained.</p>
         <div class="hero-badges">
           <span class="h-badge">✓ WHO-GMP Certified</span>
           <span class="h-badge">✓ Cold Chain Maintained</span>
-          <span class="h-badge">✓ 65% Flat Discount</span>
+          <span class="h-badge">✓ Direct from Manufacturer</span>
           <span class="h-badge">✓ Same Day Dispatch</span>
           <span class="h-badge">✓ 100% Genuine</span>
         </div>
@@ -687,7 +625,6 @@ main{flex:1;padding:24px;min-width:0;overflow:hidden}
       <option value="rate-asc">Rate: Low → High</option>
       <option value="rate-desc">Rate: High → Low</option>
       <option value="name">Name: A → Z</option>
-      <option value="savings">Savings: High → Low</option>
     </select>
   </div>
 
@@ -721,12 +658,10 @@ main{flex:1;padding:24px;min-width:0;overflow:hidden}
                 <div class="our-label">Our Rate</div>
                 <div class="our-price">₹<span x-text="p.rate"></span></div>
               </div>
-              <span class="disc-badge">65% OFF</span>
             </div>
             <div class="mrp-row">
               <span class="mrp-label">MRP:</span>
               <span class="mrp-val">₹<span x-text="p.mrp"></span></span>
-              <span class="saving-val">Save ₹<span x-text="(p.mrp-p.rate).toFixed(0)"></span></span>
             </div>
           </div>
           <template x-if="!getQty(p.id)">
@@ -762,7 +697,7 @@ main{flex:1;padding:24px;min-width:0;overflow:hidden}
       <div>
         <h2>🛒 Shopping Cart</h2>
         <div class="cart-hd-sub" x-show="cart.length>0">
-          <span x-text="cartCount"></span> items · Save ₹<span x-text="(mrpTotal-cartTotal).toFixed(0)"></span>
+          <span x-text="cartCount"></span> items
         </div>
       </div>
       <button class="cart-close-btn" @click="cartOpen=false">✕</button>
@@ -793,7 +728,6 @@ main{flex:1;padding:24px;min-width:0;overflow:hidden}
     </div>
     <div class="cart-foot" x-show="cart.length>0">
       <div class="sum-row"><span>MRP Total</span><span>₹<span x-text="mrpTotal.toFixed(0)"></span></span></div>
-      <div class="sum-row savings"><span>💚 Discount (65%)</span><span>−₹<span x-text="(mrpTotal-cartTotal).toFixed(0)"></span></span></div>
       <div class="sum-row"><span>Delivery</span><span style="color:var(--c-green);font-weight:700">FREE</span></div>
       <div class="sum-row total"><span>Total Payable</span><span>₹<span x-text="cartTotal.toFixed(0)"></span></span></div>
       <button class="checkout-btn" @click="checkout()">Proceed to Checkout →</button>
@@ -830,7 +764,6 @@ main{flex:1;padding:24px;min-width:0;overflow:hidden}
       <div class="receipt-section-label">💰 Bill Details</div>
       <div class="receipt-totals">
         <div class="rt-row"><span>MRP Total</span><span>₹<span x-text="receiptMrpTotal"></span></span></div>
-        <div class="rt-row savings"><span>🎉 You Saved (65% Off)</span><span>−₹<span x-text="(receiptMrpTotal - receiptFinalTotal)"></span></span></div>
         <div class="rt-row"><span>Delivery Charges</span><span style="color:var(--c-green);font-weight:700">FREE 🚚</span></div>
         <div class="rt-row total-final"><span>Final Amount</span><span>₹<span x-text="receiptFinalTotal"></span></span></div>
       </div>
@@ -844,8 +777,8 @@ main{flex:1;padding:24px;min-width:0;overflow:hidden}
 </div>
 
 <script>
-// rate = round(MRP * 0.35 / 5) * 5  → 65% OFF MRP, price is 35% of MRP, rounded to nearest 5
-const r = mrp => Math.round(mrp * 0.35 / 5) * 5;
+// rate = round(MRP * 0.45 / 5) * 5  → 55% OFF MRP, price is 45% of MRP, rounded to nearest 5
+const r = mrp => Math.round(mrp * 0.45 / 5) * 5;
 
 function pharmaStore(){
   const RAW = [
@@ -904,7 +837,6 @@ function pharmaStore(){
     {id:114,co:'wellgo',cat:'tablet',    name:'Welarm 5mg',                    comp:'Amlodipine Besylate 5mg',                                            pack:'Strip of 10 Tablets',    mrp:72  },
     {id:115,co:'wellgo',cat:'tablet',    name:'Welclo 75mg',                   comp:'Clopidogrel Bisulphate 75mg',                                        pack:'Strip of 10 Tablets',    mrp:88  },
     {id:116,co:'wellgo',cat:'tablet',    name:'Welclo A 75mg/150mg',           comp:'Clopidogrel 75mg + Aspirin 150mg',                                   pack:'Strip of 10 Tablets',    mrp:118 },
-    /* NEW WELLGO TABLETS */
     {id:301,co:'wellgo',cat:'tablet',    name:'Welsar 40mg',                   comp:'Telmisartan 40mg',                                                   pack:'Strip of 10 Tablets',    mrp:95  },
     {id:302,co:'wellgo',cat:'tablet',    name:'Welsar H 40mg/12.5mg',          comp:'Telmisartan 40mg + Hydrochlorothiazide 12.5mg',                      pack:'Strip of 10 Tablets',    mrp:118 },
     {id:303,co:'wellgo',cat:'tablet',    name:'Welpan 20mg',                   comp:'Pantoprazole 20mg',                                                  pack:'Strip of 10 Tablets',    mrp:65  },
@@ -917,6 +849,15 @@ function pharmaStore(){
     {id:310,co:'wellgo',cat:'tablet',    name:'Welrab DSR',                    comp:'Rabeprazole 20mg + Domperidone 30mg SR',                             pack:'Strip of 10 Tablets',    mrp:145 },
     {id:311,co:'wellgo',cat:'tablet',    name:'Welfen 200mg',                  comp:'Ibuprofen 200mg + Paracetamol 325mg',                                pack:'Strip of 10 Tablets',    mrp:58  },
     {id:312,co:'wellgo',cat:'tablet',    name:'Welvit B12',                    comp:'Cyanocobalamin 1000mcg (Sublingual)',                                pack:'Strip of 10 Tablets',    mrp:88  },
+    /* EXTRA WELLGO TABLETS */
+    {id:501,co:'wellgo',cat:'tablet',    name:'Welspas 10mg',                  comp:'Dicyclomine HCl 10mg + Paracetamol 325mg',                           pack:'Strip of 10 Tablets',    mrp:82  },
+    {id:502,co:'wellgo',cat:'tablet',    name:'Welzith 500mg',                 comp:'Azithromycin 500mg',                                                 pack:'Strip of 3 Tablets',     mrp:145 },
+    {id:503,co:'wellgo',cat:'tablet',    name:'Weluri 300mg',                  comp:'Febuxostat 300mg',                                                   pack:'Strip of 10 Tablets',    mrp:188 },
+    {id:504,co:'wellgo',cat:'tablet',    name:'Welmon 10mg',                   comp:'Montelukast Sodium 10mg',                                            pack:'Strip of 10 Tablets',    mrp:95  },
+    {id:505,co:'wellgo',cat:'tablet',    name:'Welacid 150mg',                 comp:'Ranitidine HCl 150mg',                                               pack:'Strip of 10 Tablets',    mrp:52  },
+    {id:506,co:'wellgo',cat:'tablet',    name:'Welcal D3',                     comp:'Calcium Carbonate 500mg + Vitamin D3 250 IU',                        pack:'Strip of 15 Tablets',    mrp:118 },
+    {id:507,co:'wellgo',cat:'tablet',    name:'Weliro XT',                     comp:'Ferrous Ascorbate 100mg + Folic Acid 1.5mg + Zinc 22.5mg',           pack:'Strip of 10 Tablets',    mrp:128 },
+    {id:508,co:'wellgo',cat:'tablet',    name:'Welnap 500mg',                  comp:'Naproxen Sodium 500mg',                                              pack:'Strip of 10 Tablets',    mrp:98  },
 
     /* CAPSULES */
     {id:38, co:'wellgo',cat:'capsule',   name:'Gimoxy 500mg',                  comp:'Moxifloxacin HCl 500mg',                                            pack:'Strip of 5 Capsules',    mrp:245 },
@@ -928,11 +869,15 @@ function pharmaStore(){
     {id:119,co:'wellgo',cat:'capsule',   name:'Weldox 100mg Cap',              comp:'Doxycycline Monohydrate 100mg',                                     pack:'Strip of 10 Capsules',   mrp:95  },
     {id:120,co:'wellgo',cat:'capsule',   name:'WelD3 60K',                     comp:'Cholecalciferol (Vitamin D3) 60,000 IU',                            pack:'Strip of 4 Capsules',    mrp:145 },
     {id:121,co:'wellgo',cat:'capsule',   name:'Welzinc C',                     comp:'Zinc Sulphate 50mg + Vitamin C 500mg',                              pack:'Strip of 10 Capsules',   mrp:68  },
-    /* NEW WELLGO CAPSULES */
     {id:313,co:'wellgo',cat:'capsule',   name:'Welpro DHA',                    comp:'Omega-3 (EPA 180mg + DHA 120mg) + Vitamin E 10mg',                  pack:'Strip of 10 Softgels',   mrp:185 },
     {id:314,co:'wellgo',cat:'capsule',   name:'Welfer XT',                     comp:'Ferrous Ascorbate 100mg + Folic Acid 1.5mg + Zinc 22.5mg',          pack:'Strip of 10 Capsules',   mrp:138 },
     {id:315,co:'wellgo',cat:'capsule',   name:'Welamp 500mg',                  comp:'Ampicillin 500mg',                                                   pack:'Strip of 10 Capsules',   mrp:92  },
     {id:316,co:'wellgo',cat:'capsule',   name:'Welclox 500mg',                 comp:'Cloxacillin Sodium 500mg',                                           pack:'Strip of 10 Capsules',   mrp:105 },
+    /* EXTRA WELLGO CAPSULES */
+    {id:509,co:'wellgo',cat:'capsule',   name:'Welome 20mg Cap',               comp:'Omeprazole 20mg',                                                   pack:'Strip of 10 Capsules',   mrp:68  },
+    {id:510,co:'wellgo',cat:'capsule',   name:'Welflu 150mg Cap',              comp:'Fluconazole 150mg',                                                  pack:'Strip of 1 Capsule',     mrp:55  },
+    {id:511,co:'wellgo',cat:'capsule',   name:'Welclar 250mg Cap',             comp:'Clarithromycin 250mg',                                               pack:'Strip of 10 Capsules',   mrp:175 },
+    {id:512,co:'wellgo',cat:'capsule',   name:'Welpro Probiotic',              comp:'Lactobacillus Sporogenes 112.5M + Bacillus Mesentericus',           pack:'Strip of 10 Capsules',   mrp:112 },
 
     /* SYRUPS */
     {id:42, co:'wellgo',cat:'syrup',     name:'Fluwel Syrup',                  comp:'Ambroxol 15mg + Guaifenesin 50mg + Terbutaline 1.25mg / 5ml',       pack:'Bottle of 100ml',        mrp:88  },
@@ -941,25 +886,30 @@ function pharmaStore(){
     {id:45, co:'wellgo',cat:'syrup',     name:'Wbrox LS Syrup',                comp:'Levosalbutamol 1mg + Ambroxol 30mg / 5ml',                          pack:'Bottle of 100ml',        mrp:92  },
     {id:46, co:'wellgo',cat:'syrup',     name:'Oflawel 50mg Syrup',            comp:'Ofloxacin 50mg / 5ml',                                              pack:'Bottle of 50ml',         mrp:78  },
     {id:47, co:'wellgo',cat:'syrup',     name:'Dextigo Syrup',                 comp:'Dextromethorphan 10mg + CPM 2mg + Phenylephrine 5mg / 5ml',         pack:'Bottle of 100ml',        mrp:82  },
-    {id:122,co:'wellgo',cat:'syrup',     name:'Welfer Syrup',                  comp:'Ferrous Ascorbate 30mg + Folic Acid 0.5mg / 5ml',                   pack:'Bottle of 200ml',        mrp:115 },
-    {id:123,co:'wellgo',cat:'syrup',     name:'Welcough DX Syrup',             comp:'Dextromethorphan 10mg + Guaifenesin 100mg / 5ml',                   pack:'Bottle of 100ml',        mrp:72  },
-    {id:124,co:'wellgo',cat:'syrup',     name:'Weliver Syrup',                 comp:'Silymarin 70mg + B-Complex Vitamins / 5ml',                         pack:'Bottle of 200ml',        mrp:138 },
-    {id:125,co:'wellgo',cat:'syrup',     name:'Lacwel Syrup',                  comp:'Lactulose 10g / 15ml',                                              pack:'Bottle of 200ml',        mrp:162 },
-    /* NEW WELLGO SYRUPS */
-    {id:317,co:'wellgo',cat:'syrup',     name:'Welpara 250mg Syrup',           comp:'Paracetamol 250mg / 5ml — Mango',                                   pack:'Bottle of 60ml',         mrp:48  },
-    {id:318,co:'wellgo',cat:'syrup',     name:'Welzen Syrup',                  comp:'Zinc Sulphate 20mg + Vitamin C 100mg / 5ml',                        pack:'Bottle of 100ml',        mrp:88  },
-    {id:319,co:'wellgo',cat:'syrup',     name:'Welprob Syrup',                 comp:'Lactobacillus Acidophilus 5 Billion + Fructo Oligosaccharides / 5ml',pack:'Bottle of 100ml',        mrp:145 },
-    {id:320,co:'wellgo',cat:'syrup',     name:'Welcold Syrup',                 comp:'Chlorpheniramine 2mg + Pseudoephedrine 30mg + Paracetamol 125mg / 5ml',pack:'Bottle of 100ml',     mrp:82  },
+    {id:122,co:'wellgo',cat:'syrup',     name:'Welcough DX Syrup',             comp:'Dextromethorphan 10mg + Ambroxol 30mg / 5ml',                       pack:'Bottle of 100ml',        mrp:95  },
+    {id:123,co:'wellgo',cat:'syrup',     name:'Welvit Syrup',                  comp:'Multivitamin + Multimineral + Zinc + Taurine / 5ml',                pack:'Bottle of 200ml',        mrp:145 },
+    {id:317,co:'wellgo',cat:'syrup',     name:'Welcof Syrup',                  comp:'Ambroxol 15mg + Guaifenesin 100mg + Menthol 1mg / 5ml',             pack:'Bottle of 100ml',        mrp:78  },
+    {id:318,co:'wellgo',cat:'syrup',     name:'Welfer Syrup',                  comp:'Ferrous Sulphate + Folic Acid + Zinc / 5ml',                        pack:'Bottle of 200ml',        mrp:108 },
+    {id:319,co:'wellgo',cat:'syrup',     name:'Weldi Syrup',                   comp:'Domperidone 5mg / 5ml',                                             pack:'Bottle of 100ml',        mrp:62  },
+    {id:320,co:'wellgo',cat:'syrup',     name:'Welcal Syrup',                  comp:'Calcium Gluconate + Vitamin D3 / 5ml',                              pack:'Bottle of 200ml',        mrp:88  },
+    /* EXTRA WELLGO SYRUPS */
+    {id:513,co:'wellgo',cat:'syrup',     name:'Welzinc Syrup',                 comp:'Zinc Sulphate 10mg / 5ml',                                          pack:'Bottle of 60ml',         mrp:72  },
+    {id:514,co:'wellgo',cat:'syrup',     name:'Welact Syrup',                  comp:'Lactulose 3.35g / 5ml',                                             pack:'Bottle of 100ml',        mrp:95  },
+    {id:515,co:'wellgo',cat:'syrup',     name:'Welliv Syrup',                  comp:'Silymarin 70mg + B-Complex Vitamins / 5ml',                         pack:'Bottle of 200ml',        mrp:118 },
 
     /* DRY SYRUPS */
-    {id:48, co:'wellgo',cat:'drysyrup',  name:'Fixiwel 100mg Dry Syrup',       comp:'Cefixime 100mg / 5ml (after reconstitution)',                       pack:'Bottle 30ml + WFI',      mrp:132 },
-    {id:49, co:'wellgo',cat:'drysyrup',  name:'Welcefo 50mg Dry Syrup',        comp:'Cefpodoxime Proxetil 50mg / 5ml (after reconstitution)',            pack:'Bottle 30ml + WFI',      mrp:148 },
-    {id:126,co:'wellgo',cat:'drysyrup',  name:'Amoxwel 125mg DS',              comp:'Amoxicillin Trihydrate 125mg / 5ml',                                pack:'Bottle 60ml + WFI',      mrp:88  },
-    {id:127,co:'wellgo',cat:'drysyrup',  name:'Amoxwel CV 228mg DS',           comp:'Amoxicillin 200mg + Clavulanic Acid 28.5mg / 5ml',                  pack:'Bottle 30ml + WFI',      mrp:135 },
-    /* NEW WELLGO DRY SYRUPS */
-    {id:321,co:'wellgo',cat:'drysyrup',  name:'Welazi 200mg DS',               comp:'Azithromycin 200mg / 5ml',                                          pack:'Bottle 15ml + WFI',      mrp:118 },
+    {id:48, co:'wellgo',cat:'drysyrup',  name:'Welfix 50mg DS',                comp:'Cefixime 50mg / 5ml',                                               pack:'Bottle 30ml + WFI',      mrp:82  },
+    {id:49, co:'wellgo',cat:'drysyrup',  name:'Welfix 100mg DS',               comp:'Cefixime 100mg / 5ml',                                              pack:'Bottle 30ml + WFI',      mrp:118 },
+    {id:124,co:'wellgo',cat:'drysyrup',  name:'Welfix CV 200mg DS',            comp:'Cefixime 200mg + Clavulanic Acid 125mg / 5ml',                      pack:'Bottle 30ml + WFI',      mrp:188 },
+    {id:125,co:'wellgo',cat:'drysyrup',  name:'Weloxy 228mg DS',               comp:'Amoxicillin 200mg + Clavulanate 28.5mg / 5ml',                      pack:'Bottle 30ml + WFI',      mrp:88  },
+    {id:126,co:'wellgo',cat:'drysyrup',  name:'Welcefix 125mg DS',             comp:'Cephalexin 125mg / 5ml',                                            pack:'Bottle 30ml + WFI',      mrp:72  },
+    {id:127,co:'wellgo',cat:'drysyrup',  name:'Welcefix 250mg DS',             comp:'Cephalexin 250mg / 5ml',                                            pack:'Bottle 30ml + WFI',      mrp:98  },
+    {id:321,co:'wellgo',cat:'drysyrup',  name:'Welmox 125mg DS',               comp:'Amoxicillin 125mg / 5ml — Strawberry',                              pack:'Bottle 60ml + WFI',      mrp:62  },
     {id:322,co:'wellgo',cat:'drysyrup',  name:'Welazi 100mg DS',               comp:'Azithromycin 100mg / 5ml',                                          pack:'Bottle 15ml + WFI',      mrp:88  },
     {id:323,co:'wellgo',cat:'drysyrup',  name:'Welcef XL 100mg DS',            comp:'Cefixime 100mg + LAB (Extended Release) / 5ml',                     pack:'Bottle 30ml + WFI',      mrp:152 },
+    /* EXTRA WELLGO DRY SYRUPS */
+    {id:516,co:'wellgo',cat:'drysyrup',  name:'Welclari 125mg DS',             comp:'Clarithromycin 125mg / 5ml',                                        pack:'Bottle 30ml + WFI',      mrp:142 },
+    {id:517,co:'wellgo',cat:'drysyrup',  name:'Welfix 200mg DS',               comp:'Cefixime 200mg / 5ml',                                              pack:'Bottle 30ml + WFI',      mrp:155 },
 
     /* INJECTIONS */
     {id:50, co:'wellgo',cat:'injection', name:'Amixan 500mg Inj',              comp:'Amikacin Sulphate 500mg/2ml',                                       pack:'Vial of 2ml',            mrp:82  },
@@ -971,21 +921,27 @@ function pharmaStore(){
     {id:129,co:'wellgo',cat:'injection', name:'Welcef TZ 4.5g Inj',            comp:'Piperacillin 4g + Tazobactam 500mg IV',                             pack:'Vial of 20ml',           mrp:388 },
     {id:130,co:'wellgo',cat:'injection', name:'Ondawel 4mg Inj',               comp:'Ondansetron HCl 4mg/2ml',                                           pack:'Ampoule of 2ml',         mrp:32  },
     {id:131,co:'wellgo',cat:'injection', name:'Pandewel 40mg Inj',             comp:'Pantoprazole Sodium 40mg IV',                                       pack:'Vial of 10ml',           mrp:95  },
-    /* NEW WELLGO INJECTIONS */
     {id:324,co:'wellgo',cat:'injection', name:'Welcef 2g Inj',                 comp:'Ceftriaxone Sodium 2g IV',                                          pack:'Vial of 20ml',           mrp:265 },
     {id:325,co:'wellgo',cat:'injection', name:'Weldic 75mg Inj',               comp:'Diclofenac Sodium 75mg/3ml IM',                                     pack:'Ampoule of 3ml',         mrp:42  },
     {id:326,co:'wellgo',cat:'injection', name:'Weltra 50mg Inj',               comp:'Tramadol HCl 50mg/2ml',                                             pack:'Ampoule of 2ml',         mrp:28  },
     {id:327,co:'wellgo',cat:'injection', name:'Welmet 500mg Inj',              comp:'Metronidazole 500mg/100ml IV',                                      pack:'Infusion Bottle 100ml',  mrp:115 },
+    /* EXTRA WELLGO INJECTIONS */
+    {id:518,co:'wellgo',cat:'injection', name:'Weldex 4mg Inj',                comp:'Dexamethasone Sodium Phosphate 4mg/ml',                             pack:'Ampoule of 2ml',         mrp:38  },
+    {id:519,co:'wellgo',cat:'injection', name:'Welhydro 25mg Inj',             comp:'Hydrocortisone Sodium Succinate 25mg IV',                           pack:'Vial of 5ml',            mrp:55  },
+    {id:520,co:'wellgo',cat:'injection', name:'Welfur 10mg Inj',               comp:'Furosemide 10mg/ml',                                                pack:'Ampoule of 2ml',         mrp:28  },
 
     /* DROPS */
     {id:55, co:'wellgo',cat:'drop',      name:'Vomibye 2mg Oral Drops',        comp:'Ondansetron 2mg/ml',                                                pack:'Bottle of 30ml',         mrp:95  },
     {id:56, co:'wellgo',cat:'drop',      name:'Welospas Oral Drops',           comp:'Mefenamic Acid + Dicyclomine Oral Drops',                           pack:'Bottle of 15ml',         mrp:65  },
     {id:132,co:'wellgo',cat:'drop',      name:'Welfer Oral Drops',             comp:'Ferrous Sulphate + Folic Acid Drops',                               pack:'Bottle of 30ml',         mrp:78  },
     {id:133,co:'wellgo',cat:'drop',      name:'WelD3 400 Drops',               comp:'Cholecalciferol (Vitamin D3) 400 IU/drop',                          pack:'Bottle of 30ml',         mrp:148 },
-    /* NEW WELLGO DROPS */
     {id:328,co:'wellgo',cat:'drop',      name:'Welzinc Drops',                 comp:'Zinc Sulphate 5mg / 1ml',                                           pack:'Bottle of 15ml',         mrp:58  },
     {id:329,co:'wellgo',cat:'drop',      name:'Welpara 100 Drops',             comp:'Paracetamol 100mg / 1ml — Orange',                                  pack:'Bottle of 15ml',         mrp:48  },
     {id:330,co:'wellgo',cat:'drop',      name:'Welgripe Drops',                comp:'Simethicone 40mg + Dill Oil 0.07ml / 1ml',                          pack:'Bottle of 15ml',         mrp:68  },
+    /* EXTRA WELLGO DROPS */
+    {id:521,co:'wellgo',cat:'drop',      name:'Welmox 100 Drops',              comp:'Amoxicillin 100mg / 1ml — Strawberry',                              pack:'Bottle of 15ml',         mrp:52  },
+    {id:522,co:'wellgo',cat:'drop',      name:'Welcof Drops',                  comp:'Dextromethorphan 5mg + CPM 0.5mg / 1ml',                            pack:'Bottle of 30ml',         mrp:62  },
+    {id:523,co:'wellgo',cat:'drop',      name:'Welcitriz Drops',               comp:'Cetirizine 5mg / 5ml Oral Drops',                                   pack:'Bottle of 30ml',         mrp:45  },
 
     /* ═══ PEDIAZONE ═══ */
     /* SYRUPS */
@@ -1005,13 +961,18 @@ function pharmaStore(){
     {id:205,co:'pedia', cat:'syrup',     name:'Pedicough LS Syrup',            comp:'Levosalbutamol 1mg + Ambroxol 15mg + Guaifenesin 25mg / 5ml',       pack:'Bottle of 100ml',        mrp:88  },
     {id:206,co:'pedia', cat:'syrup',     name:'Ironpedia Syrup',               comp:'Ferrous Ascorbate 15mg + Folic Acid 0.5mg + Zinc 3mg / 5ml',        pack:'Bottle of 200ml',        mrp:118 },
     {id:207,co:'pedia', cat:'syrup',     name:'Pediprobio Syrup',              comp:'Lactobacillus Acidophilus 5 Billion + Zinc / 5ml',                  pack:'Bottle of 60ml',         mrp:145 },
-    /* NEW PEDIAZONE SYRUPS */
     {id:401,co:'pedia', cat:'syrup',     name:'Pedifix 50mg Suspension',       comp:'Cefixime 50mg / 5ml — Orange & Pineapple',                          pack:'Bottle of 30ml',         mrp:88  },
     {id:402,co:'pedia', cat:'syrup',     name:'Pedilac Syrup',                 comp:'Lactulose 3.35g / 5ml — Mango',                                     pack:'Bottle of 100ml',        mrp:95  },
     {id:403,co:'pedia', cat:'syrup',     name:'Pedimont 4mg Syrup',            comp:'Montelukast Sodium 4mg / 5ml — Orange',                             pack:'Bottle of 60ml',         mrp:112 },
     {id:404,co:'pedia', cat:'syrup',     name:'Pedivit A Syrup',               comp:'Vitamin A 2500 IU + Vitamin D 200 IU + Vitamin C 25mg / 5ml',       pack:'Bottle of 100ml',        mrp:78  },
     {id:405,co:'pedia', cat:'syrup',     name:'Pedicalm Syrup',                comp:'Melatonin 1mg + L-Theanine 50mg / 5ml',                             pack:'Bottle of 60ml',         mrp:168 },
     {id:406,co:'pedia', cat:'syrup',     name:'Pediorm ORS Syrup',             comp:'Sodium Chloride + Potassium Chloride + Glucose (WHO-ORS) / 5ml',    pack:'Bottle of 200ml',        mrp:62  },
+    /* EXTRA PEDIAZONE SYRUPS */
+    {id:601,co:'pedia', cat:'syrup',     name:'Pediflam Syrup',                comp:'Ibuprofen 100mg + Paracetamol 162.5mg / 5ml',                       pack:'Bottle of 60ml',         mrp:88  },
+    {id:602,co:'pedia', cat:'syrup',     name:'Pedivit C Syrup',               comp:'Ascorbic Acid 100mg / 5ml — Orange',                                pack:'Bottle of 60ml',         mrp:52  },
+    {id:603,co:'pedia', cat:'syrup',     name:'Pedicalzol Syrup',              comp:'Albendazole 200mg / 5ml',                                           pack:'Bottle of 10ml',         mrp:48  },
+    {id:604,co:'pedia', cat:'syrup',     name:'Pediact Syrup',                 comp:'Activated Dimethicone 40mg + Dill Oil / 5ml',                       pack:'Bottle of 30ml',         mrp:65  },
+    {id:605,co:'pedia', cat:'syrup',     name:'Pedilevo Syrup',                comp:'Levocetirizine 2.5mg / 5ml — Orange',                               pack:'Bottle of 60ml',         mrp:72  },
 
     /* DRY SYRUPS */
     {id:66, co:'pedia', cat:'drysyrup',  name:'Disopod-50 Dry Syrup',          comp:'Cefpodoxime Proxetil 50mg / 5ml',                                   pack:'Bottle 30ml + WFI',      mrp:98  },
@@ -1027,10 +988,12 @@ function pharmaStore(){
     {id:76, co:'pedia', cat:'drysyrup',  name:'Cephalexin 125mg DS',           comp:'Cephalexin Monohydrate 125mg / 5ml',                                pack:'Bottle 30ml + WFI',      mrp:85  },
     {id:208,co:'pedia', cat:'drysyrup',  name:'Pedimox CV 228mg DS',           comp:'Amoxicillin 200mg + Clavulanic Acid 28.5mg / 5ml',                  pack:'Bottle 30ml + WFI',      mrp:112 },
     {id:209,co:'pedia', cat:'drysyrup',  name:'Pedicef XL 100mg DS',           comp:'Cefixime 100mg (Extended Release) / 5ml',                          pack:'Bottle 30ml + WFI',      mrp:138 },
-    /* NEW PEDIAZONE DRY SYRUPS */
     {id:407,co:'pedia', cat:'drysyrup',  name:'Pedimox 250mg DS',              comp:'Amoxicillin 250mg / 5ml — Strawberry',                              pack:'Bottle 60ml + WFI',      mrp:72  },
     {id:408,co:'pedia', cat:'drysyrup',  name:'Pediclarit 125mg DS',           comp:'Clarithromycin 125mg / 5ml',                                        pack:'Bottle 30ml + WFI',      mrp:145 },
     {id:409,co:'pedia', cat:'drysyrup',  name:'Pediclox 125mg DS',             comp:'Cephalexin 125mg + LAB / 5ml',                                      pack:'Bottle 30ml + WFI',      mrp:88  },
+    /* EXTRA PEDIAZONE DRY SYRUPS */
+    {id:606,co:'pedia', cat:'drysyrup',  name:'Pedicef 50mg DS',               comp:'Ceftriaxone 50mg + Sulbactam / 5ml',                                pack:'Bottle 30ml + WFI',      mrp:115 },
+    {id:607,co:'pedia', cat:'drysyrup',  name:'Pedierythro DS',                comp:'Erythromycin 125mg / 5ml',                                          pack:'Bottle 30ml + WFI',      mrp:95  },
 
     /* TABLETS */
     {id:77, co:'pedia', cat:'tablet',    name:'Disopod 50 DT',                 comp:'Cefpodoxime Proxetil 50mg (Dispersible)',                            pack:'Strip of 10 Tablets',    mrp:98  },
@@ -1041,11 +1004,14 @@ function pharmaStore(){
     {id:210,co:'pedia', cat:'tablet',    name:'Pedipara 500 DT',               comp:'Paracetamol 500mg (Dispersible)',                                   pack:'Strip of 10 Tablets',    mrp:52  },
     {id:211,co:'pedia', cat:'tablet',    name:'Pedifen 200 DT',                comp:'Ibuprofen 200mg (Dispersible)',                                     pack:'Strip of 10 Tablets',    mrp:65  },
     {id:212,co:'pedia', cat:'tablet',    name:'Pedimox 250 DT',                comp:'Amoxicillin 250mg (Dispersible)',                                   pack:'Strip of 10 Tablets',    mrp:75  },
-    /* NEW PEDIAZONE TABLETS */
     {id:410,co:'pedia', cat:'tablet',    name:'Pedizith 250 DT',               comp:'Azithromycin 250mg (Dispersible)',                                  pack:'Strip of 6 Tablets',     mrp:95  },
     {id:411,co:'pedia', cat:'tablet',    name:'Pedimont 4mg Chew',             comp:'Montelukast 4mg (Chewable) — Orange',                               pack:'Strip of 10 Tablets',    mrp:88  },
     {id:412,co:'pedia', cat:'tablet',    name:'Pedicetiriz 5mg',               comp:'Cetirizine 5mg (Dispersible) — Vanilla',                            pack:'Strip of 10 Tablets',    mrp:48  },
     {id:413,co:'pedia', cat:'tablet',    name:'Pediclav 625mg DT',             comp:'Amoxicillin 500mg + Clavulanic Acid 125mg (Dispersible)',            pack:'Strip of 6 Tablets',     mrp:178 },
+    /* EXTRA PEDIAZONE TABLETS */
+    {id:608,co:'pedia', cat:'tablet',    name:'Pedirab 10mg DT',               comp:'Rabeprazole 10mg (Dispersible)',                                    pack:'Strip of 10 Tablets',    mrp:72  },
+    {id:609,co:'pedia', cat:'tablet',    name:'Pedivit D3 1000 DT',            comp:'Cholecalciferol 1000 IU (Dispersible)',                             pack:'Strip of 10 Tablets',    mrp:88  },
+    {id:610,co:'pedia', cat:'tablet',    name:'Pediace 100mg DT',              comp:'Aceclofenac 100mg (Dispersible)',                                   pack:'Strip of 10 Tablets',    mrp:78  },
 
     /* CAPSULES / SACHETS */
     {id:82, co:'pedia', cat:'capsule',   name:'Esomopedia 10mg Sachets',       comp:'Esomeprazole 10mg Granules',                                        pack:'Box of 10 Sachets',      mrp:110 },
@@ -1054,10 +1020,13 @@ function pharmaStore(){
     {id:213,co:'pedia', cat:'capsule',   name:'PediD3 1000 IU Cap',            comp:'Cholecalciferol (Vitamin D3) 1000 IU',                              pack:'Strip of 10 Capsules',   mrp:88  },
     {id:214,co:'pedia', cat:'capsule',   name:'Pedizyme Sachet',               comp:'Amylase + Papain + Protease + Cellulase / Sachet',                  pack:'Box of 10 Sachets',      mrp:135 },
     {id:215,co:'pedia', cat:'capsule',   name:'Pediprob ORS Sachet',           comp:'Lactobacillus 2.5 Billion + ORS Electrolytes',                      pack:'Box of 10 Sachets',      mrp:118 },
-    /* NEW PEDIAZONE CAPSULES */
     {id:414,co:'pedia', cat:'capsule',   name:'PediCal D3 Sachet',             comp:'Calcium Carbonate 500mg + Vitamin D3 250 IU / Sachet',              pack:'Box of 15 Sachets',      mrp:155 },
     {id:415,co:'pedia', cat:'capsule',   name:'Pedimulti Sachet',              comp:'Multivitamin + Multimineral + Taurine / Sachet',                    pack:'Box of 10 Sachets',      mrp:178 },
     {id:416,co:'pedia', cat:'capsule',   name:'Pedigluta Sachet',              comp:'L-Glutamine 5g + Zinc 10mg + Vitamin C 50mg / Sachet',              pack:'Box of 10 Sachets',      mrp:215 },
+    /* EXTRA PEDIAZONE CAPSULES */
+    {id:611,co:'pedia', cat:'capsule',   name:'Pediome 20mg Cap',              comp:'Omeprazole 20mg',                                                   pack:'Strip of 10 Capsules',   mrp:65  },
+    {id:612,co:'pedia', cat:'capsule',   name:'Pediprobio Cap',                comp:'Lactobacillus 15 Billion CFU + Fructooligosaccharide',              pack:'Strip of 10 Capsules',   mrp:145 },
+    {id:613,co:'pedia', cat:'capsule',   name:'PediZn Sachet',                 comp:'Zinc Acetate 20mg + ORS Electrolytes / Sachet',                     pack:'Box of 10 Sachets',      mrp:98  },
 
     /* INJECTIONS */
     {id:85, co:'pedia', cat:'injection', name:'Pedimox 250/50mg Inj',          comp:'Amoxicillin 250mg + Clavulanic Acid 50mg IV',                       pack:'Vial of 10ml',           mrp:148 },
@@ -1066,11 +1035,14 @@ function pharmaStore(){
     {id:216,co:'pedia', cat:'injection', name:'Pedicef 250mg Inj',             comp:'Ceftriaxone 250mg IV',                                              pack:'Vial of 10ml',           mrp:118 },
     {id:217,co:'pedia', cat:'injection', name:'Pediond 2mg Inj',               comp:'Ondansetron 2mg/ml IV',                                             pack:'Ampoule of 2ml',         mrp:38  },
     {id:218,co:'pedia', cat:'injection', name:'Pedicillin 500mg Inj',          comp:'Ampicillin 500mg IV',                                               pack:'Vial of 10ml',           mrp:85  },
-    /* NEW PEDIAZONE INJECTIONS */
     {id:417,co:'pedia', cat:'injection', name:'Pedicef 1g Inj',                comp:'Ceftriaxone 1g IV',                                                 pack:'Vial of 10ml',           mrp:215 },
     {id:418,co:'pedia', cat:'injection', name:'Pedidex 4mg Inj',               comp:'Dexamethasone Sodium Phosphate 4mg/ml',                             pack:'Ampoule of 2ml',         mrp:32  },
     {id:419,co:'pedia', cat:'injection', name:'Pediphen 50mg Inj',             comp:'Phenobarbitone 50mg/ml (Anticonvulsant)',                            pack:'Ampoule of 2ml',         mrp:65  },
     {id:420,co:'pedia', cat:'injection', name:'Pedifur 10mg Inj',              comp:'Furosemide 10mg/ml',                                                pack:'Ampoule of 2ml',         mrp:28  },
+    /* EXTRA PEDIAZONE INJECTIONS */
+    {id:614,co:'pedia', cat:'injection', name:'Pedipan 40mg Inj',              comp:'Pantoprazole Sodium 40mg IV',                                       pack:'Vial of 10ml',           mrp:85  },
+    {id:615,co:'pedia', cat:'injection', name:'Pedihydro 25mg Inj',            comp:'Hydrocortisone Sodium Succinate 25mg IV',                           pack:'Vial of 5ml',            mrp:48  },
+    {id:616,co:'pedia', cat:'injection', name:'Pedimag 500mg Inj',             comp:'Magnesium Sulphate 500mg/ml',                                       pack:'Ampoule of 2ml',         mrp:38  },
 
     /* DROPS */
     {id:88, co:'pedia', cat:'drop',      name:'Disopod 25 Drops',              comp:'Cefpodoxime 25mg / 1ml — Orange & Peppermint',                      pack:'Bottle of 10ml',         mrp:65  },
@@ -1081,12 +1053,15 @@ function pharmaStore(){
     {id:220,co:'pedia', cat:'drop',      name:'Pedifen Drops',                 comp:'Ibuprofen 100mg / 5ml Drops',                                       pack:'Bottle of 30ml',         mrp:62  },
     {id:221,co:'pedia', cat:'drop',      name:'Pedizinc Drops',                comp:'Zinc Sulphate 5mg / 1ml',                                           pack:'Bottle of 10ml',         mrp:55  },
     {id:222,co:'pedia', cat:'drop',      name:'Pedigripe Drops',               comp:'Simethicone 40mg + Dill Oil 0.05ml / 1ml',                          pack:'Bottle of 15ml',         mrp:72  },
-    /* NEW PEDIAZONE DROPS */
     {id:421,co:'pedia', cat:'drop',      name:'Pedimox 100 Drops',             comp:'Amoxicillin 100mg / 1ml — Strawberry',                              pack:'Bottle of 15ml',         mrp:58  },
     {id:422,co:'pedia', cat:'drop',      name:'Pediazith 100 Drops',           comp:'Azithromycin 100mg / 5ml Oral Suspension Drops',                    pack:'Bottle of 15ml',         mrp:72  },
     {id:423,co:'pedia', cat:'drop',      name:'PediD3 800 Drops',              comp:'Cholecalciferol 800 IU / drop',                                     pack:'Bottle of 30ml',         mrp:178 },
     {id:424,co:'pedia', cat:'drop',      name:'Pediment 5mg Drops',            comp:'Montelukast 5mg / 5ml Drops — Cherry',                              pack:'Bottle of 30ml',         mrp:125 },
     {id:425,co:'pedia', cat:'drop',      name:'Pediorm Drops',                 comp:'Sodium Chloride 0.45% + Glucose 2.5% ORS Drops',                   pack:'Bottle of 100ml',        mrp:42  },
+    /* EXTRA PEDIAZONE DROPS */
+    {id:617,co:'pedia', cat:'drop',      name:'Pedicof Drops',                 comp:'Dextromethorphan 5mg + CPM 0.5mg / 1ml',                            pack:'Bottle of 30ml',         mrp:55  },
+    {id:618,co:'pedia', cat:'drop',      name:'Pedilevo Drops',                comp:'Levocetirizine 2.5mg / 5ml Drops',                                  pack:'Bottle of 15ml',         mrp:48  },
+    {id:619,co:'pedia', cat:'drop',      name:'Pediflu 100 Drops',             comp:'Fluconazole 50mg / 5ml Drops',                                      pack:'Bottle of 35ml',         mrp:88  },
   ];
 
   const iconMap = {
@@ -1155,7 +1130,6 @@ function pharmaStore(){
       if(this.sortBy==='rate-asc')  arr.sort((a,b)=>a.rate-b.rate);
       if(this.sortBy==='rate-desc') arr.sort((a,b)=>b.rate-a.rate);
       if(this.sortBy==='name')      arr.sort((a,b)=>a.name.localeCompare(b.name));
-      if(this.sortBy==='savings')   arr.sort((a,b)=>(b.mrp-b.rate)-(a.mrp-a.rate));
       return arr;
     },
 
