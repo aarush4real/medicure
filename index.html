@@ -710,7 +710,7 @@ main{flex:1;padding:24px;min-width:0;overflow:hidden}
     </div>
 
     <div class="hd-right">
-      <span class="badge-rx">🏥 Best Retail Price</span>
+      <span class="badge-rx">⭐ Best Retail Price</span>
       <button class="cart-btn" @click="cartOpen=true">
         <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
         Cart
@@ -748,6 +748,31 @@ main{flex:1;padding:24px;min-width:0;overflow:hidden}
         <div class="co-sub">Show all <span x-text="products.length"></span> products</div>
       </div>
     </div>
+
+    
+    <div class="co-card" :class="{on:aCo==='w'}" @click="aCo=aCo==='w'?null:'w'">
+      <div class="co-logo-wrap">
+        <img src="https://wellgo.co.in/wp-content/uploads/2020/06/cropped-wellgo-logo-1-270x270.png"
+             onerror="this.style.display='none';this.parentNode.innerText='W'" alt="Wellgo"/>
+      </div>
+      <div class="co-info">
+        <div class="co-name">Wellgo Pharma</div>
+        <div class="co-sub">Chandigarh · WHO-GMP</div>
+      </div>
+    </div>
+
+    <div class="co-card" :class="{on:aCo==='p'}" @click="aCo=aCo==='p'?null:'p'">
+      <div class="co-logo-wrap">
+        <img src="https://pediazone.in/wp-content/uploads/2023/06/cropped-favicon-3-270x270.png"
+             onerror="this.style.display='none';this.parentNode.innerText='P'" alt="PediaZone"/>
+      </div>
+      <div class="co-info">
+        <div class="co-name">PediaZone</div>
+        <div class="co-sub">Panchkula · Paediatric</div>
+      </div>
+    </div>
+  </div>
+  
     <template x-for="c in companies" :key="c.id">
       <div class="company-card" :class="{active:aCo===c.id}" @click="aCo=aCo===c.id?null:c.id">
         <div class="co-dot" :style="'background:'+c.color"></div>
