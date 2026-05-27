@@ -340,6 +340,14 @@ main{flex:1;padding:24px;min-width:0;overflow:hidden}
 }
 .q-btn:hover{background:rgba(26,111,196,.32)}
 .q-num{font-weight:800;font-size:.95rem;color:var(--c-text);min-width:28px;text-align:center}
+.q-input{
+  width:52px;text-align:center;font-weight:800;font-size:.9rem;color:var(--c-text);
+  background:rgba(255,255,255,.07);border:1px solid var(--c-blue);border-radius:7px;
+  padding:4px 6px;outline:none;font-family:inherit;
+  -moz-appearance:textfield;
+}
+.q-input::-webkit-outer-spin-button,.q-input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.q-input:focus{border-color:var(--c-blue-light);box-shadow:0 0 0 2px rgba(26,111,196,.2)}
 .empty-state{text-align:center;padding:80px 20px;color:var(--c-text-muted)}
 .empty-state .ei{font-size:3rem;margin-bottom:12px}
 .empty-state h3{font-size:1.1rem;font-weight:700;margin-bottom:6px;color:var(--c-text)}
@@ -394,6 +402,14 @@ main{flex:1;padding:24px;min-width:0;overflow:hidden}
 }
 .cq-btn:hover{background:rgba(26,111,196,.32)}
 .cq-n{font-weight:800;font-size:.82rem;color:var(--c-text);min-width:20px;text-align:center}
+.cq-input{
+  width:44px;text-align:center;font-weight:800;font-size:.82rem;color:var(--c-text);
+  background:rgba(255,255,255,.07);border:1px solid var(--c-blue);border-radius:6px;
+  padding:3px 4px;outline:none;font-family:inherit;
+  -moz-appearance:textfield;
+}
+.cq-input::-webkit-outer-spin-button,.cq-input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.cq-input:focus{border-color:var(--c-blue-light);box-shadow:0 0 0 2px rgba(26,111,196,.18)}
 .cart-foot{
   border-top:1px solid var(--c-border);
   padding:18px 22px 22px;
@@ -776,7 +792,11 @@ select.co-input option{background:var(--c-card)}
           <template x-if="getQty(p.id)">
             <div class="qty-ctrl">
               <button class="q-btn" @click="rem(p.id)">−</button>
-              <span class="q-num" x-text="getQty(p.id)"></span>
+              <input class="q-input" type="number" min="0"
+                :value="getQty(p.id)"
+                @change="setQty(p, $event.target.value)"
+                @blur="if(!$event.target.value||+$event.target.value<1){remAll(p.id)}"
+              />
               <button class="q-btn" @click="add(p)">+</button>
             </div>
           </template>
@@ -823,7 +843,11 @@ select.co-input option{background:var(--c-card)}
           </div>
           <div class="ci-qty">
             <button class="cq-btn" @click="rem(item.id)">−</button>
-            <span class="cq-n" x-text="item.qty"></span>
+            <input class="cq-input" type="number" min="1"
+              :value="item.qty"
+              @change="setQty(item, $event.target.value)"
+              @blur="if(!$event.target.value||+$event.target.value<1){remAll(item.id)}"
+            />
             <button class="cq-btn" @click="add(item)">+</button>
           </div>
         </div>
@@ -855,7 +879,7 @@ select.co-input option{background:var(--c-card)}
       <div class="co-form-grid">
         <div class="co-field">
           <label class="co-label">Full Name *</label>
-          <input class="co-input" :class="{'error': coErrors.name}" type="text" placeholder="Harish Medicos" x-model="coForm.name" @input="coErrors.name=false"/>
+          <input class="co-input" :class="{'error': coErrors.name}" type="text" placeholder="Dr. Aarush Sharma" x-model="coForm.name" @input="coErrors.name=false"/>
           <span class="co-err" :class="{'show': coErrors.name}">Please enter your name</span>
         </div>
         <div class="co-field">
@@ -865,7 +889,7 @@ select.co-input option{background:var(--c-card)}
         </div>
         <div class="co-field full">
           <label class="co-label">Clinic / Hospital / Shop Name</label>
-          <input class="co-input" type="text" placeholder="City Medical Store, Jalalabad" x-model="coForm.clinic"/>
+          <input class="co-input" type="text" placeholder="City Medical Store, Ludhiana" x-model="coForm.clinic"/>
         </div>
         <div class="co-field full">
           <label class="co-label">Delivery Address *</label>
@@ -874,12 +898,12 @@ select.co-input option{background:var(--c-card)}
         </div>
         <div class="co-field">
           <label class="co-label">City *</label>
-          <input class="co-input" :class="{'error': coErrors.city}" type="text" placeholder="Jalalabad" x-model="coForm.city" @input="coErrors.city=false"/>
+          <input class="co-input" :class="{'error': coErrors.city}" type="text" placeholder="Ludhiana" x-model="coForm.city" @input="coErrors.city=false"/>
           <span class="co-err" :class="{'show': coErrors.city}">Enter city</span>
         </div>
         <div class="co-field">
           <label class="co-label">PIN Code *</label>
-          <input class="co-input" :class="{'error': coErrors.pin}" type="text" placeholder="152024" x-model="coForm.pin" @input="coErrors.pin=false" maxlength="6"/>
+          <input class="co-input" :class="{'error': coErrors.pin}" type="text" placeholder="141001" x-model="coForm.pin" @input="coErrors.pin=false" maxlength="6"/>
           <span class="co-err" :class="{'show': coErrors.pin}">Enter valid 6-digit PIN</span>
         </div>
         <div class="co-field full">
@@ -897,8 +921,11 @@ select.co-input option{background:var(--c-card)}
         <div class="co-pay-opt" :class="{selected:coForm.payment==='upi'}" @click="coForm.payment='upi'">
           <span class="co-pay-icon">📱</span> UPI / QR
         </div>
+        <div class="co-pay-opt" :class="{selected:coForm.payment==='neft'}" @click="coForm.payment='neft'">
+          <span class="co-pay-icon">🏦</span> NEFT / RTGS
+        </div>
+      </div>
 
-<p></p>
       <!-- Order Summary -->
       <div class="co-section-label">🛒 Order Summary</div>
       <div class="co-order-summary">
@@ -954,12 +981,12 @@ select.co-input option{background:var(--c-card)}
           <div class="receipt-item">
             <div class="ri-left">
               <div class="ri-name"><span x-text="item.icon"></span> <span x-text="item.name"></span></div>
-              <div class="ri-detail" x-text="item.co==='wellgo'?'Wellgo Pharmaceuticals':'PediaZone'"></div>
-              <div class="ri-qty">Qty: <span x-text="item.qty"></span> × ₹<span x-text="item.rate"></span></div>
+              <div class="ri-qty" style="font-size:.72rem;color:var(--c-text-muted);margin-top:2px">
+                ₹<span x-text="item.rate"></span> × <span x-text="item.qty"></span>
+              </div>
             </div>
             <div class="ri-price">
-              <div class="ri-amount">₹<span x-text="(item.rate*item.qty).toFixed(0)"></span></div>
-              <div class="ri-mrp-s">MRP ₹<span x-text="(item.mrp*item.qty).toFixed(0)"></span></div>
+              <div class="ri-amount">₹<span x-text="(item.rate * item.qty).toFixed(0)"></span></div>
             </div>
           </div>
         </template>
@@ -1265,6 +1292,121 @@ function pharmaStore(){
     {id:617,co:'pedia', cat:'drop',      name:'Pedicof Drops',                 comp:'Dextromethorphan 5mg + CPM 0.5mg / 1ml',                            pack:'Bottle of 30ml',         mrp:55  },
     {id:618,co:'pedia', cat:'drop',      name:'Pedilevo Drops',                comp:'Levocetirizine 2.5mg / 5ml Drops',                                  pack:'Bottle of 15ml',         mrp:48  },
     {id:619,co:'pedia', cat:'drop',      name:'Pediflu 100 Drops',             comp:'Fluconazole 50mg / 5ml Drops',                                      pack:'Bottle of 35ml',         mrp:88  },
+
+    /* ═══════════════════════════════════════════════════════ */
+    /* ═══ NEW ADDITIONS — WELLGO PHARMACEUTICALS ═══════════ */
+    /* ═══════════════════════════════════════════════════════ */
+
+    /* TABLETS — REQUESTED */
+    {id:700,co:'wellgo',cat:'tablet',    name:'Rabuwel DSR',                   comp:'Rabeprazole 20mg + Domperidone 30mg SR',                             pack:'Strip of 10 Tablets',    mrp:155 },
+    {id:701,co:'wellgo',cat:'tablet',    name:'Welpanto EC 40mg',              comp:'Pantoprazole Sodium 40mg (Enteric Coated — New Batch)',              pack:'Strip of 10 Tablets',    mrp:88  },
+    {id:702,co:'wellgo',cat:'tablet',    name:'Welpanto D 10mg/40mg',          comp:'Pantoprazole 40mg + Domperidone 10mg (SR)',                          pack:'Strip of 10 Tablets',    mrp:118 },
+    {id:703,co:'wellgo',cat:'tablet',    name:'Fixiwel CV 200mg',              comp:'Cefixime 200mg + Clavulanic Acid 125mg',                             pack:'Strip of 6 Tablets',     mrp:310 },
+    {id:704,co:'wellgo',cat:'tablet',    name:'Nandgo 50mg',                   comp:'Nandrolone Decanoate 50mg (Anabolic)',                               pack:'Strip of 10 Tablets',    mrp:175 },
+    {id:705,co:'wellgo',cat:'tablet',    name:'Atrimol S 100mg/325mg',         comp:'Aceclofenac 100mg + Paracetamol 325mg + Serratiopeptidase 15mg',    pack:'Strip of 10 Tablets',    mrp:155 },
+    {id:706,co:'wellgo',cat:'tablet',    name:'Nimpwel P 100mg/325mg',         comp:'Nimesulide 100mg + Paracetamol 325mg',                              pack:'Strip of 10 Tablets',    mrp:82  },
+    {id:707,co:'wellgo',cat:'tablet',    name:'Nimpwel SP',                    comp:'Nimesulide 100mg + Paracetamol 325mg + Serratiopeptidase 15mg',     pack:'Strip of 10 Tablets',    mrp:128 },
+    {id:708,co:'wellgo',cat:'tablet',    name:'Volwel 50mg',                   comp:'Diclofenac Sodium 50mg (Enteric Coated)',                            pack:'Strip of 10 Tablets',    mrp:72  },
+    {id:709,co:'wellgo',cat:'tablet',    name:'Volwel MR',                     comp:'Diclofenac 50mg + Methocarbamol 500mg',                             pack:'Strip of 10 Tablets',    mrp:118 },
+    {id:710,co:'wellgo',cat:'tablet',    name:'Volwel SR 100mg',               comp:'Diclofenac Sodium 100mg Sustained Release',                         pack:'Strip of 10 Tablets',    mrp:98  },
+    {id:711,co:'wellgo',cat:'tablet',    name:'Multiwel Tablet',               comp:'Multivitamin + Multimineral + Antioxidants',                        pack:'Strip of 15 Tablets',    mrp:148 },
+    {id:712,co:'wellgo',cat:'tablet',    name:'Welsun D3 60K',                 comp:'Cholecalciferol (Vitamin D3) 60,000 IU',                            pack:'Strip of 4 Tablets',     mrp:158 },
+    {id:713,co:'wellgo',cat:'tablet',    name:'Welsun D3 1000 IU',             comp:'Cholecalciferol 1000 IU + Calcium 500mg + Magnesium 50mg',         pack:'Strip of 15 Tablets',    mrp:135 },
+    {id:714,co:'wellgo',cat:'tablet',    name:'Calowel K27',                   comp:'Calcium Carbonate 500mg + Vitamin D3 250 IU + Vitamin K2-7 45mcg', pack:'Strip of 15 Tablets',    mrp:185 },
+    {id:715,co:'wellgo',cat:'tablet',    name:'Calowel',                       comp:'Calcium Carbonate 1250mg + Vitamin D3 250 IU',                      pack:'Strip of 15 Tablets',    mrp:118 },
+    {id:716,co:'wellgo',cat:'tablet',    name:'Calowel XT',                    comp:'Calcium Citrate 1000mg + Vitamin D3 400 IU + Zinc 4mg + Magnesium', pack:'Strip of 15 Tablets',    mrp:215 },
+
+    /* TABLETS — EXTRA NEW */
+    {id:717,co:'wellgo',cat:'tablet',    name:'Welcod 10mg/325mg',             comp:'Codeine 10mg + Paracetamol 325mg',                                  pack:'Strip of 10 Tablets',    mrp:145 },
+    {id:718,co:'wellgo',cat:'tablet',    name:'Welvic 100mg',                  comp:'Acyclovir 200mg',                                                   pack:'Strip of 5 Tablets',     mrp:88  },
+    {id:719,co:'wellgo',cat:'tablet',    name:'Welchlor 10mg',                 comp:'Chlorpheniramine Maleate 4mg + Phenylephrine 10mg',                 pack:'Strip of 10 Tablets',    mrp:48  },
+    {id:720,co:'wellgo',cat:'tablet',    name:'Welgab M',                      comp:'Gabapentin 300mg + Methylcobalamin 500mcg',                         pack:'Strip of 10 Tablets',    mrp:205 },
+    {id:721,co:'wellgo',cat:'tablet',    name:'Weldolo 650mg',                 comp:'Paracetamol 650mg (Extended Release)',                              pack:'Strip of 15 Tablets',    mrp:65  },
+    {id:722,co:'wellgo',cat:'tablet',    name:'Weltor 20mg',                   comp:'Atorvastatin 20mg + Ezetimibe 10mg',                                pack:'Strip of 10 Tablets',    mrp:198 },
+    {id:723,co:'wellgo',cat:'tablet',    name:'Welten 50mg',                   comp:'Teneligliptin Hydrobromide 20mg',                                   pack:'Strip of 10 Tablets',    mrp:215 },
+    {id:724,co:'wellgo',cat:'tablet',    name:'Welcip 500mg',                  comp:'Ciprofloxacin HCl 500mg',                                           pack:'Strip of 10 Tablets',    mrp:82  },
+    {id:725,co:'wellgo',cat:'tablet',    name:'Welsartan 50mg',                comp:'Losartan Potassium 50mg',                                           pack:'Strip of 10 Tablets',    mrp:88  },
+    {id:726,co:'wellgo',cat:'tablet',    name:'Welpiro 7.5mg',                 comp:'Piroxicam 20mg',                                                    pack:'Strip of 10 Tablets',    mrp:68  },
+    {id:727,co:'wellgo',cat:'tablet',    name:'Welpreg 75mg SR',               comp:'Pregabalin 75mg SR',                                                pack:'Strip of 10 Tablets',    mrp:135 },
+    {id:728,co:'wellgo',cat:'tablet',    name:'Welpreg 150mg SR',              comp:'Pregabalin 150mg SR',                                               pack:'Strip of 10 Tablets',    mrp:188 },
+
+    /* CAPSULES — NEW */
+    {id:750,co:'wellgo',cat:'capsule',   name:'Multiwel Cap',                  comp:'Multivitamin + Multimineral + Lycopene + Selenium + Zinc',          pack:'Strip of 10 Capsules',   mrp:188 },
+    {id:751,co:'wellgo',cat:'capsule',   name:'Wellyco Cap',                   comp:'Lycopene 5000mcg + Vitamins A, C, E + Selenium + Zinc',             pack:'Strip of 10 Capsules',   mrp:165 },
+    {id:752,co:'wellgo',cat:'capsule',   name:'Welcal D3 Softgel',             comp:'Calcium Carbonate 500mg + Vitamin D3 400 IU Softgel',              pack:'Strip of 10 Softgels',   mrp:145 },
+    {id:753,co:'wellgo',cat:'capsule',   name:'Welsun D3 60K Cap',             comp:'Cholecalciferol 60,000 IU Softgel Capsule',                         pack:'Strip of 4 Capsules',    mrp:158 },
+    {id:754,co:'wellgo',cat:'capsule',   name:'WelOmega HP',                   comp:'EPA 360mg + DHA 240mg + Vitamin E 10mg',                            pack:'Strip of 10 Softgels',   mrp:225 },
+    {id:755,co:'wellgo',cat:'capsule',   name:'Welnerv PG Cap',                comp:'Pregabalin 75mg + Mecobalamin 750mcg Capsule',                      pack:'Strip of 10 Capsules',   mrp:195 },
+    {id:756,co:'wellgo',cat:'capsule',   name:'Welbio 10 Cap',                 comp:'Lactobacillus rhamnosus + Bifidobacterium 10 Billion CFU',          pack:'Strip of 10 Capsules',   mrp:198 },
+
+    /* SYRUPS — NEW */
+    {id:760,co:'wellgo',cat:'syrup',     name:'Fluwel-LS Syrup',               comp:'Levosalbutamol 1mg + Ambroxol 30mg + Guaifenesin 50mg / 5ml',      pack:'Bottle of 100ml',        mrp:98  },
+    {id:761,co:'wellgo',cat:'syrup',     name:'Multiwel Syrup',                comp:'Multivitamin B-Complex + Zinc + Taurine + Ginseng / 5ml',           pack:'Bottle of 200ml',        mrp:155 },
+    {id:762,co:'wellgo',cat:'syrup',     name:'Welcough EX Syrup',             comp:'Dextromethorphan 10mg + Guaifenesin 100mg + Menthol 1mg / 5ml',     pack:'Bottle of 100ml',        mrp:88  },
+    {id:763,co:'wellgo',cat:'syrup',     name:'Welprobio Syrup',               comp:'Lactobacillus 10B CFU + Fructooligosaccharide / 5ml',               pack:'Bottle of 60ml',         mrp:145 },
+    {id:764,co:'wellgo',cat:'syrup',     name:'Welhepa Syrup',                 comp:'Silymarin 140mg + Vitamin B12 + Folic Acid / 5ml',                  pack:'Bottle of 200ml',        mrp:128 },
+
+    /* DRY SYRUPS — NEW */
+    {id:770,co:'wellgo',cat:'drysyrup',  name:'Fixiwel CV 50mg DS',            comp:'Cefixime 50mg + Clavulanic Acid 31.25mg / 5ml',                     pack:'Bottle 30ml + WFI',      mrp:158 },
+    {id:771,co:'wellgo',cat:'drysyrup',  name:'Welfix 200 CV DS',              comp:'Cefixime 200mg + Clavulanic Acid 125mg / 5ml',                      pack:'Bottle 30ml + WFI',      mrp:225 },
+    {id:772,co:'wellgo',cat:'drysyrup',  name:'Welcef CV 250mg DS',            comp:'Cefuroxime 125mg + Clavulanic Acid 62.5mg / 5ml',                   pack:'Bottle 30ml + WFI',      mrp:185 },
+
+    /* INJECTIONS — NEW */
+    {id:780,co:'wellgo',cat:'injection', name:'Volwel 75mg Inj',               comp:'Diclofenac Sodium 75mg/3ml IM (Aqueous)',                           pack:'Ampoule of 3ml',         mrp:45  },
+    {id:781,co:'wellgo',cat:'injection', name:'Welcef TZ 2.25g Inj',           comp:'Piperacillin 2g + Tazobactam 250mg IV',                             pack:'Vial of 10ml',           mrp:245 },
+    {id:782,co:'wellgo',cat:'injection', name:'Welicef 1g Inj',                comp:'Cefuroxime Sodium 1g IV',                                           pack:'Vial of 10ml',           mrp:278 },
+    {id:783,co:'wellgo',cat:'injection', name:'Welipred 125mg Inj',            comp:'Methylprednisolone Sodium Succinate 125mg IV',                      pack:'Vial of 5ml',            mrp:185 },
+    {id:784,co:'wellgo',cat:'injection', name:'Welmero 500mg Inj',             comp:'Meropenem 500mg IV',                                                pack:'Vial of 20ml',           mrp:388 },
+    {id:785,co:'wellgo',cat:'injection', name:'Welmero 1g Inj',                comp:'Meropenem 1g IV',                                                   pack:'Vial of 20ml',           mrp:658 },
+    {id:786,co:'wellgo',cat:'injection', name:'Welrabi 40mg Inj',              comp:'Rabeprazole Sodium 40mg IV',                                        pack:'Vial of 10ml',           mrp:115 },
+    {id:787,co:'wellgo',cat:'injection', name:'Welvank 500mg Inj',             comp:'Vancomycin HCl 500mg IV',                                           pack:'Vial of 10ml',           mrp:478 },
+
+    /* OINTMENTS — REQUESTED + EXTRA */
+    {id:790,co:'wellgo',cat:'ointment',  name:'Weliderm Cream',                comp:'Clobetasol Propionate 0.05% + Neomycin 0.5% + Miconazole 2%',      pack:'Tube of 15g',            mrp:118 },
+    {id:791,co:'wellgo',cat:'ointment',  name:'Weliderm B Cream',              comp:'Betamethasone 0.05% + Clotrimazole 1% + Neomycin 0.5%',            pack:'Tube of 20g',            mrp:135 },
+    {id:792,co:'wellgo',cat:'ointment',  name:'Weliderm G Cream',              comp:'Gentamicin Sulphate 0.1% + Betamethasone Valerate 0.1%',           pack:'Tube of 20g',            mrp:98  },
+    {id:793,co:'wellgo',cat:'ointment',  name:'Welvolini Gel',                 comp:'Diclofenac Sodium 1% + Methyl Salicylate 10% + Menthol 5%',        pack:'Tube of 30g',            mrp:125 },
+    {id:794,co:'wellgo',cat:'ointment',  name:'Welvolini Plus Gel',            comp:'Diclofenac Diethylamine 1.16% + Linseed Oil 3%',                   pack:'Tube of 30g',            mrp:148 },
+    {id:795,co:'wellgo',cat:'ointment',  name:'Welscab Lotion',                comp:'Permethrin 5% Lotion (Anti-Scabies)',                               pack:'Bottle of 60ml',         mrp:175 },
+    {id:796,co:'wellgo',cat:'ointment',  name:'Welfung Cream',                 comp:'Clotrimazole 1% + Beclomethasone 0.025% + Neomycin 0.5%',          pack:'Tube of 15g',            mrp:108 },
+    {id:797,co:'wellgo',cat:'ointment',  name:'Welacne Gel',                   comp:'Clindamycin 1% + Nicotinamide 4% Gel',                             pack:'Tube of 15g',            mrp:155 },
+    {id:798,co:'wellgo',cat:'ointment',  name:'Welskin Cream',                 comp:'Fluocinolone Acetonide 0.01% + Hydroquinone 2% + Tretinoin 0.05%', pack:'Tube of 15g',            mrp:195 },
+    {id:799,co:'wellgo',cat:'ointment',  name:'Welzit Gel',                    comp:'Salicylic Acid 0.5% + Zinc Acetate 1.2% (Acne Gel)',              pack:'Tube of 15g',            mrp:128 },
+
+    /* ═══════════════════════════════════════════════════════ */
+    /* ═══ NEW ADDITIONS — PEDIAZONE ════════════════════════ */
+    /* ═══════════════════════════════════════════════════════ */
+
+    /* TABLETS — REQUESTED (PEDIA) */
+    {id:800,co:'pedia', cat:'tablet',    name:'Lemonto-Kid Tablet',            comp:'Levocetirizine 2.5mg + Montelukast 4mg (Chewable)',                 pack:'Strip of 10 Tablets',    mrp:115 },
+    {id:801,co:'pedia', cat:'tablet',    name:'Fluwel-Kid Tablet',             comp:'Paracetamol 125mg + Chlorpheniramine 1mg (Chewable)',               pack:'Strip of 10 Tablets',    mrp:48  },
+    {id:802,co:'pedia', cat:'tablet',    name:'Nimpwel Kid 50mg',              comp:'Nimesulide 50mg (Paediatric) Mouth Dissolving',                     pack:'Strip of 10 Tablets',    mrp:55  },
+    {id:803,co:'pedia', cat:'tablet',    name:'Pedifex 200mg',                 comp:'Cefixime 200mg',                                                    pack:'Strip of 6 Tablets',     mrp:178 },
+    {id:804,co:'pedia', cat:'tablet',    name:'Pedipan 40mg Tab',              comp:'Pantoprazole Sodium 40mg (EC Tablet)',                              pack:'Strip of 10 Tablets',    mrp:88  },
+    {id:805,co:'pedia', cat:'tablet',    name:'Pedivit D3 1000',               comp:'Cholecalciferol 1000 IU + Calcium Carbonate 500mg',                 pack:'Strip of 15 Tablets',    mrp:128 },
+    {id:806,co:'pedia', cat:'tablet',    name:'Pedifolic 5mg',                 comp:'Folic Acid 5mg',                                                    pack:'Strip of 30 Tablets',    mrp:32  },
+    {id:807,co:'pedia', cat:'tablet',    name:'Pediiron XT',                   comp:'Ferrous Ascorbate 30mg + Folic Acid 0.5mg + Zinc 7.5mg (Paed)',    pack:'Strip of 30 Tablets',    mrp:95  },
+
+    /* SYRUPS — PEDIA NEW */
+    {id:820,co:'pedia', cat:'syrup',     name:'Lemonto-Kid Syrup',             comp:'Montelukast 4mg + Levocetirizine 2.5mg / 5ml — Strawberry',        pack:'Bottle of 60ml',         mrp:125 },
+    {id:821,co:'pedia', cat:'syrup',     name:'Fluwel-Kid Syrup',              comp:'Ambroxol 15mg + Levosalbutamol 1mg + Guaifenesin 25mg / 5ml',      pack:'Bottle of 100ml',        mrp:98  },
+    {id:822,co:'pedia', cat:'syrup',     name:'Nimpwel Kid Syrup',             comp:'Nimesulide 50mg / 5ml (Strawberry)',                                pack:'Bottle of 60ml',         mrp:72  },
+    {id:823,co:'pedia', cat:'syrup',     name:'Multiwel-Kid Syrup',            comp:'Multivitamin + Zinc + Taurine + DHA / 5ml — Mixed Fruit',          pack:'Bottle of 200ml',        mrp:168 },
+    {id:824,co:'pedia', cat:'syrup',     name:'Pedicalm Plus Syrup',           comp:'Cyproheptadine 2mg + Tricholine Citrate 275mg / 5ml — Pineapple',  pack:'Bottle of 110ml',        mrp:138 },
+    {id:825,co:'pedia', cat:'syrup',     name:'Pedivit D3 Syrup',              comp:'Cholecalciferol 400 IU + Calcium Gluconate / 5ml',                  pack:'Bottle of 100ml',        mrp:95  },
+    {id:826,co:'pedia', cat:'syrup',     name:'Pediiron DS Syrup',             comp:'Ferrous Sulphate 30mg + Folic Acid 0.75mg + Zinc 5mg / 5ml',       pack:'Bottle of 100ml',        mrp:88  },
+
+    /* DRY SYRUPS — PEDIA NEW */
+    {id:840,co:'pedia', cat:'drysyrup',  name:'Lemonto CV 50mg DS',            comp:'Amoxicillin 200mg + Clavulanic Acid 28.5mg + LAB / 5ml',           pack:'Bottle 30ml + WFI',      mrp:128 },
+    {id:841,co:'pedia', cat:'drysyrup',  name:'Fixiwel-Kid 50mg DS',           comp:'Cefixime 50mg + LAB (Lactic Acid Bacillus) / 5ml',                 pack:'Bottle 30ml + WFI',      mrp:112 },
+    {id:842,co:'pedia', cat:'drysyrup',  name:'Pedizith 200mg DS',             comp:'Azithromycin 200mg / 5ml Suspension',                              pack:'Bottle 15ml + WFI',      mrp:115 },
+
+    /* OINTMENTS — PEDIA NEW */
+    {id:850,co:'pedia', cat:'ointment',  name:'Pediderm Cream',                comp:'Zinc Oxide 10% + Calamine 8% + Boric Acid 3% (Nappy Rash)',       pack:'Tube of 30g',            mrp:88  },
+    {id:851,co:'pedia', cat:'ointment',  name:'Pedifung Cream',                comp:'Miconazole Nitrate 2% (Paediatric Antifungal Cream)',              pack:'Tube of 15g',            mrp:75  },
+    {id:852,co:'pedia', cat:'ointment',  name:'Pedimoist Lotion',              comp:'Glycerin 5% + Lactic Acid 2% + Urea 2% (Baby Moisturiser)',       pack:'Bottle of 100ml',        mrp:115 },
+    {id:853,co:'pedia', cat:'ointment',  name:'Pedisep Cream',                 comp:'Mupirocin 2% (Topical Antibacterial)',                             pack:'Tube of 5g',             mrp:95  },
+    {id:854,co:'pedia', cat:'ointment',  name:'Pedicortex Cream',              comp:'Hydrocortisone Acetate 1% + Clioquinol 1%',                        pack:'Tube of 15g',            mrp:88  },
   ];
 
   const iconMap = {
@@ -1314,6 +1456,7 @@ function pharmaStore(){
       {id:'drysyrup',  name:'Dry Syrup',  icon:'🧪'},
       {id:'injection', name:'Injections', icon:'💉'},
       {id:'drop',      name:'Drops',      icon:'💧'},
+      {id:'ointment',  name:'Ointments',  icon:'🧴'},
     ],
 
     priceRanges:[
@@ -1368,6 +1511,19 @@ function pharmaStore(){
       if(idx===-1) return;
       if(this.cart[idx].qty>1) this.cart[idx].qty--;
       else this.cart.splice(idx,1);
+    },
+
+    remAll(id){
+      const idx=this.cart.findIndex(c=>c.id===id);
+      if(idx!==-1) this.cart.splice(idx,1);
+    },
+
+    setQty(p, val){
+      const n = parseInt(val);
+      if(!n || n < 1){ this.remAll(p.id); return; }
+      const i = this.cart.find(c=>c.id===p.id);
+      if(i) i.qty = n;
+      else this.cart.push({...p, qty:n});
     },
 
     clearAll(){ this.q=''; this.aCo=null; this.aCat=null; this.aPr=null; },
