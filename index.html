@@ -66,6 +66,9 @@ header{
   display:flex;align-items:center;gap:16px;
   padding:0 24px;height:66px;
 }
+/* Mobile header rows */
+.header-row1{display:flex;align-items:center;width:100%;gap:10px}
+.header-row2{display:none}
 .logo{display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0}
 .logo-mark{
   width:38px;height:38px;border-radius:9px;
@@ -141,7 +144,7 @@ aside{
   background:rgba(13,30,56,.7);backdrop-filter:blur(12px);
   border-right:1px solid var(--c-border);
   padding:0 0 32px;
-  position:sticky;top:66px;height:calc(100vh - 66px);overflow-y:auto;
+  position:sticky;top:var(--header-h,66px);height:calc(100vh - var(--header-h,66px));overflow-y:auto;
 }
 .aside-head{padding:20px 20px 16px;border-bottom:1px solid var(--c-border);background:rgba(26,111,196,.06);}
 .aside-head h2{font-size:.72rem;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;color:var(--c-text-dim)}
@@ -495,6 +498,7 @@ select.co-input option{background:var(--c-card)}
   .about-hero-inner{flex-direction:column;gap:20px}
 }
 @media(max-width:640px){
+  :root{--header-h:108px}
   main{padding:12px}
   .cart-drawer{width:100vw}
   .receipt-box{border-radius:14px}
@@ -506,31 +510,36 @@ select.co-input option{background:var(--c-card)}
   .qf-grid{grid-template-columns:1fr}
   .badge-rx{display:none}
 
-  /* Two-row mobile header */
-  header{position:sticky;top:0;z-index:200}
+  /* Two-row header: no fixed height, wrap naturally */
   .header-inner{
-    flex-wrap:wrap;height:auto;padding:10px 14px 0;gap:0;
+    height:auto;padding:10px 14px 0;
+    flex-direction:column;align-items:stretch;gap:0;
   }
-  .logo{flex:1;min-width:0}
+  .header-row1{
+    display:flex;align-items:center;gap:8px;
+    padding-bottom:8px;
+  }
   .logo-text{font-size:1rem}
   .logo-mark{width:32px;height:32px}
   .logo-mark svg{width:16px;height:16px}
   .hd-right{margin-left:auto;flex-shrink:0}
-  .cart-btn{padding:7px 12px;font-size:.8rem;gap:5px}
+  .cart-btn{padding:7px 12px;font-size:.82rem;gap:5px}
 
-  /* Nav tabs go full width on second row */
+  /* Tabs row: full width under logo/cart row */
+  .header-row2{
+    display:flex;border-top:1px solid var(--c-border);
+  }
   .nav-tabs{
-    display:flex;gap:0;margin-left:0;
-    width:100%;margin-top:8px;
-    border-top:1px solid var(--c-border);
-    padding:6px 0 6px;
+    display:flex;flex:1;gap:0;margin-left:0;
+    padding:6px 0;
     overflow-x:auto;-webkit-overflow-scrolling:touch;
     scrollbar-width:none;
   }
   .nav-tabs::-webkit-scrollbar{display:none}
+  .header-row1 .nav-tabs{display:none}
   .nav-tab{
     flex:1;text-align:center;
-    padding:7px 4px;font-size:.78rem;font-weight:700;
+    padding:7px 2px;font-size:.78rem;font-weight:700;
     border-radius:6px;white-space:nowrap;
     min-width:0;
   }
