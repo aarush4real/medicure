@@ -6,6 +6,7 @@
 <title>Medicure By Aarush</title>
 <link rel="icon" type="image/x-icon" href="https://png.pngtree.com/png-clipart/20240307/original/pngtree-medical-plus-button-symbol-png-free-download-png-image_14531815.png">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.13.5/cdn.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
 <style>
 :root{
@@ -47,14 +48,15 @@ body{
     radial-gradient(ellipse 40% 50% at 20% 80%, rgba(67,176,247,.08) 0%, transparent 50%),
     linear-gradient(135deg, #0b1628 0%, #0d1e38 50%, #091220 100%);
   background-attachment:fixed;
-  transition:background-image .05s;
 }
 ::-webkit-scrollbar{width:5px;height:5px}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:var(--c-border-light);border-radius:4px}
+
+/* ── HEADER ── */
 header{
   position:sticky;top:0;z-index:200;
-  background:rgba(9,18,38,.85);
+  background:rgba(9,18,38,.88);
   backdrop-filter:blur(18px);
   border-bottom:1px solid var(--c-border);
   box-shadow:0 2px 30px rgba(0,0,0,.4);
@@ -77,6 +79,21 @@ header{
   background:linear-gradient(90deg,var(--c-blue-light),var(--c-teal-light));
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
 }
+
+/* ── NAV TABS ── */
+.nav-tabs{display:flex;align-items:center;gap:4px;margin-left:8px}
+.nav-tab{
+  background:transparent;border:1px solid transparent;
+  color:var(--c-text-muted);padding:7px 16px;border-radius:8px;
+  font-size:.85rem;font-weight:600;cursor:pointer;font-family:inherit;
+  transition:all .18s;white-space:nowrap;
+}
+.nav-tab:hover{background:rgba(26,111,196,.1);color:var(--c-text);border-color:rgba(26,111,196,.2)}
+.nav-tab.active{
+  background:rgba(26,111,196,.18);border-color:rgba(26,111,196,.4);
+  color:var(--c-blue-light);
+}
+
 .searchbar{
   flex:1;max-width:500px;
   display:flex;align-items:center;
@@ -85,26 +102,12 @@ header{
   border-radius:9px;overflow:hidden;
   transition:border-color .2s,box-shadow .2s;
 }
-.searchbar:focus-within{
-  border-color:var(--c-blue);
-  box-shadow:0 0 0 3px rgba(26,111,196,.15);
-}
-.searchbar input{
-  flex:1;background:transparent;border:none;outline:none;
-  color:var(--c-text);padding:10px 14px;font-size:.88rem;font-family:inherit;
-}
+.searchbar:focus-within{border-color:var(--c-blue);box-shadow:0 0 0 3px rgba(26,111,196,.15)}
+.searchbar input{flex:1;background:transparent;border:none;outline:none;color:var(--c-text);padding:10px 14px;font-size:.88rem;font-family:inherit;}
 .searchbar input::placeholder{color:var(--c-text-dim)}
-.searchbar button{
-  background:var(--c-blue);border:none;padding:10px 14px;
-  color:white;cursor:pointer;transition:background .2s;
-}
+.searchbar button{background:var(--c-blue);border:none;padding:10px 14px;color:white;cursor:pointer;transition:background .2s;}
 .searchbar button:hover{background:var(--c-blue-mid)}
-.mobile-searchbar{
-  display:none;
-  padding:10px 12px;
-  background:rgba(9,18,38,.95);
-  border-bottom:1px solid var(--c-border);
-}
+.mobile-searchbar{display:none;padding:10px 12px;background:rgba(9,18,38,.95);border-bottom:1px solid var(--c-border);}
 .mobile-searchbar .searchbar{max-width:100%;flex:1;}
 .hd-right{display:flex;align-items:center;gap:10px;margin-left:auto}
 .badge-rx{
@@ -121,10 +124,7 @@ header{
   font-size:.88rem;font-family:inherit;font-weight:600;
   transition:all .2s;box-shadow:0 4px 14px rgba(26,111,196,.25);
 }
-.cart-btn:hover{
-  background:linear-gradient(135deg,var(--c-blue),var(--c-blue-mid));
-  box-shadow:0 6px 20px rgba(26,111,196,.4);transform:translateY(-1px);
-}
+.cart-btn:hover{background:linear-gradient(135deg,var(--c-blue),var(--c-blue-mid));box-shadow:0 6px 20px rgba(26,111,196,.4);transform:translateY(-1px);}
 .cart-badge{
   position:absolute;top:-7px;right:-7px;
   background:var(--c-red);color:white;
@@ -133,159 +133,69 @@ header{
   display:flex;align-items:center;justify-content:center;
   border:2px solid var(--c-bg);
 }
-.page-wrap{
-  max-width:1500px;margin:0 auto;
-  display:flex;gap:0;min-height:calc(100vh - 66px);
-}
+
+/* ── LAYOUT ── */
+.page-wrap{max-width:1500px;margin:0 auto;display:flex;gap:0;min-height:calc(100vh - 66px);}
 aside{
   width:268px;flex-shrink:0;
-  background:rgba(13,30,56,.7);
-  backdrop-filter:blur(12px);
+  background:rgba(13,30,56,.7);backdrop-filter:blur(12px);
   border-right:1px solid var(--c-border);
   padding:0 0 32px;
-  position:sticky;top:66px;
-  height:calc(100vh - 66px);overflow-y:auto;
+  position:sticky;top:66px;height:calc(100vh - 66px);overflow-y:auto;
 }
-.aside-head{
-  padding:20px 20px 16px;
-  border-bottom:1px solid var(--c-border);
-  background:rgba(26,111,196,.06);
-}
+.aside-head{padding:20px 20px 16px;border-bottom:1px solid var(--c-border);background:rgba(26,111,196,.06);}
 .aside-head h2{font-size:.72rem;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;color:var(--c-text-dim)}
 .sb-section{padding:20px 16px 8px}
 .sb-label{font-size:.68rem;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--c-text-dim);margin-bottom:10px;padding-left:4px}
-.filter-pill{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:8px 10px;border-radius:8px;cursor:pointer;
-  transition:all .15s;margin-bottom:3px;
-  border:1px solid transparent;user-select:none;
-}
+.filter-pill{display:flex;align-items:center;justify-content:space-between;padding:8px 10px;border-radius:8px;cursor:pointer;transition:all .15s;margin-bottom:3px;border:1px solid transparent;user-select:none;}
 .filter-pill:hover{background:rgba(26,111,196,.12);border-color:rgba(26,111,196,.2)}
-.filter-pill.active{
-  background:rgba(26,111,196,.18);
-  border-color:rgba(26,111,196,.35);
-  color:var(--c-blue-light);
-}
+.filter-pill.active{background:rgba(26,111,196,.18);border-color:rgba(26,111,196,.35);color:var(--c-blue-light);}
 .fp-left{display:flex;align-items:center;gap:8px;font-size:.855rem}
-.fp-count{
-  font-size:.7rem;font-family:'DM Mono',monospace;
-  background:rgba(255,255,255,.07);color:var(--c-text-muted);
-  padding:2px 7px;border-radius:10px;
-}
+.fp-count{font-size:.7rem;font-family:'DM Mono',monospace;background:rgba(255,255,255,.07);color:var(--c-text-muted);padding:2px 7px;border-radius:10px;}
 .filter-pill.active .fp-count{background:rgba(26,111,196,.25);color:var(--c-blue-light)}
-.company-card{
-  display:flex;align-items:center;gap:10px;
-  padding:9px 10px;border-radius:9px;cursor:pointer;
-  transition:all .15s;margin-bottom:5px;
-  border:1.5px solid transparent;
-}
+.company-card{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:9px;cursor:pointer;transition:all .15s;margin-bottom:5px;border:1.5px solid transparent;}
 .company-card:hover{background:rgba(255,255,255,.04);border-color:var(--c-border-light)}
 .company-card.active{background:rgba(26,111,196,.12);border-color:var(--c-blue);}
 .co-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
 .co-info .co-name{font-size:.855rem;font-weight:600}
 .co-info .co-sub{font-size:.68rem;color:var(--c-text-dim);margin-top:1px}
-.clear-all-btn{
-  width:calc(100% - 32px);margin:8px 16px 0;
-  background:transparent;border:1px solid var(--c-border-light);
-  color:var(--c-text-muted);padding:8px;border-radius:8px;
-  cursor:pointer;font-size:.8rem;font-family:inherit;transition:all .15s;
-}
+.clear-all-btn{width:calc(100% - 32px);margin:8px 16px 0;background:transparent;border:1px solid var(--c-border-light);color:var(--c-text-muted);padding:8px;border-radius:8px;cursor:pointer;font-size:.8rem;font-family:inherit;transition:all .15s;}
 .clear-all-btn:hover{border-color:var(--c-blue);color:var(--c-blue-light);background:rgba(26,111,196,.08)}
+
 main{flex:1;padding:24px;min-width:0;overflow:hidden}
-.hero{
-  position:relative;overflow:hidden;
-  background:linear-gradient(120deg,rgba(9,31,66,.95) 0%,rgba(15,50,90,.9) 50%,rgba(9,40,70,.95) 100%);
-  border:1px solid var(--c-border-light);
-  border-radius:16px;padding:28px 32px 28px;
-  margin-bottom:24px;
-  box-shadow:0 8px 40px rgba(0,0,0,.35);
-}
-.hero::before{
-  content:'';position:absolute;inset:0;
-  background:radial-gradient(ellipse 60% 100% at 80% 50%,rgba(26,111,196,.15) 0%,transparent 60%);
-  pointer-events:none;
-}
+
+/* ── HERO ── */
+.hero{position:relative;overflow:hidden;background:linear-gradient(120deg,rgba(9,31,66,.95) 0%,rgba(15,50,90,.9) 50%,rgba(9,40,70,.95) 100%);border:1px solid var(--c-border-light);border-radius:16px;padding:28px 32px;margin-bottom:24px;box-shadow:0 8px 40px rgba(0,0,0,.35);}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 100% at 80% 50%,rgba(26,111,196,.15) 0%,transparent 60%);pointer-events:none;}
 .hero-grid{display:flex;align-items:center;justify-content:space-between;gap:24px;position:relative}
-.hero-text h1{
-  font-size:1.55rem;font-weight:800;line-height:1.2;
-  background:linear-gradient(90deg,#e8f0fe,var(--c-blue-light));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-  margin-bottom:8px;
-}
+.hero-text h1{font-size:1.55rem;font-weight:800;line-height:1.2;background:linear-gradient(90deg,#e8f0fe,var(--c-blue-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:8px;}
 .hero-text p{font-size:.88rem;color:var(--c-text-muted);max-width:460px;line-height:1.55}
 .hero-badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
-.h-badge{
-  border:1px solid rgba(26,111,196,.35);
-  background:rgba(26,111,196,.12);
-  color:var(--c-blue-light);
-  font-size:.72rem;font-weight:700;
-  padding:4px 11px;border-radius:20px;letter-spacing:.3px;
-}
-.hero-pills{
-  display:flex;flex-direction:column;gap:10px;flex-shrink:0;
-  opacity:.6;font-size:3.2rem;line-height:1;
-}
-.topbar{
-  display:flex;align-items:center;justify-content:space-between;
-  margin-bottom:14px;flex-wrap:wrap;gap:10px;
-}
+.h-badge{border:1px solid rgba(26,111,196,.35);background:rgba(26,111,196,.12);color:var(--c-blue-light);font-size:.72rem;font-weight:700;padding:4px 11px;border-radius:20px;letter-spacing:.3px;}
+.hero-pills{display:flex;flex-direction:column;gap:10px;flex-shrink:0;opacity:.6;font-size:3.2rem;line-height:1;}
+
+/* ── TOPBAR ── */
+.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:10px;}
 .res-info{font-size:.83rem;color:var(--c-text-muted)}
 .res-info strong{color:var(--c-text);font-weight:700}
-.sort-sel{
-  background:rgba(255,255,255,.06);
-  border:1px solid var(--c-border-light);
-  border-radius:8px;padding:7px 12px;
-  font-size:.83rem;color:var(--c-text);
-  cursor:pointer;font-family:inherit;outline:none;transition:border-color .2s;
-}
+.sort-sel{background:rgba(255,255,255,.06);border:1px solid var(--c-border-light);border-radius:8px;padding:7px 12px;font-size:.83rem;color:var(--c-text);cursor:pointer;font-family:inherit;outline:none;transition:border-color .2s;}
 .sort-sel:focus{border-color:var(--c-blue)}
 .sort-sel option{background:var(--c-card)}
 .active-tags{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px}
-.a-tag{
-  background:rgba(26,111,196,.15);border:1px solid rgba(26,111,196,.3);
-  color:var(--c-blue-light);font-size:.75rem;font-weight:600;
-  padding:4px 10px;border-radius:20px;display:flex;align-items:center;gap:6px;
-}
+.a-tag{background:rgba(26,111,196,.15);border:1px solid rgba(26,111,196,.3);color:var(--c-blue-light);font-size:.75rem;font-weight:600;padding:4px 10px;border-radius:20px;display:flex;align-items:center;gap:6px;}
 .a-tag button{background:none;border:none;color:inherit;cursor:pointer;font-size:1rem;line-height:1;padding:0}
-.grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(218px,1fr));
-  gap:16px;
-}
-.prod-card{
-  background:var(--c-card);
-  border:1px solid var(--c-border);
-  border-radius:var(--r);
-  display:flex;flex-direction:column;
-  overflow:hidden;
-  transition:transform .2s,box-shadow .25s,border-color .2s,background .2s;
-  cursor:default;position:relative;
-}
-.prod-card::before{
-  content:'';position:absolute;inset:0;border-radius:var(--r);
-  background:radial-gradient(circle 200px at var(--mx,50%) var(--my,50%),
-    rgba(26,111,196,.18) 0%,transparent 70%);
-  opacity:0;transition:opacity .3s;pointer-events:none;z-index:0;
-}
-.prod-card:hover{
-  transform:translateY(-4px);
-  box-shadow:var(--shadow-hover),0 2px 8px rgba(0,0,0,.4);
-  border-color:var(--c-blue);background:var(--c-card-hover);
-}
+
+/* ── PRODUCT GRID ── */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(218px,1fr));gap:16px;}
+.prod-card{background:var(--c-card);border:1px solid var(--c-border);border-radius:var(--r);display:flex;flex-direction:column;overflow:hidden;transition:transform .2s,box-shadow .25s,border-color .2s,background .2s;cursor:default;position:relative;}
+.prod-card::before{content:'';position:absolute;inset:0;border-radius:var(--r);background:radial-gradient(circle 200px at var(--mx,50%) var(--my,50%),rgba(26,111,196,.18) 0%,transparent 70%);opacity:0;transition:opacity .3s;pointer-events:none;z-index:0;}
+.prod-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-hover),0 2px 8px rgba(0,0,0,.4);border-color:var(--c-blue);background:var(--c-card-hover);}
 .prod-card:hover::before{opacity:1}
-.card-img{
-  position:relative;padding:22px 16px 18px;
-  display:flex;align-items:center;justify-content:center;
-  height:115px;z-index:1;
-}
+.card-img{position:relative;padding:22px 16px 18px;display:flex;align-items:center;justify-content:center;height:115px;z-index:1;}
 .card-img.wellgo-bg{background:linear-gradient(145deg,rgba(10,30,60,.8) 0%,rgba(20,50,100,.6) 100%);}
 .card-img.pedia-bg{background:linear-gradient(145deg,rgba(5,35,30,.8) 0%,rgba(10,60,50,.6) 100%);}
 .med-icon{font-size:2.4rem;filter:drop-shadow(0 2px 8px rgba(0,0,0,.5))}
-.cat-chip{
-  position:absolute;top:8px;right:8px;
-  font-size:.62rem;font-weight:800;letter-spacing:.6px;text-transform:uppercase;
-  padding:3px 8px;border-radius:20px;
-}
+.cat-chip{position:absolute;top:8px;right:8px;font-size:.62rem;font-weight:800;letter-spacing:.6px;text-transform:uppercase;padding:3px 8px;border-radius:20px;}
 .cc-tablet  {background:rgba(109,40,217,.3);color:#c4b5fd;border:1px solid rgba(109,40,217,.4)}
 .cc-capsule {background:rgba(180,83,9,.3);color:#fcd34d;border:1px solid rgba(180,83,9,.4)}
 .cc-syrup   {background:rgba(6,95,70,.35);color:#6ee7b7;border:1px solid rgba(6,95,70,.5)}
@@ -293,11 +203,7 @@ main{flex:1;padding:24px;min-width:0;overflow:hidden}
 .cc-injection{background:rgba(157,23,77,.3);color:#f9a8d4;border:1px solid rgba(157,23,77,.4)}
 .cc-drop    {background:rgba(3,105,161,.3);color:#7dd3fc;border:1px solid rgba(3,105,161,.4)}
 .cc-ointment{background:rgba(30,64,175,.3);color:#a5b4fc;border:1px solid rgba(30,64,175,.4)}
-.brand-chip{
-  position:absolute;top:8px;left:8px;
-  font-size:.6rem;font-weight:800;letter-spacing:.4px;
-  padding:2px 7px;border-radius:4px;
-}
+.brand-chip{position:absolute;top:8px;left:8px;font-size:.6rem;font-weight:800;letter-spacing:.4px;padding:2px 7px;border-radius:4px;}
 .bc-wellgo{background:rgba(26,111,196,.3);color:#93c5fd;border:1px solid rgba(26,111,196,.35)}
 .bc-pedia {background:rgba(5,150,105,.3);color:#6ee7b7;border:1px solid rgba(5,150,105,.35)}
 .card-body{padding:12px 14px 10px;flex:1;z-index:1;position:relative}
@@ -307,75 +213,36 @@ main{flex:1;padding:24px;min-width:0;overflow:hidden}
 .card-foot{padding:10px 14px 14px;border-top:1px solid var(--c-border);z-index:1;position:relative;}
 .price-block{margin-bottom:10px}
 .price-row-1{display:flex;align-items:baseline;gap:8px;margin-bottom:3px;}
-.our-price{
-  font-size:1.08rem;font-weight:800;
-  background:linear-gradient(90deg,var(--c-blue-light),var(--c-teal-light));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-}
+.our-price{font-size:1.08rem;font-weight:800;background:linear-gradient(90deg,var(--c-blue-light),var(--c-teal-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
 .our-label{font-size:.68rem;color:var(--c-text-dim);font-weight:500}
 .mrp-row{display:flex;align-items:center;gap:6px;}
 .mrp-label{font-size:.68rem;color:var(--c-text-dim)}
 .mrp-val{font-size:.76rem;color:var(--c-text-dim);text-decoration:line-through;font-family:'DM Mono',monospace}
-.add-btn{
-  width:100%;
-  background:linear-gradient(135deg,var(--c-blue-dark),var(--c-blue));
-  border:1px solid var(--c-blue);border-radius:8px;color:white;
-  padding:9px;font-size:.83rem;font-weight:700;
-  cursor:pointer;font-family:inherit;
-  display:flex;align-items:center;justify-content:center;gap:6px;
-  transition:all .2s;
-}
-.add-btn:hover{
-  background:linear-gradient(135deg,var(--c-blue),var(--c-blue-mid));
-  box-shadow:0 4px 16px rgba(26,111,196,.35);transform:translateY(-1px);
-}
+.add-btn{width:100%;background:linear-gradient(135deg,var(--c-blue-dark),var(--c-blue));border:1px solid var(--c-blue);border-radius:8px;color:white;padding:9px;font-size:.83rem;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:6px;transition:all .2s;}
+.add-btn:hover{background:linear-gradient(135deg,var(--c-blue),var(--c-blue-mid));box-shadow:0 4px 16px rgba(26,111,196,.35);transform:translateY(-1px);}
 .qty-ctrl{display:flex;align-items:center;gap:8px;justify-content:center;}
-.q-btn{
-  width:32px;height:32px;border-radius:8px;
-  background:rgba(26,111,196,.18);border:1px solid var(--c-blue);
-  color:var(--c-blue-light);font-weight:800;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;font-size:1rem;
-  transition:background .15s;
-}
+.q-btn{width:32px;height:32px;border-radius:8px;background:rgba(26,111,196,.18);border:1px solid var(--c-blue);color:var(--c-blue-light);font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1rem;transition:background .15s;}
 .q-btn:hover{background:rgba(26,111,196,.32)}
 .q-num{font-weight:800;font-size:.95rem;color:var(--c-text);min-width:28px;text-align:center}
+.q-input{width:52px;text-align:center;font-weight:800;font-size:.9rem;color:var(--c-text);background:rgba(255,255,255,.07);border:1px solid var(--c-blue);border-radius:7px;padding:4px 6px;outline:none;font-family:inherit;-moz-appearance:textfield;}
+.q-input::-webkit-outer-spin-button,.q-input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.q-input:focus{border-color:var(--c-blue-light);box-shadow:0 0 0 2px rgba(26,111,196,.2)}
 .empty-state{text-align:center;padding:80px 20px;color:var(--c-text-muted)}
 .empty-state .ei{font-size:3rem;margin-bottom:12px}
 .empty-state h3{font-size:1.1rem;font-weight:700;margin-bottom:6px;color:var(--c-text)}
-.cart-overlay{
-  position:fixed;inset:0;z-index:300;
-  background:rgba(0,0,0,.6);backdrop-filter:blur(6px);
-}
-.cart-drawer{
-  position:absolute;right:0;top:0;bottom:0;
-  width:420px;
-  background:linear-gradient(180deg,#0d1f40 0%,#091525 100%);
-  border-left:1px solid var(--c-border-light);
-  display:flex;flex-direction:column;
-  box-shadow:-8px 0 40px rgba(0,0,0,.5);
-}
-.cart-hd{
-  padding:20px 22px;
-  border-bottom:1px solid var(--c-border);
-  display:flex;align-items:flex-start;justify-content:space-between;
-  background:rgba(26,111,196,.06);
-}
+
+/* ── CART DRAWER ── */
+.cart-overlay{position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.6);backdrop-filter:blur(6px);}
+.cart-drawer{position:absolute;right:0;top:0;bottom:0;width:420px;background:linear-gradient(180deg,#0d1f40 0%,#091525 100%);border-left:1px solid var(--c-border-light);display:flex;flex-direction:column;box-shadow:-8px 0 40px rgba(0,0,0,.5);}
+.cart-hd{padding:20px 22px;border-bottom:1px solid var(--c-border);display:flex;align-items:flex-start;justify-content:space-between;background:rgba(26,111,196,.06);}
 .cart-hd h2{font-size:1rem;font-weight:800}
 .cart-hd-sub{font-size:.75rem;color:var(--c-green);margin-top:3px;font-weight:600}
-.cart-close-btn{
-  background:rgba(255,255,255,.06);border:1px solid var(--c-border-light);
-  color:var(--c-text-muted);width:30px;height:30px;border-radius:7px;
-  cursor:pointer;font-size:.9rem;display:flex;align-items:center;justify-content:center;
-  transition:all .15s;flex-shrink:0;
-}
+.cart-close-btn{background:rgba(255,255,255,.06);border:1px solid var(--c-border-light);color:var(--c-text-muted);width:30px;height:30px;border-radius:7px;cursor:pointer;font-size:.9rem;display:flex;align-items:center;justify-content:center;transition:all .15s;flex-shrink:0;}
 .cart-close-btn:hover{background:rgba(232,72,90,.15);border-color:var(--c-red);color:var(--c-red)}
 .cart-items{flex:1;overflow-y:auto;padding:12px 0}
 .cart-empty-msg{text-align:center;padding:60px 20px;color:var(--c-text-muted)}
 .cart-empty-msg .ei{font-size:2.5rem;margin-bottom:10px}
-.cart-item{
-  display:flex;align-items:flex-start;gap:12px;
-  padding:12px 22px;border-bottom:1px solid rgba(30,53,86,.5);
-}
+.cart-item{display:flex;align-items:flex-start;gap:12px;padding:12px 22px;border-bottom:1px solid rgba(30,53,86,.5);}
 .ci-icon{font-size:1.6rem;flex-shrink:0;padding-top:2px}
 .ci-info{flex:1;min-width:0}
 .ci-name{font-size:.85rem;font-weight:700;color:var(--c-text);margin-bottom:2px}
@@ -384,86 +251,34 @@ main{flex:1;padding:24px;min-width:0;overflow:hidden}
 .ci-price{font-size:.85rem;font-weight:800;color:var(--c-blue-light)}
 .ci-mrp-small{font-size:.67rem;color:var(--c-text-dim);text-decoration:line-through;font-family:'DM Mono',monospace}
 .ci-qty{display:flex;align-items:center;gap:5px}
-.cq-btn{
-  width:24px;height:24px;border-radius:6px;
-  background:rgba(26,111,196,.18);border:1px solid var(--c-blue);
-  color:var(--c-blue-light);font-weight:800;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;font-size:.82rem;
-  transition:background .15s;
-}
+.cq-btn{width:24px;height:24px;border-radius:6px;background:rgba(26,111,196,.18);border:1px solid var(--c-blue);color:var(--c-blue-light);font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.82rem;transition:background .15s;}
 .cq-btn:hover{background:rgba(26,111,196,.32)}
-.cq-n{font-weight:800;font-size:.82rem;color:var(--c-text);min-width:20px;text-align:center}
-.cart-foot{
-  border-top:1px solid var(--c-border);
-  padding:18px 22px 22px;
-  background:rgba(9,18,38,.6);
-}
-.sum-row{
-  display:flex;justify-content:space-between;
-  font-size:.84rem;color:var(--c-text-muted);margin-bottom:7px;
-}
-.sum-row.total{
-  font-size:1.08rem;font-weight:800;color:var(--c-text);
-  margin-top:8px;padding-top:8px;
-  border-top:1px dashed var(--c-border-light);
-}
-.sum-row.total span:last-child{
-  background:linear-gradient(90deg,var(--c-blue-light),var(--c-teal-light));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-}
-.checkout-btn{
-  width:100%;margin-top:16px;
-  background:linear-gradient(135deg,var(--c-blue),var(--c-teal));
-  border:none;border-radius:10px;color:white;padding:14px;
-  font-size:.95rem;font-weight:800;cursor:pointer;font-family:inherit;
-  transition:all .2s;box-shadow:0 4px 20px rgba(26,111,196,.3);
-}
+.cq-input{width:44px;text-align:center;font-weight:800;font-size:.82rem;color:var(--c-text);background:rgba(255,255,255,.07);border:1px solid var(--c-blue);border-radius:6px;padding:3px 4px;outline:none;font-family:inherit;-moz-appearance:textfield;}
+.cq-input::-webkit-outer-spin-button,.cq-input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.cq-input:focus{border-color:var(--c-blue-light);box-shadow:0 0 0 2px rgba(26,111,196,.18)}
+.cart-foot{border-top:1px solid var(--c-border);padding:18px 22px 22px;background:rgba(9,18,38,.6);}
+.sum-row{display:flex;justify-content:space-between;font-size:.84rem;color:var(--c-text-muted);margin-bottom:7px;}
+.sum-row.total{font-size:1.08rem;font-weight:800;color:var(--c-text);margin-top:8px;padding-top:8px;border-top:1px dashed var(--c-border-light);}
+.sum-row.total span:last-child{background:linear-gradient(90deg,var(--c-blue-light),var(--c-teal-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.checkout-btn{width:100%;margin-top:16px;background:linear-gradient(135deg,var(--c-blue),var(--c-teal));border:none;border-radius:10px;color:white;padding:14px;font-size:.95rem;font-weight:800;cursor:pointer;font-family:inherit;transition:all .2s;box-shadow:0 4px 20px rgba(26,111,196,.3);}
 .checkout-btn:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(26,111,196,.45);}
 .checkout-btn:disabled{background:var(--c-border-light);box-shadow:none;cursor:not-allowed;transform:none;}
-.receipt-overlay{
-  position:fixed;inset:0;z-index:500;
-  display:flex;align-items:center;justify-content:center;
-  background:rgba(0,0,0,.75);backdrop-filter:blur(8px);padding:16px;
-}
-.receipt-box{
-  width:100%;max-width:480px;max-height:90vh;overflow-y:auto;
-  border-radius:20px;
-  background:linear-gradient(145deg,#0d1f40 0%,#0a2a50 30%,#073a3a 70%,#071f38 100%);
-  border:1px solid rgba(77,176,247,.25);
-  box-shadow:0 0 0 1px rgba(20,199,184,.1),0 24px 80px rgba(0,0,0,.7),0 0 60px rgba(26,111,196,.2);
-  animation:popIn .35s cubic-bezier(.34,1.56,.64,1);
-}
+
+/* ── RECEIPT ── */
+.receipt-overlay{position:fixed;inset:0;z-index:500;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.75);backdrop-filter:blur(8px);padding:16px;}
+.receipt-box{width:100%;max-width:480px;max-height:90vh;overflow-y:auto;border-radius:20px;background:linear-gradient(145deg,#0d1f40 0%,#0a2a50 30%,#073a3a 70%,#071f38 100%);border:1px solid rgba(77,176,247,.25);box-shadow:0 0 0 1px rgba(20,199,184,.1),0 24px 80px rgba(0,0,0,.7),0 0 60px rgba(26,111,196,.2);animation:popIn .35s cubic-bezier(.34,1.56,.64,1);}
 @keyframes popIn{from{transform:scale(.85);opacity:0}to{transform:scale(1);opacity:1}}
-.receipt-header{
-  padding:28px 28px 20px;text-align:center;
-  background:linear-gradient(135deg,rgba(26,111,196,.15),rgba(13,158,144,.15));
-  border-bottom:1px solid rgba(77,176,247,.15);
-  border-radius:20px 20px 0 0;position:relative;overflow:hidden;
-}
-.receipt-header::before{
-  content:'';position:absolute;inset:0;
-  background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(77,176,247,.12) 0%,transparent 70%);
-  pointer-events:none;
-}
+.receipt-header{padding:28px 28px 20px;text-align:center;background:linear-gradient(135deg,rgba(26,111,196,.15),rgba(13,158,144,.15));border-bottom:1px solid rgba(77,176,247,.15);border-radius:20px 20px 0 0;position:relative;overflow:hidden;}
+.receipt-header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(77,176,247,.12) 0%,transparent 70%);pointer-events:none;}
 .receipt-checkmark{font-size:3.5rem;display:block;margin-bottom:10px;animation:bounceIn .5s .15s cubic-bezier(.34,1.56,.64,1) both;}
 @keyframes bounceIn{from{transform:scale(0) rotate(-20deg);opacity:0}to{transform:scale(1) rotate(0);opacity:1}}
-.receipt-title{
-  font-size:1.45rem;font-weight:800;
-  background:linear-gradient(90deg,#e8f0fe,var(--c-blue-light),var(--c-teal-light));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:6px;
-}
+.receipt-title{font-size:1.45rem;font-weight:800;background:linear-gradient(90deg,#e8f0fe,var(--c-blue-light),var(--c-teal-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:6px;}
 .receipt-subtitle{font-size:.85rem;color:var(--c-text-muted);line-height:1.5}
 .receipt-body{padding:22px 28px}
-.receipt-section-label{
-  font-size:.65rem;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;
-  color:var(--c-text-dim);margin-bottom:12px;display:flex;align-items:center;gap:8px;
-}
+.receipt-section-label{font-size:.65rem;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;color:var(--c-text-dim);margin-bottom:12px;display:flex;align-items:center;gap:8px;}
 .receipt-section-label::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,var(--c-border-light),transparent);}
 .receipt-items{margin-bottom:18px}
-.receipt-item{
-  display:flex;align-items:flex-start;justify-content:space-between;gap:10px;
-  padding:9px 0;border-bottom:1px solid rgba(30,53,86,.6);
-}
+.receipt-item{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;padding:9px 0;border-bottom:1px solid rgba(30,53,86,.6);}
 .receipt-item:last-child{border-bottom:none}
 .ri-left{flex:1}
 .ri-name{font-size:.85rem;font-weight:700;color:var(--c-text);margin-bottom:2px}
@@ -472,51 +287,253 @@ main{flex:1;padding:24px;min-width:0;overflow:hidden}
 .ri-price{text-align:right;flex-shrink:0}
 .ri-amount{font-size:.9rem;font-weight:800;color:var(--c-blue-light)}
 .ri-mrp-s{font-size:.66rem;color:var(--c-text-dim);text-decoration:line-through;font-family:'DM Mono',monospace}
-.receipt-totals{
-  background:rgba(11,22,40,.6);border:1px solid var(--c-border);
-  border-radius:12px;padding:14px 16px;margin-bottom:18px;
-}
+.receipt-totals{background:rgba(11,22,40,.6);border:1px solid var(--c-border);border-radius:12px;padding:14px 16px;margin-bottom:18px;}
 .rt-row{display:flex;justify-content:space-between;font-size:.84rem;color:var(--c-text-muted);margin-bottom:8px;}
 .rt-row:last-child{margin-bottom:0}
-.rt-row.total-final{
-  font-size:1.1rem;font-weight:800;color:var(--c-text);
-  padding-top:10px;margin-top:4px;border-top:1px dashed var(--c-border-light);
-}
-.rt-row.total-final span:last-child{
-  background:linear-gradient(90deg,var(--c-blue-light),var(--c-teal-light));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-}
-.receipt-order-id{
-  background:rgba(26,111,196,.1);border:1px solid rgba(26,111,196,.2);
-  border-radius:9px;padding:10px 14px;font-size:.75rem;color:var(--c-text-muted);
-  display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;
-}
+.rt-row.total-final{font-size:1.1rem;font-weight:800;color:var(--c-text);padding-top:10px;margin-top:4px;border-top:1px dashed var(--c-border-light);}
+.rt-row.total-final span:last-child{background:linear-gradient(90deg,var(--c-blue-light),var(--c-teal-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.receipt-order-id{background:rgba(26,111,196,.1);border:1px solid rgba(26,111,196,.2);border-radius:9px;padding:10px 14px;font-size:.75rem;color:var(--c-text-muted);display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;}
 .receipt-order-id span:last-child{font-family:'DM Mono',monospace;color:var(--c-blue-light);font-weight:700;font-size:.8rem;}
-.receipt-thank{
-  text-align:center;padding:14px;
-  background:linear-gradient(135deg,rgba(26,111,196,.08),rgba(13,158,144,.08));
-  border-radius:10px;border:1px solid rgba(77,176,247,.12);margin-bottom:20px;
-}
+.receipt-thank{text-align:center;padding:14px;background:linear-gradient(135deg,rgba(26,111,196,.08),rgba(13,158,144,.08));border-radius:10px;border:1px solid rgba(77,176,247,.12);margin-bottom:20px;}
 .receipt-thank .thank-emoji{font-size:1.6rem;margin-bottom:6px;display:block}
 .receipt-thank p{font-size:.82rem;color:var(--c-text-muted);line-height:1.6}
 .receipt-thank strong{color:var(--c-blue-light)}
-.receipt-close-btn{
+.receipt-close-btn{width:100%;background:linear-gradient(135deg,var(--c-blue),var(--c-teal));border:none;border-radius:10px;color:white;padding:13px;font-size:.92rem;font-weight:800;cursor:pointer;font-family:inherit;transition:all .2s;box-shadow:0 4px 20px rgba(26,111,196,.3);}
+.receipt-close-btn:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(26,111,196,.45);}
+
+/* ── CHECKOUT MODAL ── */
+.checkout-overlay{position:fixed;inset:0;z-index:400;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.75);backdrop-filter:blur(8px);padding:16px;}
+.checkout-modal-box{width:100%;max-width:560px;max-height:92vh;overflow-y:auto;border-radius:20px;background:linear-gradient(145deg,#0d1f40 0%,#091830 50%,#071f38 100%);border:1px solid rgba(77,176,247,.25);box-shadow:0 0 0 1px rgba(26,111,196,.1),0 24px 80px rgba(0,0,0,.7),0 0 60px rgba(26,111,196,.18);animation:popIn .35s cubic-bezier(.34,1.56,.64,1);}
+.co-modal-header{padding:24px 28px 18px;background:linear-gradient(135deg,rgba(26,111,196,.12),rgba(13,158,144,.1));border-bottom:1px solid rgba(77,176,247,.15);border-radius:20px 20px 0 0;display:flex;align-items:flex-start;justify-content:space-between;}
+.co-modal-header-left h2{font-size:1.15rem;font-weight:800;margin-bottom:4px}
+.co-modal-header-left p{font-size:.8rem;color:var(--c-text-muted)}
+.co-modal-close{background:rgba(255,255,255,.06);border:1px solid var(--c-border-light);color:var(--c-text-muted);width:30px;height:30px;border-radius:7px;cursor:pointer;font-size:.9rem;display:flex;align-items:center;justify-content:center;transition:all .15s;flex-shrink:0;}
+.co-modal-close:hover{background:rgba(232,72,90,.15);border-color:var(--c-red);color:var(--c-red)}
+.co-modal-body{padding:22px 28px 24px}
+.co-section-label{font-size:.65rem;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;color:var(--c-text-dim);margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+.co-section-label::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,var(--c-border-light),transparent);}
+.co-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px}
+.co-field{display:flex;flex-direction:column;gap:5px}
+.co-field.full{grid-column:1/-1}
+.co-label{font-size:.74rem;font-weight:600;color:var(--c-text-muted);letter-spacing:.3px}
+.co-input{background:rgba(255,255,255,.05);border:1px solid var(--c-border-light);border-radius:9px;padding:10px 13px;font-size:.875rem;color:var(--c-text);font-family:inherit;outline:none;transition:border-color .2s,box-shadow .2s;}
+.co-input::placeholder{color:var(--c-text-dim)}
+.co-input:focus{border-color:var(--c-blue);box-shadow:0 0 0 3px rgba(26,111,196,.15)}
+.co-input.error{border-color:var(--c-red);box-shadow:0 0 0 3px rgba(232,72,90,.12)}
+.co-err{font-size:.7rem;color:var(--c-red);margin-top:2px;display:none}
+.co-err.show{display:block}
+select.co-input option{background:var(--c-card)}
+.co-order-summary{background:rgba(11,22,40,.6);border:1px solid var(--c-border);border-radius:12px;padding:14px 16px;margin-bottom:20px;}
+.co-sum-row{display:flex;justify-content:space-between;font-size:.83rem;color:var(--c-text-muted);margin-bottom:7px}
+.co-sum-row:last-child{margin-bottom:0}
+.co-sum-row.total{font-size:1rem;font-weight:800;color:var(--c-text);padding-top:9px;margin-top:4px;border-top:1px dashed var(--c-border-light);}
+.co-sum-row.total span:last-child{background:linear-gradient(90deg,var(--c-blue-light),var(--c-teal-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.co-payment-options{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:20px}
+.co-pay-opt{flex:1;min-width:110px;border:1.5px solid var(--c-border-light);border-radius:10px;padding:10px 14px;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.03);font-size:.83rem;font-weight:600;color:var(--c-text-muted);}
+.co-pay-opt:hover{background:rgba(26,111,196,.1);border-color:rgba(26,111,196,.3)}
+.co-pay-opt.selected{background:rgba(26,111,196,.15);border-color:var(--c-blue);color:var(--c-blue-light);}
+.co-pay-icon{font-size:1.2rem}
+.place-order-btn{width:100%;background:linear-gradient(135deg,var(--c-blue),var(--c-teal));border:none;border-radius:10px;color:white;padding:14px;font-size:.95rem;font-weight:800;cursor:pointer;font-family:inherit;transition:all .2s;box-shadow:0 4px 20px rgba(26,111,196,.3);display:flex;align-items:center;justify-content:center;gap:8px;}
+.place-order-btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 8px 30px rgba(26,111,196,.45);}
+.place-order-btn:disabled{background:var(--c-border-light);cursor:not-allowed;transform:none;box-shadow:none;}
+.co-sending-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(34,201,114,.1);border:1px solid rgba(34,201,114,.25);color:var(--c-green);font-size:.72rem;font-weight:700;padding:4px 10px;border-radius:20px;margin-top:10px;}
+.co-receipt-email-note{font-size:.73rem;color:var(--c-text-dim);text-align:center;margin-top:10px;line-height:1.5}
+
+/* ══════════════════════════════════════════
+   ABOUT SECTION
+══════════════════════════════════════════ */
+.about-page{width:100%;padding:0}
+.about-hero{
+  position:relative;overflow:hidden;
+  background:linear-gradient(120deg,rgba(9,31,66,.95) 0%,rgba(15,50,90,.9) 50%,rgba(9,40,70,.95) 100%);
+  border:1px solid var(--c-border-light);border-radius:16px;
+  padding:40px 36px;margin-bottom:28px;
+}
+.about-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 120% at 90% 50%,rgba(13,158,144,.18) 0%,transparent 60%);pointer-events:none;}
+.about-hero-inner{position:relative;display:flex;gap:40px;align-items:center;}
+.about-logo-big{
+  width:80px;height:80px;border-radius:20px;flex-shrink:0;
+  background:linear-gradient(135deg,var(--c-blue) 0%,var(--c-teal) 100%);
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 8px 30px rgba(26,111,196,.4);
+  font-size:2.5rem;
+}
+.about-hero-text h1{font-size:2rem;font-weight:800;line-height:1.15;background:linear-gradient(90deg,#e8f0fe,var(--c-blue-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:10px;}
+.about-hero-text p{font-size:.95rem;color:var(--c-text-muted);max-width:600px;line-height:1.65}
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:28px;}
+.about-card{background:var(--c-card);border:1px solid var(--c-border);border-radius:14px;padding:26px 28px;transition:border-color .2s,box-shadow .2s;}
+.about-card:hover{border-color:var(--c-blue);box-shadow:var(--shadow-hover);}
+.about-card-icon{font-size:2rem;margin-bottom:12px;display:block}
+.about-card h3{font-size:1rem;font-weight:800;margin-bottom:8px;color:var(--c-text)}
+.about-card p{font-size:.85rem;color:var(--c-text-muted);line-height:1.65}
+.about-card ul{margin-top:8px;padding-left:0;list-style:none;}
+.about-card ul li{font-size:.83rem;color:var(--c-text-muted);line-height:1.6;display:flex;align-items:flex-start;gap:6px;}
+.about-card ul li::before{content:'✓';color:var(--c-teal-light);flex-shrink:0;font-weight:800;font-size:.75rem;margin-top:2px}
+.about-full{grid-column:1/-1}
+.stat-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px;}
+.stat-card{background:var(--c-card);border:1px solid var(--c-border);border-radius:14px;padding:22px;text-align:center;}
+.stat-card .stat-num{font-size:2rem;font-weight:800;background:linear-gradient(90deg,var(--c-blue-light),var(--c-teal-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.stat-card .stat-label{font-size:.78rem;color:var(--c-text-muted);margin-top:4px}
+
+/* Partner cards */
+.partner-strip{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:28px;}
+.partner-card{background:var(--c-card);border:1px solid var(--c-border);border-radius:14px;padding:24px 28px;display:flex;gap:16px;align-items:flex-start;}
+.partner-card:hover{border-color:var(--c-blue);box-shadow:var(--shadow-hover);}
+.partner-dot{width:14px;height:14px;border-radius:50%;flex-shrink:0;margin-top:4px}
+.partner-info h3{font-size:1rem;font-weight:800;margin-bottom:4px}
+.partner-info .partner-sub{font-size:.78rem;color:var(--c-blue-light);font-weight:600;margin-bottom:8px}
+.partner-info p{font-size:.83rem;color:var(--c-text-muted);line-height:1.6}
+
+/* ══════════════════════════════════════════
+   CONTACT / QUERY SECTION
+══════════════════════════════════════════ */
+.contact-section{margin-top:0}
+.contact-header-label{
+  font-size:.68rem;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;
+  color:var(--c-text-dim);display:flex;align-items:center;gap:8px;margin-bottom:22px;
+}
+.contact-header-label::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,var(--c-border-light),transparent);}
+.contact-grid{display:grid;grid-template-columns:1fr 1.4fr;gap:24px;margin-bottom:40px;}
+
+.contact-info-col{display:flex;flex-direction:column;gap:14px;}
+.contact-info-card{background:var(--c-card);border:1px solid var(--c-border);border-radius:14px;padding:20px 22px;display:flex;gap:14px;align-items:flex-start;transition:border-color .2s;}
+.contact-info-card:hover{border-color:var(--c-blue-light)}
+.ci-card-icon{font-size:1.6rem;flex-shrink:0}
+.ci-card-body h4{font-size:.88rem;font-weight:700;margin-bottom:4px}
+.ci-card-body a,.ci-card-body span{font-size:.83rem;color:var(--c-text-muted);text-decoration:none;display:block;line-height:1.5}
+.ci-card-body a:hover{color:var(--c-blue-light)}
+.ci-card-body .ci-tag{font-size:.65rem;font-weight:700;background:rgba(26,111,196,.15);color:var(--c-blue-light);border:1px solid rgba(26,111,196,.3);padding:2px 8px;border-radius:20px;margin-top:6px;display:inline-block;}
+
+.query-form-card{background:var(--c-card);border:1px solid var(--c-border);border-radius:14px;padding:28px 30px;}
+.query-form-card h3{font-size:1rem;font-weight:800;margin-bottom:6px}
+.query-form-card p{font-size:.82rem;color:var(--c-text-muted);margin-bottom:22px;line-height:1.5}
+.qf-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.qf-field{display:flex;flex-direction:column;gap:6px}
+.qf-field.full{grid-column:1/-1}
+.qf-label{font-size:.73rem;font-weight:600;color:var(--c-text-muted)}
+.qf-input,.qf-textarea{background:rgba(255,255,255,.05);border:1px solid var(--c-border-light);border-radius:9px;padding:10px 13px;font-size:.875rem;color:var(--c-text);font-family:inherit;outline:none;transition:border-color .2s,box-shadow .2s;width:100%;}
+.qf-input::placeholder,.qf-textarea::placeholder{color:var(--c-text-dim)}
+.qf-input:focus,.qf-textarea:focus{border-color:var(--c-blue);box-shadow:0 0 0 3px rgba(26,111,196,.15)}
+.qf-textarea{resize:vertical;min-height:100px;}
+.qf-submit{
   width:100%;background:linear-gradient(135deg,var(--c-blue),var(--c-teal));
   border:none;border-radius:10px;color:white;padding:13px;
-  font-size:.92rem;font-weight:800;cursor:pointer;font-family:inherit;
+  font-size:.93rem;font-weight:800;cursor:pointer;font-family:inherit;
   transition:all .2s;box-shadow:0 4px 20px rgba(26,111,196,.3);
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  margin-top:8px;
 }
-.receipt-close-btn:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(26,111,196,.45);}
-@media(max-width:960px){aside{display:none}.hero{padding:20px}.hero-pills{display:none}}
+.qf-submit:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(26,111,196,.45);}
+.qf-success{display:none;background:rgba(34,201,114,.1);border:1px solid rgba(34,201,114,.3);border-radius:10px;padding:16px;text-align:center;color:var(--c-green);font-weight:600;font-size:.88rem;margin-top:12px;}
+.qf-success.show{display:block}
+
+/* Hours table */
+.hours-row{display:flex;justify-content:space-between;font-size:.82rem;color:var(--c-text-muted);padding:5px 0;border-bottom:1px solid rgba(30,53,86,.4);}
+.hours-row:last-child{border-bottom:none}
+.hours-row .day{font-weight:600;color:var(--c-text)}
+.hours-row .time{color:var(--c-blue-light);font-family:'DM Mono',monospace;font-size:.78rem}
+.hours-row .closed{color:var(--c-red);font-size:.78rem}
+
+/* ── PAGE TRANSITIONS ── */
+.page-section{animation:pageFadeIn .32s cubic-bezier(.4,0,.2,1);}
+@keyframes pageFadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── PRODUCT SEARCHBAR (inside product section) ── */
+.product-searchbar{
+  display:flex;align-items:center;
+  background:rgba(255,255,255,.06);
+  border:1px solid var(--c-border-light);
+  border-radius:9px;overflow:hidden;
+  transition:border-color .2s,box-shadow .2s;
+  margin-bottom:16px;
+}
+.product-searchbar:focus-within{border-color:var(--c-blue);box-shadow:0 0 0 3px rgba(26,111,196,.15)}
+.product-searchbar input{flex:1;background:transparent;border:none;outline:none;color:var(--c-text);padding:11px 16px;font-size:.93rem;font-family:inherit;}
+.product-searchbar input::placeholder{color:var(--c-text-dim)}
+.product-searchbar button{background:var(--c-blue);border:none;padding:11px 16px;color:white;cursor:pointer;transition:background .2s;display:flex;align-items:center;}
+.product-searchbar button:hover{background:var(--c-blue-mid)}
+
+/* ── MOBILE FILTER DRAWER ── */
+.mob-filter-toggle{
+  display:none;align-items:center;gap:8px;
+  background:rgba(26,111,196,.12);border:1px solid rgba(26,111,196,.3);
+  color:var(--c-blue-light);padding:8px 14px;border-radius:8px;
+  font-size:.83rem;font-weight:700;cursor:pointer;font-family:inherit;transition:all .18s;
+}
+.mob-filter-toggle:hover{background:rgba(26,111,196,.22)}
+.mob-filter-overlay{position:fixed;inset:0;z-index:250;background:rgba(0,0,0,.6);backdrop-filter:blur(6px);}
+.mob-filter-drawer{
+  position:absolute;left:0;top:0;bottom:0;width:min(300px,88vw);
+  background:linear-gradient(180deg,#0d1f40 0%,#091525 100%);
+  border-right:1px solid var(--c-border-light);
+  overflow-y:auto;padding-bottom:32px;
+  animation:slideInLeft .26s cubic-bezier(.4,0,.2,1);
+}
+@keyframes slideInLeft{from{transform:translateX(-100%)}to{transform:translateX(0)}}
+.mob-filter-head{
+  padding:18px 16px 14px;border-bottom:1px solid var(--c-border);
+  display:flex;align-items:center;justify-content:space-between;
+  background:rgba(26,111,196,.06);
+}
+.mob-filter-head h2{font-size:.85rem;font-weight:800;color:var(--c-text)}
+.mob-filter-close{background:rgba(255,255,255,.06);border:1px solid var(--c-border-light);color:var(--c-text-muted);width:28px;height:28px;border-radius:7px;cursor:pointer;font-size:.9rem;display:flex;align-items:center;justify-content:center;transition:all .15s;}
+.mob-filter-close:hover{background:rgba(232,72,90,.15);border-color:var(--c-red);color:var(--c-red)}
+
+/* ── RESPONSIVE ── */
+@media(max-width:1060px){
+  .about-grid{grid-template-columns:1fr}
+  .about-full{grid-column:unset}
+  .stat-strip{grid-template-columns:repeat(2,1fr)}
+  .partner-strip{grid-template-columns:1fr}
+  .contact-grid{grid-template-columns:1fr}
+}
+@media(max-width:960px){
+  aside{display:none}
+  .mob-filter-toggle{display:flex}
+  .hero{padding:20px}
+  .hero-pills{display:none}
+  .about-hero-inner{flex-direction:column;gap:20px}
+}
 @media(max-width:640px){
   main{padding:12px}
-  .header-inner{padding:0 12px}
-  .header-inner .searchbar{display:none}
-  .mobile-searchbar{display:flex;align-items:center;gap:8px}
   .cart-drawer{width:100vw}
   .receipt-box{border-radius:14px}
   .receipt-body{padding:16px 18px}
   .receipt-header{padding:22px 18px 16px}
+  .checkout-modal-box{border-radius:14px;margin:8px}
+  .co-form-grid{grid-template-columns:1fr !important}
+  .stat-strip{grid-template-columns:repeat(2,1fr)}
+  .qf-grid{grid-template-columns:1fr}
+  .badge-rx{display:none}
+
+  /* Two-row mobile header */
+  header{position:sticky;top:0;z-index:200}
+  .header-inner{
+    flex-wrap:wrap;height:auto;padding:10px 14px 0;gap:0;
+  }
+  .logo{flex:1;min-width:0}
+  .logo-text{font-size:1rem}
+  .logo-mark{width:32px;height:32px}
+  .logo-mark svg{width:16px;height:16px}
+  .hd-right{margin-left:auto;flex-shrink:0}
+  .cart-btn{padding:7px 12px;font-size:.8rem;gap:5px}
+
+  /* Nav tabs go full width on second row */
+  .nav-tabs{
+    display:flex;gap:0;margin-left:0;
+    width:100%;margin-top:8px;
+    border-top:1px solid var(--c-border);
+    padding:6px 0 6px;
+    overflow-x:auto;-webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
+  }
+  .nav-tabs::-webkit-scrollbar{display:none}
+  .nav-tab{
+    flex:1;text-align:center;
+    padding:7px 4px;font-size:.78rem;font-weight:700;
+    border-radius:6px;white-space:nowrap;
+    min-width:0;
+  }
 }
 </style>
 </head>
@@ -525,16 +542,22 @@ main{flex:1;padding:24px;min-width:0;overflow:hidden}
 <!-- HEADER -->
 <header>
   <div class="header-inner">
-    <a class="logo" href="#">
+    <a class="logo" href="#" @click.prevent="activePage='products'">
       <div class="logo-mark">
         <svg viewBox="0 0 24 24"><path d="M19 3H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V5a2 2 0 00-2-2zm-7 3a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H8a1 1 0 110-2h3V7a1 1 0 011-1z"/></svg>
       </div>
       <span class="logo-text">Medi<span>Cure</span></span>
     </a>
-    <div class="searchbar">
-      <input type="text" placeholder="Search by name or composition…" x-model="q"/>
-      <button><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></button>
-    </div>
+
+    <!-- NAV TABS -->
+    <nav class="nav-tabs">
+      <button class="nav-tab" :class="{active:activePage==='products'}" @click="activePage='products'">🏥 Products</button>
+      <button class="nav-tab" :class="{active:activePage==='about'}" @click="activePage='about'">ℹ️ About Us</button>
+      <button class="nav-tab" :class="{active:activePage==='contact'}" @click="activePage='contact'">📞 Contact</button>
+    </nav>
+
+
+
     <div class="hd-right">
       <span class="badge-rx">⭐ Best Retail Price</span>
       <button class="cart-btn" @click="cartOpen=true">
@@ -546,18 +569,59 @@ main{flex:1;padding:24px;min-width:0;overflow:hidden}
   </div>
 </header>
 
-<!-- MOBILE SEARCH -->
-<div class="mobile-searchbar">
-  <div class="searchbar" style="flex:1;max-width:100%">
-    <input type="text" placeholder="Search medicines, composition…" x-model="q"/>
-    <button><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></button>
-  </div>
-</div>
 
 <div class="page-wrap">
 
-<!-- SIDEBAR -->
-<aside>
+<!-- MOBILE FILTER DRAWER -->
+<div class="mob-filter-overlay" x-show="mobFilterOpen" @click.self="mobFilterOpen=false" style="display:none">
+  <div class="mob-filter-drawer">
+    <div class="mob-filter-head">
+      <h2>🔬 Refine Results</h2>
+      <button class="mob-filter-close" @click="mobFilterOpen=false">✕</button>
+    </div>
+    <div class="sb-section">
+      <p class="sb-label">Company</p>
+      <div class="company-card" :class="{active:aCo===null}" @click="aCo=null">
+        <div class="co-dot" style="background:linear-gradient(135deg,#1a6fc4,#0d9e90)"></div>
+        <div class="co-info">
+          <div class="co-name">All Companies</div>
+          <div class="co-sub">Show all <span x-text="products.length"></span> products</div>
+        </div>
+      </div>
+      <template x-for="c in companies" :key="c.id">
+        <div class="company-card" :class="{active:aCo===c.id}" @click="aCo=aCo===c.id?null:c.id">
+          <div class="co-dot" :style="'background:'+c.color"></div>
+          <div class="co-info">
+            <div class="co-name" x-text="c.name"></div>
+            <div class="co-sub" x-text="c.sub"></div>
+          </div>
+        </div>
+      </template>
+    </div>
+    <div class="sb-section">
+      <p class="sb-label">Dosage Form</p>
+      <template x-for="cat in categories" :key="cat.id">
+        <div class="filter-pill" :class="{active:aCat===cat.id}" @click="aCat=aCat===cat.id?null:cat.id">
+          <div class="fp-left"><span x-text="cat.icon"></span><span x-text="cat.name"></span></div>
+          <span class="fp-count" x-text="cntByCat(cat.id)"></span>
+        </div>
+      </template>
+    </div>
+    <div class="sb-section">
+      <p class="sb-label">Price Range (Our Rate)</p>
+      <template x-for="pr in priceRanges" :key="pr.id">
+        <div class="filter-pill" :class="{active:aPr===pr.id}" @click="aPr=aPr===pr.id?null:pr.id">
+          <div class="fp-left">💰 <span x-text="pr.label"></span></div>
+          <span class="fp-count" x-text="cntByPr(pr)"></span>
+        </div>
+      </template>
+    </div>
+    <button class="clear-all-btn" @click="clearAll()">✕ Clear All Filters</button>
+  </div>
+</div>
+
+<!-- SIDEBAR (only on products) -->
+<aside x-show="activePage==='products'">
   <div class="aside-head"><h2>🔬 Refine Results</h2></div>
   <div class="sb-section">
     <p class="sb-label">Company</p>
@@ -601,92 +665,365 @@ main{flex:1;padding:24px;min-width:0;overflow:hidden}
 
 <!-- MAIN -->
 <main>
-  <div class="hero">
-    <div class="hero-grid">
-      <div class="hero-text">
-        <h1>Genuine Medicines · Best Prices</h1>
-        <p>Authorised distributor for <strong>Wellgo Pharmaceuticals</strong> (Chandigarh) &amp; <strong>PediaZone</strong> (Panchkula). All products sourced directly from manufacturer — WHO‑GMP certified, cold chain maintained.</p>
-        <div class="hero-badges">
-          <span class="h-badge">✓ WHO-GMP Certified</span>
-          <span class="h-badge">✓ Cold Chain Maintained</span>
-          <span class="h-badge">✓ Direct from Manufacturer</span>
-          <span class="h-badge">✓ Same Day Dispatch</span>
-          <span class="h-badge">✓ 100% Genuine</span>
-        </div>
+
+  <!-- ══ PRODUCTS PAGE ══ -->
+  <div x-show="activePage==='products'" class="page-section" x-cloak>
+    <!-- Search bar in product section -->
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px">
+      <div class="product-searchbar" style="flex:1">
+        <input type="text" placeholder="🔍  Search medicines by name or composition…" x-model="q"/>
+        <button><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></button>
       </div>
-      <div class="hero-pills"><span>💊</span><span>🧪</span><span>🍶</span></div>
+      <button class="mob-filter-toggle" @click="mobFilterOpen=true">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="11" y1="18" x2="13" y2="18"/></svg>
+        Filters<template x-if="aCo||aCat||aPr"><span style="background:var(--c-blue);color:white;border-radius:50%;width:17px;height:17px;font-size:.65rem;display:inline-flex;align-items:center;justify-content:center;font-weight:800">!</span></template>
+      </button>
+    </div>
+    <div class="hero">
+      <div class="hero-grid">
+        <div class="hero-text">
+          <h1>Genuine Medicines · Best Prices</h1>
+          <p>Authorised distributor for <strong>Wellgo Pharmaceuticals</strong> (Chandigarh) &amp; <strong>PediaZone</strong> (Panchkula). All products sourced directly from manufacturer — WHO‑GMP certified, cold chain maintained.</p>
+          <div class="hero-badges">
+            <span class="h-badge">✓ WHO-GMP Certified</span>
+            <span class="h-badge">✓ Cold Chain Maintained</span>
+            <span class="h-badge">✓ Direct from Manufacturer</span>
+            <span class="h-badge">✓ Same Day Dispatch</span>
+            <span class="h-badge">✓ 100% Genuine</span>
+          </div>
+        </div>
+        <div class="hero-pills"><span>💊</span><span>🧪</span><span>🍶</span></div>
+      </div>
+    </div>
+
+    <div class="topbar">
+      <p class="res-info">Showing <strong x-text="sorted.length"></strong> of <strong x-text="products.length"></strong> products</p>
+      <select class="sort-sel" x-model="sortBy">
+        <option value="default">Sort: Featured</option>
+        <option value="rate-asc">Rate: Low → High</option>
+        <option value="rate-desc">Rate: High → Low</option>
+        <option value="name">Name: A → Z</option>
+      </select>
+    </div>
+
+    <div class="active-tags" x-show="q||aCo||aCat||aPr">
+      <template x-if="q"><span class="a-tag">🔍 "<span x-text="q"></span>" <button @click="q=''">×</button></span></template>
+      <template x-if="aCo"><span class="a-tag">🏢 <span x-text="companies.find(c=>c.id===aCo)?.name"></span><button @click="aCo=null">×</button></span></template>
+      <template x-if="aCat"><span class="a-tag"><span x-text="categories.find(c=>c.id===aCat)?.icon"></span> <span x-text="categories.find(c=>c.id===aCat)?.name"></span><button @click="aCat=null">×</button></span></template>
+      <template x-if="aPr"><span class="a-tag">💰 <span x-text="priceRanges.find(p=>p.id===aPr)?.label"></span><button @click="aPr=null">×</button></span></template>
+    </div>
+
+    <div class="grid" x-show="sorted.length>0">
+      <template x-for="p in sorted" :key="p.id">
+        <div class="prod-card"
+             @mousemove="cardMouseMove($event, $el)"
+             @mouseleave="$el.style.setProperty('--mx','50%');$el.style.setProperty('--my','50%')">
+          <div class="card-img" :class="p.co==='wellgo'?'wellgo-bg':'pedia-bg'">
+            <div class="med-icon" x-text="p.icon"></div>
+            <span class="brand-chip" :class="p.co==='wellgo'?'bc-wellgo':'bc-pedia'"
+                  x-text="p.co==='wellgo'?'WELLGO':'PEDIAZONE'"></span>
+            <span class="cat-chip" :class="'cc-'+p.cat" x-text="catLabel(p.cat)"></span>
+          </div>
+          <div class="card-body">
+            <div class="med-name" x-text="p.name"></div>
+            <div class="med-comp" x-text="p.comp"></div>
+            <div class="med-pack" x-text="p.pack"></div>
+          </div>
+          <div class="card-foot">
+            <div class="price-block">
+              <div class="price-row-1">
+                <div>
+                  <div class="our-label">Our Rate</div>
+                  <div class="our-price">₹<span x-text="p.rate"></span></div>
+                </div>
+              </div>
+              <div class="mrp-row">
+                <span class="mrp-label">MRP:</span>
+                <span class="mrp-val">₹<span x-text="p.mrp"></span></span>
+              </div>
+            </div>
+            <template x-if="!getQty(p.id)">
+              <button class="add-btn" @click="add(p)">
+                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                Add to Cart
+              </button>
+            </template>
+            <template x-if="getQty(p.id)">
+              <div class="qty-ctrl">
+                <button class="q-btn" @click="rem(p.id)">−</button>
+                <input class="q-input" type="number" min="0"
+                  :value="getQty(p.id)"
+                  @change="setQty(p, $event.target.value)"
+                  @blur="if(!$event.target.value||+$event.target.value<1){remAll(p.id)}"
+                />
+                <button class="q-btn" @click="add(p)">+</button>
+              </div>
+            </template>
+          </div>
+        </div>
+      </template>
+    </div>
+
+    <div class="empty-state" x-show="sorted.length===0">
+      <div class="ei">🔍</div>
+      <h3>No products found</h3>
+      <p>Try adjusting your filters or search term.</p>
     </div>
   </div>
 
-  <div class="topbar">
-    <p class="res-info">Showing <strong x-text="sorted.length"></strong> of <strong x-text="products.length"></strong> products</p>
-    <select class="sort-sel" x-model="sortBy">
-      <option value="default">Sort: Featured</option>
-      <option value="rate-asc">Rate: Low → High</option>
-      <option value="rate-desc">Rate: High → Low</option>
-      <option value="name">Name: A → Z</option>
-    </select>
-  </div>
+  <!-- ══ ABOUT PAGE ══ -->
+  <div x-show="activePage==='about'" class="about-page page-section" x-cloak>
 
-  <div class="active-tags" x-show="q||aCo||aCat||aPr">
-    <template x-if="q"><span class="a-tag">🔍 "<span x-text="q"></span>" <button @click="q=''">×</button></span></template>
-    <template x-if="aCo"><span class="a-tag">🏢 <span x-text="companies.find(c=>c.id===aCo)?.name"></span><button @click="aCo=null">×</button></span></template>
-    <template x-if="aCat"><span class="a-tag"><span x-text="categories.find(c=>c.id===aCat)?.icon"></span> <span x-text="categories.find(c=>c.id===aCat)?.name"></span><button @click="aCat=null">×</button></span></template>
-    <template x-if="aPr"><span class="a-tag">💰 <span x-text="priceRanges.find(p=>p.id===aPr)?.label"></span><button @click="aPr=null">×</button></span></template>
-  </div>
-
-  <div class="grid" x-show="sorted.length>0">
-    <template x-for="p in sorted" :key="p.id">
-      <div class="prod-card"
-           @mousemove="cardMouseMove($event, $el)"
-           @mouseleave="$el.style.setProperty('--mx','50%');$el.style.setProperty('--my','50%')">
-        <div class="card-img" :class="p.co==='wellgo'?'wellgo-bg':'pedia-bg'">
-          <div class="med-icon" x-text="p.icon"></div>
-          <span class="brand-chip" :class="p.co==='wellgo'?'bc-wellgo':'bc-pedia'"
-                x-text="p.co==='wellgo'?'WELLGO':'PEDIAZONE'"></span>
-          <span class="cat-chip" :class="'cc-'+p.cat" x-text="catLabel(p.cat)"></span>
-        </div>
-        <div class="card-body">
-          <div class="med-name" x-text="p.name"></div>
-          <div class="med-comp" x-text="p.comp"></div>
-          <div class="med-pack" x-text="p.pack"></div>
-        </div>
-        <div class="card-foot">
-          <div class="price-block">
-            <div class="price-row-1">
-              <div>
-                <div class="our-label">Our Rate</div>
-                <div class="our-price">₹<span x-text="p.rate"></span></div>
-              </div>
-            </div>
-            <div class="mrp-row">
-              <span class="mrp-label">MRP:</span>
-              <span class="mrp-val">₹<span x-text="p.mrp"></span></span>
-            </div>
-          </div>
-          <template x-if="!getQty(p.id)">
-            <button class="add-btn" @click="add(p)">
-              <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-              Add to Cart
-            </button>
-          </template>
-          <template x-if="getQty(p.id)">
-            <div class="qty-ctrl">
-              <button class="q-btn" @click="rem(p.id)">−</button>
-              <span class="q-num" x-text="getQty(p.id)"></span>
-              <button class="q-btn" @click="add(p)">+</button>
-            </div>
-          </template>
+    <!-- Hero -->
+    <div class="about-hero">
+      <div class="about-hero-inner">
+        <div class="about-logo-big">💊</div>
+        <div class="about-hero-text">
+          <h1>About MediCure</h1>
+          <p>MediCure is a trusted pharmaceutical distribution company based in the Chandigarh-Panchkula region, serving healthcare professionals, clinics, hospitals, and medical stores since 2018. We believe in making high-quality, genuine medicines accessible at the best possible prices — no middlemen, no markups.</p>
         </div>
       </div>
-    </template>
+    </div>
+
+    <!-- Stats -->
+    <div class="stat-strip">
+      <div class="stat-card">
+        <div class="stat-num">500+</div>
+        <div class="stat-label">Products in Catalogue</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">2</div>
+        <div class="stat-label">Manufacturer Partners</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">7+</div>
+        <div class="stat-label">Years of Service</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">100%</div>
+        <div class="stat-label">Genuine Products</div>
+      </div>
+    </div>
+
+    <!-- About Cards -->
+    <div class="about-grid">
+      <div class="about-card">
+        <span class="about-card-icon">🎯</span>
+        <h3>Our Mission</h3>
+        <p>To provide healthcare professionals with reliable, WHO-GMP certified pharmaceuticals at the best retail prices — directly from the manufacturer, ensuring full authenticity and cold-chain compliance every step of the way.</p>
+      </div>
+      <div class="about-card">
+        <span class="about-card-icon">🔬</span>
+        <h3>Quality Assurance</h3>
+        <ul>
+          <li>WHO-GMP certified manufacturing partners</li>
+          <li>Cold chain maintained throughout storage & delivery</li>
+          <li>Every product sourced directly from the manufacturer</li>
+          <li>Batch traceability on all orders</li>
+          <li>No parallel imports or counterfeit stock</li>
+        </ul>
+      </div>
+      <div class="about-card">
+        <span class="about-card-icon">🚚</span>
+        <h3>Distribution & Delivery</h3>
+        <p>We offer same-day dispatch for orders placed before 2 PM, with free delivery across Chandigarh, Panchkula, Mohali and surrounding areas. Bulk and institutional orders handled with dedicated account support.</p>
+        <ul style="margin-top:10px">
+          <li>Same-day dispatch (orders before 2 PM)</li>
+          <li>Free delivery on all orders</li>
+          <li>Cash on Delivery &amp; UPI accepted</li>
+          <li>Bulk order discounts available</li>
+        </ul>
+      </div>
+      <div class="about-card">
+        <span class="about-card-icon">💼</span>
+        <h3>Who We Serve</h3>
+        <ul>
+          <li>Private clinics &amp; family practitioners</li>
+          <li>Paediatric specialists &amp; child health clinics</li>
+          <li>Hospitals &amp; nursing homes</li>
+          <li>Retail medical stores &amp; pharmacies</li>
+          <li>Diagnostic labs &amp; health centres</li>
+          <li>Individual practitioners requiring home delivery</li>
+        </ul>
+      </div>
+      <div class="about-card about-full">
+        <span class="about-card-icon">📋</span>
+        <h3>Licences & Compliance</h3>
+        <p>MediCure operates with full regulatory compliance under Indian pharmaceutical distribution law. All products carry valid batch numbers, expiry details, and are sourced exclusively from licensed manufacturers holding current Drug Licence, GST registration, and WHO-GMP certification. We maintain temperature-controlled storage and follow CDSCO guidelines for pharmaceutical storage and distribution.</p>
+      </div>
+    </div>
+
+    <!-- Partner Companies -->
+    <div class="contact-header-label">Our Manufacturing Partners</div>
+    <div class="partner-strip">
+      <div class="partner-card">
+        <div class="partner-dot" style="background:#1a6fc4"></div>
+        <div class="partner-info">
+          <h3>Wellgo Pharmaceuticals</h3>
+          <div class="partner-sub">📍 Chandigarh · Established 2005</div>
+          <p>A leading pharmaceutical manufacturer from Chandigarh specialising in tablets, capsules, syrups, dry syrups, injections, drops, and ointments across all major therapeutic categories — antibiotics, analgesics, gastroenterology, cardiology, neurology, and more. WHO-GMP certified and CDSCO licensed.</p>
+        </div>
+      </div>
+      <div class="partner-card">
+        <div class="partner-dot" style="background:#0d9e90"></div>
+        <div class="partner-info">
+          <h3>PediaZone</h3>
+          <div class="partner-sub">📍 Panchkula · Paediatric Specialist</div>
+          <p>A dedicated paediatric pharmaceutical company from Panchkula manufacturing child-safe formulations — dispersible tablets, syrups, oral drops, dry syrups, injections, sachets, and topical creams specifically designed for infants, toddlers, and children. All formulations are paediatrician-recommended and child-friendly flavoured.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contact shortcut -->
+    <div style="text-align:center;padding:32px;background:linear-gradient(120deg,rgba(26,111,196,.1),rgba(13,158,144,.1));border:1px solid var(--c-border-light);border-radius:16px;margin-bottom:8px">
+      <div style="font-size:2rem;margin-bottom:10px">📞</div>
+      <h3 style="font-size:1.1rem;font-weight:800;margin-bottom:8px">Have a query or need a quote?</h3>
+      <p style="font-size:.85rem;color:var(--c-text-muted);margin-bottom:18px">Our support team is available Monday–Saturday, 9 AM to 7 PM.</p>
+      <button class="add-btn" style="max-width:220px;margin:0 auto" @click="activePage='contact'">
+        Contact Us →
+      </button>
+    </div>
   </div>
 
-  <div class="empty-state" x-show="sorted.length===0">
-    <div class="ei">🔍</div>
-    <h3>No products found</h3>
-    <p>Try adjusting your filters or search term.</p>
+  <!-- ══ CONTACT PAGE ══ -->
+  <div x-show="activePage==='contact'" class="about-page page-section" x-cloak>
+
+    <div class="about-hero" style="padding:32px 36px">
+      <div class="about-hero-inner">
+        <div class="about-logo-big" style="font-size:2rem">📞</div>
+        <div class="about-hero-text">
+          <h1>Get in Touch</h1>
+          <p>Have a question about a product, need a bulk quote, or want to place a large order? Reach out to our team — we typically respond within a few hours.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="contact-section">
+      <div class="contact-header-label">Contact Information &amp; Support</div>
+
+      <div class="contact-grid">
+        <!-- Info cards -->
+        <div class="contact-info-col">
+          <div class="contact-info-card">
+            <div class="ci-card-icon">📧</div>
+            <div class="ci-card-body">
+              <h4>Email Support</h4>
+              <a href="mailto:medicuresupport@gmail.com">medicuresupport@gmail.com</a>
+              <span class="ci-tag">Replies within 4–6 hours</span>
+            </div>
+          </div>
+          <div class="contact-info-card">
+            <div class="ci-card-icon">📞</div>
+            <div class="ci-card-body">
+              <h4>Toll-Free Number</h4>
+              <a href="tel:18001239988">1800-123-9988</a>
+              <span style="font-size:.76rem;color:var(--c-text-dim);display:block;margin-top:2px">Mon – Sat, 9:00 AM – 7:00 PM</span>
+              <span class="ci-tag">Free · No waiting charges</span>
+            </div>
+          </div>
+          <div class="contact-info-card">
+            <div class="ci-card-icon">📱</div>
+            <div class="ci-card-body">
+              <h4>WhatsApp / Direct</h4>
+              <a href="tel:+919876543210">+91 98765 43210</a>
+              <span style="font-size:.76rem;color:var(--c-text-dim);display:block;margin-top:2px">Quick order queries &amp; product info</span>
+              <span class="ci-tag">WhatsApp preferred</span>
+            </div>
+          </div>
+          <div class="contact-info-card">
+            <div class="ci-card-icon">📍</div>
+            <div class="ci-card-body">
+              <h4>Our Location</h4>
+              <span>Jalalabad, Punjab</span>
+              <span style="font-size:.76rem;color:var(--c-text-dim);display:block;margin-top:2px">Serving Jalalabad &amp; surrounding areas of Punjab</span>
+            </div>
+          </div>
+          <!-- Business Hours -->
+          <div class="contact-info-card" style="flex-direction:column;gap:12px">
+            <div style="display:flex;gap:14px;align-items:flex-start;width:100%">
+              <div class="ci-card-icon">🕘</div>
+              <div class="ci-card-body" style="width:100%">
+                <h4 style="margin-bottom:12px">Business Hours</h4>
+                <div class="hours-row"><span class="day">Monday – Friday</span><span class="time">9:00 AM – 7:00 PM</span></div>
+                <div class="hours-row"><span class="day">Saturday</span><span class="time">9:00 AM – 5:00 PM</span></div>
+                <div class="hours-row"><span class="day">Sunday</span><span class="closed">Closed</span></div>
+                <div class="hours-row"><span class="day">Public Holidays</span><span class="closed">Closed</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Query Form -->
+        <div class="query-form-card">
+          <h3>📬 Send Us a Query</h3>
+          <p>Fill in the form below and our team will get back to you as quickly as possible.</p>
+          <div x-data="queryForm()">
+            <div class="qf-grid">
+              <div class="qf-field">
+                <label class="qf-label">Your Name *</label>
+                <input class="qf-input" :class="{'error':qErr.name}" type="text" placeholder="Dr. Rajesh Sharma" x-model="name" @input="qErr.name=false"/>
+                <span class="co-err" :class="{show:qErr.name}">Please enter your name</span>
+              </div>
+              <div class="qf-field">
+                <label class="qf-label">Phone Number *</label>
+                <input class="qf-input" :class="{'error':qErr.phone}" type="tel" placeholder="9876543210" x-model="phone" maxlength="10" @input="qErr.phone=false"/>
+                <span class="co-err" :class="{show:qErr.phone}">Enter a valid 10-digit phone number</span>
+              </div>
+              <div class="qf-field full">
+                <label class="qf-label">Email Address</label>
+                <input class="qf-input" type="email" placeholder="doctor@clinic.com" x-model="email"/>
+              </div>
+              <div class="qf-field full">
+                <label class="qf-label">Clinic / Hospital / Organisation</label>
+                <input class="qf-input" type="text" placeholder="City Medical Store" x-model="org"/>
+              </div>
+              <div class="qf-field full">
+                <label class="qf-label">Query / Message *</label>
+                <textarea class="qf-textarea" :class="{'error':qErr.message}" placeholder="Tell us what you need — product enquiry, pricing, bulk order, delivery, or anything else…" x-model="message" @input="qErr.message=false"></textarea>
+                <span class="co-err" :class="{show:qErr.message}">Please enter your message</span>
+              </div>
+            </div>
+            <button class="qf-submit" @click="submit()">
+              <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+              <span x-text="sending?'Sending…':'Send Message'"></span>
+            </button>
+            <div class="qf-success" :class="{show:sent}">
+              ✅ Your message has been received! We'll respond within 4–6 hours on business days.
+            </div>
+            <p style="font-size:.72rem;color:var(--c-text-dim);margin-top:14px;text-align:center">
+              By submitting this form you agree that MediCure may contact you regarding your enquiry. We respect your privacy and never share your data.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- FAQ strip -->
+      <div class="contact-header-label">Frequently Asked Questions</div>
+      <div class="about-grid">
+        <div class="about-card">
+          <span class="about-card-icon">🚚</span>
+          <h3>How fast is delivery?</h3>
+          <p>Orders placed before 2 PM are dispatched the same day. Delivery within Chandigarh, Panchkula, and Mohali is typically completed within 24 hours.</p>
+        </div>
+        <div class="about-card">
+          <span class="about-card-icon">💳</span>
+          <h3>What payment methods do you accept?</h3>
+          <p>We accept Cash on Delivery (COD) for all orders, and UPI / QR-based payments via any UPI app including PhonePe, GPay, Paytm, and BHIM.</p>
+        </div>
+        <div class="about-card">
+          <span class="about-card-icon">📦</span>
+          <h3>Can I place bulk orders?</h3>
+          <p>Absolutely. Bulk and institutional orders are welcome. Contact us on WhatsApp or email for volume pricing, credit terms, and dedicated account management.</p>
+        </div>
+        <div class="about-card">
+          <span class="about-card-icon">🔄</span>
+          <h3>What is your return/exchange policy?</h3>
+          <p>Damaged or incorrect items are replaced immediately at no charge. Cold-chain products and opened medicines cannot be returned unless defective. Contact us within 24 hours of delivery for any issue.</p>
+        </div>
+      </div>
+    </div>
   </div>
+
 </main>
 </div>
 
@@ -720,7 +1057,11 @@ main{flex:1;padding:24px;min-width:0;overflow:hidden}
           </div>
           <div class="ci-qty">
             <button class="cq-btn" @click="rem(item.id)">−</button>
-            <span class="cq-n" x-text="item.qty"></span>
+            <input class="cq-input" type="number" min="1"
+              :value="item.qty"
+              @change="setQty(item, $event.target.value)"
+              @blur="if(!$event.target.value||+$event.target.value<1){remAll(item.id)}"
+            />
             <button class="cq-btn" @click="add(item)">+</button>
           </div>
         </div>
@@ -730,29 +1071,147 @@ main{flex:1;padding:24px;min-width:0;overflow:hidden}
       <div class="sum-row"><span>MRP Total</span><span>₹<span x-text="mrpTotal.toFixed(0)"></span></span></div>
       <div class="sum-row"><span>Delivery</span><span style="color:var(--c-green);font-weight:700">FREE</span></div>
       <div class="sum-row total"><span>Total Payable</span><span>₹<span x-text="cartTotal.toFixed(0)"></span></span></div>
-      <button class="checkout-btn" @click="checkout()">Proceed to Checkout →</button>
+      <button class="checkout-btn" @click="cartOpen=false; checkoutOpen=true">Proceed to Checkout →</button>
     </div>
   </div>
 </div>
 
-<!-- ORDER RECEIPT POPUP -->
+<!-- CHECKOUT MODAL -->
+<div class="checkout-overlay" x-show="checkoutOpen" style="display:none" x-cloak>
+  <div class="checkout-modal-box">
+    <div class="co-modal-header">
+      <div class="co-modal-header-left">
+        <h2>🧾 Checkout</h2>
+        <p>Fill in your details to place the order</p>
+      </div>
+      <button class="co-modal-close" @click="checkoutOpen=false">✕</button>
+    </div>
+    <div class="co-modal-body">
+
+      <div class="co-section-label">📦 Delivery Details</div>
+      <div class="co-form-grid">
+        <div class="co-field">
+          <label class="co-label">Full Name *</label>
+          <input class="co-input" :class="{'error': coErrors.name}" type="text" placeholder="Dr. Rajesh Sharma" x-model="coForm.name" @input="coErrors.name=false"/>
+          <span class="co-err" :class="{'show': coErrors.name}">Please enter your name</span>
+        </div>
+        <div class="co-field">
+          <label class="co-label">Phone Number *</label>
+          <input class="co-input" :class="{'error': coErrors.phone}" type="tel" placeholder="9876543210" x-model="coForm.phone" @input="coErrors.phone=false" maxlength="10"/>
+          <span class="co-err" :class="{'show': coErrors.phone}">Enter valid 10-digit number</span>
+        </div>
+        <div class="co-field full">
+          <label class="co-label">Clinic / Hospital / Shop Name</label>
+          <input class="co-input" type="text" placeholder="City Medical Store, Sector 17" x-model="coForm.clinic"/>
+        </div>
+        <div class="co-field full">
+          <label class="co-label">Delivery Address *</label>
+          <input class="co-input" :class="{'error': coErrors.address}" type="text" placeholder="Street, Locality, City, PIN" x-model="coForm.address" @input="coErrors.address=false"/>
+          <span class="co-err" :class="{'show': coErrors.address}">Please enter delivery address</span>
+        </div>
+        <div class="co-field">
+          <label class="co-label">City *</label>
+          <input class="co-input" :class="{'error': coErrors.city}" type="text" placeholder="Chandigarh" x-model="coForm.city" @input="coErrors.city=false"/>
+          <span class="co-err" :class="{'show': coErrors.city}">Enter city</span>
+        </div>
+        <div class="co-field">
+          <label class="co-label">PIN Code *</label>
+          <input class="co-input" :class="{'error': coErrors.pin}" type="text" placeholder="160001" x-model="coForm.pin" @input="coErrors.pin=false" maxlength="6"/>
+          <span class="co-err" :class="{'show': coErrors.pin}">Enter valid 6-digit PIN</span>
+        </div>
+        <div class="co-field full">
+          <label class="co-label">Order Notes (optional)</label>
+          <input class="co-input" type="text" placeholder="Special instructions, urgent delivery, etc." x-model="coForm.notes"/>
+        </div>
+      </div>
+
+      <div class="co-section-label">📋 Order Summary</div>
+      <div class="co-order-summary">
+        <template x-for="item in cart" :key="item.id">
+          <div class="co-sum-row">
+            <span x-text="item.icon+' '+item.name+' ×'+item.qty"></span>
+            <span>₹<span x-text="(item.rate*item.qty).toFixed(0)"></span></span>
+          </div>
+        </template>
+        <div class="co-sum-row"><span>Delivery</span><span style="color:var(--c-green);font-weight:700">FREE</span></div>
+        <div class="co-sum-row total"><span>Total Payable</span><span>₹<span x-text="cartTotal.toFixed(0)"></span></span></div>
+      </div>
+
+      <div class="co-section-label">💳 Payment Method</div>
+      <div class="co-payment-options" style="margin-bottom:20px">
+        <div class="co-pay-opt" :class="{selected:coForm.payment==='cod'}" @click="coForm.payment='cod'">
+          <span class="co-pay-icon">💵</span> Cash on Delivery
+        </div>
+        <div class="co-pay-opt" :class="{selected:coForm.payment==='upi'}" @click="coForm.payment='upi'">
+          <span class="co-pay-icon">📱</span> UPI / QR
+        </div>
+      </div>
+
+      <div x-show="coForm.payment==='upi'" style="display:none;text-align:center;margin-bottom:20px;padding:20px 16px;background:rgba(255,255,255,.04);border:1px solid var(--c-border-light);border-radius:14px;">
+        <p style="font-size:.78rem;color:var(--c-text-muted);margin-bottom:12px;font-weight:600;letter-spacing:.4px;text-transform:uppercase;">Scan QR to Pay via Any UPI App</p>
+        <div style="background:white;border-radius:12px;padding:16px;display:inline-block;margin-bottom:12px">
+          <svg width="120" height="120" viewBox="0 0 120 120" fill="none">
+            <rect width="120" height="120" fill="white"/>
+            <rect x="10" y="10" width="40" height="40" rx="4" fill="#0b1628"/>
+            <rect x="16" y="16" width="28" height="28" rx="2" fill="white"/>
+            <rect x="22" y="22" width="16" height="16" rx="1" fill="#0b1628"/>
+            <rect x="70" y="10" width="40" height="40" rx="4" fill="#0b1628"/>
+            <rect x="76" y="16" width="28" height="28" rx="2" fill="white"/>
+            <rect x="82" y="22" width="16" height="16" rx="1" fill="#0b1628"/>
+            <rect x="10" y="70" width="40" height="40" rx="4" fill="#0b1628"/>
+            <rect x="16" y="76" width="28" height="28" rx="2" fill="white"/>
+            <rect x="22" y="82" width="16" height="16" rx="1" fill="#0b1628"/>
+            <rect x="56" y="56" width="8" height="8" fill="#1a6fc4"/>
+            <rect x="70" y="56" width="8" height="8" fill="#1a6fc4"/>
+            <rect x="84" y="56" width="8" height="8" fill="#1a6fc4"/>
+            <rect x="98" y="56" width="8" height="8" fill="#1a6fc4"/>
+            <rect x="70" y="70" width="8" height="8" fill="#0d9e90"/>
+            <rect x="84" y="84" width="8" height="8" fill="#0d9e90"/>
+            <rect x="56" y="84" width="8" height="8" fill="#1a6fc4"/>
+            <rect x="56" y="98" width="8" height="8" fill="#1a6fc4"/>
+            <rect x="70" y="98" width="8" height="8" fill="#0d9e90"/>
+            <rect x="98" y="84" width="8" height="8" fill="#0d9e90"/>
+            <rect x="98" y="98" width="8" height="8" fill="#1a6fc4"/>
+          </svg>
+        </div>
+        <p style="font-size:.78rem;color:var(--c-text-muted)">UPI ID: <strong style="color:var(--c-blue-light)">medicure@upi</strong></p>
+        <p style="font-size:.72rem;color:var(--c-text-dim);margin-top:4px">Pay and place order — we'll verify on delivery</p>
+      </div>
+
+      <button class="place-order-btn" @click="placeOrder()" :disabled="coPlacing||cart.length===0">
+        <template x-if="coPlacing">
+          <span>⏳ Placing Order…</span>
+        </template>
+        <template x-if="!coPlacing">
+          <span>✅ Place Order · ₹<span x-text="cartTotal.toFixed(0)"></span></span>
+        </template>
+      </button>
+      <p class="co-receipt-email-note">A copy of your order will be sent to our team. You'll receive a confirmation call within 30 minutes.</p>
+    </div>
+  </div>
+</div>
+
+<!-- RECEIPT MODAL -->
 <div class="receipt-overlay" x-show="receiptOpen" style="display:none" x-cloak>
   <div class="receipt-box">
     <div class="receipt-header">
       <span class="receipt-checkmark">✅</span>
-      <div class="receipt-title">Order Placed Successfully!</div>
-      <div class="receipt-subtitle">Your medicines are confirmed &amp; will be dispatched shortly.<br/>Thank you for choosing <strong style="color:var(--c-blue-light)">MediCure</strong> — stay healthy! 💙</div>
+      <div class="receipt-title">Order Placed!</div>
+      <div class="receipt-subtitle">Your order has been received and our team will confirm it shortly.</div>
     </div>
     <div class="receipt-body">
-      <div class="receipt-order-id"><span>Order ID</span><span x-text="receiptOrderId"></span></div>
-      <div class="receipt-section-label">🧾 Order Summary</div>
+      <div class="receipt-order-id">
+        <span>Order ID</span>
+        <span x-text="receiptOrderId"></span>
+      </div>
+      <div class="receipt-section-label">Items Ordered</div>
       <div class="receipt-items">
         <template x-for="item in receiptItems" :key="item.id">
           <div class="receipt-item">
             <div class="ri-left">
-              <div class="ri-name"><span x-text="item.icon"></span> <span x-text="item.name"></span></div>
-              <div class="ri-detail" x-text="item.co==='wellgo'?'Wellgo Pharmaceuticals':'PediaZone'"></div>
-              <div class="ri-qty">Qty: <span x-text="item.qty"></span> × ₹<span x-text="item.rate"></span></div>
+              <div class="ri-name" x-text="item.icon+' '+item.name"></div>
+              <div class="ri-detail" x-text="item.comp"></div>
+              <div class="ri-qty" x-text="'Qty: '+item.qty+' × ₹'+item.rate"></div>
             </div>
             <div class="ri-price">
               <div class="ri-amount">₹<span x-text="(item.rate*item.qty).toFixed(0)"></span></div>
@@ -761,26 +1220,56 @@ main{flex:1;padding:24px;min-width:0;overflow:hidden}
           </div>
         </template>
       </div>
-      <div class="receipt-section-label">💰 Bill Details</div>
       <div class="receipt-totals">
         <div class="rt-row"><span>MRP Total</span><span>₹<span x-text="receiptMrpTotal"></span></span></div>
-        <div class="rt-row"><span>Delivery Charges</span><span style="color:var(--c-green);font-weight:700">FREE 🚚</span></div>
-        <div class="rt-row total-final"><span>Final Amount</span><span>₹<span x-text="receiptFinalTotal"></span></span></div>
+        <div class="rt-row"><span>Delivery</span><span style="color:var(--c-green);font-weight:700">FREE</span></div>
+        <div class="rt-row total-final"><span>Total Payable</span><span>₹<span x-text="receiptFinalTotal"></span></span></div>
       </div>
+      <template x-if="receiptCustomer">
+        <div>
+          <div class="receipt-section-label">Delivery Details</div>
+          <div style="font-size:.82rem;color:var(--c-text-muted);line-height:1.8;margin-bottom:18px;background:rgba(11,22,40,.5);border:1px solid var(--c-border);border-radius:10px;padding:12px 14px">
+            <div><strong style="color:var(--c-text)" x-text="receiptCustomer.name"></strong></div>
+            <div x-text="receiptCustomer.phone"></div>
+            <template x-if="receiptCustomer.clinic"><div x-text="receiptCustomer.clinic"></div></template>
+            <div x-text="receiptCustomer.address"></div>
+            <div style="margin-top:6px;color:var(--c-blue-light);font-weight:600" x-text="'Payment: '+receiptCustomer.payment"></div>
+          </div>
+        </div>
+      </template>
       <div class="receipt-thank">
         <span class="thank-emoji">🙏</span>
-        <p>Thank you for shopping with us! Your order is being processed by our licensed pharmacists. For queries, reach us at <strong>support@medicure.in</strong></p>
+        <p>Thank you for choosing <strong>MediCure</strong>! Our team will call you within 30 minutes to confirm your order. For queries call <strong>1800-123-9988</strong> or email <strong>medicuresupport@gmail.com</strong></p>
       </div>
-      <button class="receipt-close-btn" @click="closeReceipt()">Continue Shopping →</button>
+      <button class="receipt-close-btn" @click="closeReceipt()">Continue Shopping</button>
     </div>
   </div>
 </div>
 
 <script>
-// rate = round(MRP * 0.45 / 5) * 5  → 55% OFF MRP, price is 45% of MRP, rounded to nearest 5
-const r = mrp => Math.round(mrp * 0.45 / 5) * 5;
+function queryForm(){
+  return {
+    name:'', phone:'', email:'', org:'', message:'',
+    sending:false, sent:false,
+    qErr:{name:false, phone:false, message:false},
+    submit(){
+      this.qErr.name    = !this.name.trim();
+      this.qErr.phone   = !/^\d{10}$/.test(this.phone.trim());
+      this.qErr.message = !this.message.trim();
+      if(this.qErr.name || this.qErr.phone || this.qErr.message) return;
+      this.sending = true;
+      setTimeout(()=>{
+        this.sending = false;
+        this.sent = true;
+        this.name=''; this.phone=''; this.email=''; this.org=''; this.message='';
+        this.qErr={name:false,phone:false,message:false};
+      }, 1200);
+    }
+  }
+}
 
 function pharmaStore(){
+  // ── Products deduplicated by composition (keeping first occurrence per comp) ──
   const RAW = [
     /* ═══ WELLGO PHARMACEUTICALS ═══ */
     /* TABLETS */
@@ -1062,14 +1551,265 @@ function pharmaStore(){
     {id:617,co:'pedia', cat:'drop',      name:'Pedicof Drops',                 comp:'Dextromethorphan 5mg + CPM 0.5mg / 1ml',                            pack:'Bottle of 30ml',         mrp:55  },
     {id:618,co:'pedia', cat:'drop',      name:'Pedilevo Drops',                comp:'Levocetirizine 2.5mg / 5ml Drops',                                  pack:'Bottle of 15ml',         mrp:48  },
     {id:619,co:'pedia', cat:'drop',      name:'Pediflu 100 Drops',             comp:'Fluconazole 50mg / 5ml Drops',                                      pack:'Bottle of 35ml',         mrp:88  },
+
+    /* ═══════════════════════════════════════════════════════ */
+    /* ═══ NEW ADDITIONS — WELLGO PHARMACEUTICALS ═══════════ */
+    /* ═══════════════════════════════════════════════════════ */
+
+    /* TABLETS — REQUESTED */
+    {id:700,co:'wellgo',cat:'tablet',    name:'Rabuwel DSR',                   comp:'Rabeprazole 20mg + Domperidone 30mg SR',                             pack:'Strip of 10 Tablets',    mrp:155 },
+    {id:701,co:'wellgo',cat:'tablet',    name:'Welpanto EC 40mg',              comp:'Pantoprazole Sodium 40mg (Enteric Coated — New Batch)',              pack:'Strip of 10 Tablets',    mrp:88  },
+    {id:702,co:'wellgo',cat:'tablet',    name:'Welpanto D 10mg/40mg',          comp:'Pantoprazole 40mg + Domperidone 10mg (SR)',                          pack:'Strip of 10 Tablets',    mrp:118 },
+    {id:703,co:'wellgo',cat:'tablet',    name:'Fixiwel CV 200mg',              comp:'Cefixime 200mg + Clavulanic Acid 125mg',                             pack:'Strip of 6 Tablets',     mrp:310 },
+    {id:704,co:'wellgo',cat:'injection',    name:'Nandgo 50mg',                   comp:'Nandrolone Decanoate 50mg',                               pack:'Dispo Pack 1ml',    mrp:145 },
+    {id:705,co:'wellgo',cat:'tablet',    name:'Atrimol S 100mg/325mg',         comp:'Aceclofenac 100mg + Paracetamol 325mg + Serratiopeptidase 15mg',    pack:'Strip of 10 Tablets',    mrp:155 },
+    {id:706,co:'wellgo',cat:'tablet',    name:'Nimpwel P 100mg/325mg',         comp:'Nimesulide 100mg + Paracetamol 325mg',                              pack:'Strip of 10 Tablets',    mrp:82  },
+    {id:707,co:'wellgo',cat:'tablet',    name:'Nimpwel SP',                    comp:'Nimesulide 100mg + Paracetamol 325mg + Serratiopeptidase 15mg',     pack:'Strip of 10 Tablets',    mrp:128 },
+    {id:708,co:'wellgo',cat:'tablet',    name:'Volwel 50mg',                   comp:'Diclofenac Sodium 50mg (Enteric Coated)',                            pack:'Strip of 10 Tablets',    mrp:72  },
+    {id:709,co:'wellgo',cat:'tablet',    name:'Volwel MR',                     comp:'Diclofenac 50mg + Methocarbamol 500mg',                             pack:'Strip of 10 Tablets',    mrp:118 },
+    {id:710,co:'wellgo',cat:'tablet',    name:'Volwel SR 100mg',               comp:'Diclofenac Sodium 100mg Sustained Release',                         pack:'Strip of 10 Tablets',    mrp:98  },
+    {id:711,co:'wellgo',cat:'tablet',    name:'Multiwel Tablet',               comp:'Multivitamin + Multimineral + Antioxidants',                        pack:'Strip of 15 Tablets',    mrp:148 },
+    {id:712,co:'wellgo',cat:'tablet',    name:'Welsun D3 60K',                 comp:'Cholecalciferol (Vitamin D3) 60,000 IU',                            pack:'Strip of 4 Tablets',     mrp:158 },
+    {id:713,co:'wellgo',cat:'tablet',    name:'Welsun D3 1000 IU',             comp:'Cholecalciferol 1000 IU + Calcium 500mg + Magnesium 50mg',         pack:'Strip of 15 Tablets',    mrp:135 },
+    {id:714,co:'wellgo',cat:'tablet',    name:'Calowel K27',                   comp:'Calcium Carbonate 500mg + Vitamin D3 250 IU + Vitamin K2-7 45mcg', pack:'Strip of 15 Tablets',    mrp:185 },
+    {id:715,co:'wellgo',cat:'tablet',    name:'Calowel',                       comp:'Calcium Carbonate 1250mg + Vitamin D3 250 IU',                      pack:'Strip of 15 Tablets',    mrp:118 },
+    {id:716,co:'wellgo',cat:'tablet',    name:'Calowel XT',                    comp:'Calcium Citrate 1000mg + Vitamin D3 400 IU + Zinc 4mg + Magnesium', pack:'Strip of 15 Tablets',    mrp:215 },
+
+    /* TABLETS — EXTRA NEW */
+    {id:717,co:'wellgo',cat:'tablet',    name:'Welcod 10mg/325mg',             comp:'Codeine 10mg + Paracetamol 325mg',                                  pack:'Strip of 10 Tablets',    mrp:145 },
+    {id:718,co:'wellgo',cat:'tablet',    name:'Welvic 100mg',                  comp:'Acyclovir 200mg',                                                   pack:'Strip of 5 Tablets',     mrp:88  },
+    {id:719,co:'wellgo',cat:'tablet',    name:'Welchlor 10mg',                 comp:'Chlorpheniramine Maleate 4mg + Phenylephrine 10mg',                 pack:'Strip of 10 Tablets',    mrp:48  },
+    {id:720,co:'wellgo',cat:'tablet',    name:'Welgab M',                      comp:'Gabapentin 300mg + Methylcobalamin 500mcg',                         pack:'Strip of 10 Tablets',    mrp:205 },
+    {id:721,co:'wellgo',cat:'tablet',    name:'Weldolo 650mg',                 comp:'Paracetamol 650mg (Extended Release)',                              pack:'Strip of 15 Tablets',    mrp:65  },
+    {id:722,co:'wellgo',cat:'tablet',    name:'Weltor 20mg',                   comp:'Atorvastatin 20mg + Ezetimibe 10mg',                                pack:'Strip of 10 Tablets',    mrp:198 },
+    {id:723,co:'wellgo',cat:'tablet',    name:'Welten 50mg',                   comp:'Teneligliptin Hydrobromide 20mg',                                   pack:'Strip of 10 Tablets',    mrp:215 },
+    {id:724,co:'wellgo',cat:'tablet',    name:'Welcip 500mg',                  comp:'Ciprofloxacin HCl 500mg',                                           pack:'Strip of 10 Tablets',    mrp:82  },
+    {id:725,co:'wellgo',cat:'tablet',    name:'Welsartan 50mg',                comp:'Losartan Potassium 50mg',                                           pack:'Strip of 10 Tablets',    mrp:88  },
+    {id:726,co:'wellgo',cat:'tablet',    name:'Welpiro 7.5mg',                 comp:'Piroxicam 20mg',                                                    pack:'Strip of 10 Tablets',    mrp:68  },
+    {id:727,co:'wellgo',cat:'tablet',    name:'Welpreg 75mg SR',               comp:'Pregabalin 75mg SR',                                                pack:'Strip of 10 Tablets',    mrp:135 },
+    {id:728,co:'wellgo',cat:'tablet',    name:'Welpreg 150mg SR',              comp:'Pregabalin 150mg SR',                                               pack:'Strip of 10 Tablets',    mrp:188 },
+
+    /* CAPSULES — NEW */
+    {id:750,co:'wellgo',cat:'capsule',   name:'Multiwel Cap',                  comp:'Multivitamin + Multimineral + Lycopene + Selenium + Zinc',          pack:'Strip of 10 Capsules',   mrp:188 },
+    {id:751,co:'wellgo',cat:'capsule',   name:'Wellyco Cap',                   comp:'Lycopene 5000mcg + Vitamins A, C, E + Selenium + Zinc',             pack:'Strip of 10 Capsules',   mrp:165 },
+    {id:752,co:'wellgo',cat:'capsule',   name:'Welcal D3 Softgel',             comp:'Calcium Carbonate 500mg + Vitamin D3 400 IU Softgel',              pack:'Strip of 10 Softgels',   mrp:145 },
+    {id:753,co:'wellgo',cat:'capsule',   name:'Welsun D3 60K Cap',             comp:'Cholecalciferol 60,000 IU Softgel Capsule',                         pack:'Strip of 4 Capsules',    mrp:158 },
+    {id:754,co:'wellgo',cat:'capsule',   name:'WelOmega HP',                   comp:'EPA 360mg + DHA 240mg + Vitamin E 10mg',                            pack:'Strip of 10 Softgels',   mrp:225 },
+    {id:755,co:'wellgo',cat:'capsule',   name:'Welnerv PG Cap',                comp:'Pregabalin 75mg + Mecobalamin 750mcg Capsule',                      pack:'Strip of 10 Capsules',   mrp:195 },
+    {id:756,co:'wellgo',cat:'capsule',   name:'Welbio 10 Cap',                 comp:'Lactobacillus rhamnosus + Bifidobacterium 10 Billion CFU',          pack:'Strip of 10 Capsules',   mrp:198 },
+
+    /* SYRUPS — NEW */
+    {id:760,co:'wellgo',cat:'syrup',     name:'Fluwel-LS Syrup',               comp:'Levosalbutamol 1mg + Ambroxol 30mg + Guaifenesin 50mg / 5ml',      pack:'Bottle of 100ml',        mrp:98  },
+    {id:761,co:'wellgo',cat:'syrup',     name:'Multiwel Syrup',                comp:'Multivitamin B-Complex + Zinc + Taurine + Ginseng / 5ml',           pack:'Bottle of 200ml',        mrp:155 },
+    {id:762,co:'wellgo',cat:'syrup',     name:'Welcough EX Syrup',             comp:'Dextromethorphan 10mg + Guaifenesin 100mg + Menthol 1mg / 5ml',     pack:'Bottle of 100ml',        mrp:88  },
+    {id:763,co:'wellgo',cat:'syrup',     name:'Welprobio Syrup',               comp:'Lactobacillus 10B CFU + Fructooligosaccharide / 5ml',               pack:'Bottle of 60ml',         mrp:145 },
+    {id:764,co:'wellgo',cat:'syrup',     name:'Welhepa Syrup',                 comp:'Silymarin 140mg + Vitamin B12 + Folic Acid / 5ml',                  pack:'Bottle of 200ml',        mrp:128 },
+
+    /* DRY SYRUPS — NEW */
+    {id:770,co:'wellgo',cat:'drysyrup',  name:'Fixiwel CV 50mg DS',            comp:'Cefixime 50mg + Clavulanic Acid 31.25mg / 5ml',                     pack:'Bottle 30ml + WFI',      mrp:158 },
+    {id:771,co:'wellgo',cat:'drysyrup',  name:'Welfix 200 CV DS',              comp:'Cefixime 200mg + Clavulanic Acid 125mg / 5ml',                      pack:'Bottle 30ml + WFI',      mrp:225 },
+    {id:772,co:'wellgo',cat:'drysyrup',  name:'Welcef CV 250mg DS',            comp:'Cefuroxime 125mg + Clavulanic Acid 62.5mg / 5ml',                   pack:'Bottle 30ml + WFI',      mrp:185 },
+
+    /* INJECTIONS — NEW */
+    {id:780,co:'wellgo',cat:'injection', name:'Volwel 75mg Inj',               comp:'Diclofenac Sodium 75mg/3ml IM (Aqueous)',                           pack:'Ampoule of 3ml',         mrp:45  },
+    {id:781,co:'wellgo',cat:'injection', name:'Welcef TZ 2.25g Inj',           comp:'Piperacillin 2g + Tazobactam 250mg IV',                             pack:'Vial of 10ml',           mrp:245 },
+    {id:782,co:'wellgo',cat:'injection', name:'Welicef 1g Inj',                comp:'Cefuroxime Sodium 1g IV',                                           pack:'Vial of 10ml',           mrp:278 },
+    {id:783,co:'wellgo',cat:'injection', name:'Welipred 125mg Inj',            comp:'Methylprednisolone Sodium Succinate 125mg IV',                      pack:'Vial of 5ml',            mrp:185 },
+    {id:784,co:'wellgo',cat:'injection', name:'Welmero 500mg Inj',             comp:'Meropenem 500mg IV',                                                pack:'Vial of 20ml',           mrp:388 },
+    {id:785,co:'wellgo',cat:'injection', name:'Welmero 1g Inj',                comp:'Meropenem 1g IV',                                                   pack:'Vial of 20ml',           mrp:658 },
+    {id:786,co:'wellgo',cat:'injection', name:'Welrabi 40mg Inj',              comp:'Rabeprazole Sodium 40mg IV',                                        pack:'Vial of 10ml',           mrp:115 },
+    {id:787,co:'wellgo',cat:'injection', name:'Welvank 500mg Inj',             comp:'Vancomycin HCl 500mg IV',                                           pack:'Vial of 10ml',           mrp:478 },
+
+    /* OINTMENTS — REQUESTED + EXTRA */
+    {id:790,co:'wellgo',cat:'ointment',  name:'Weliderm Cream',                comp:'Clobetasol Propionate 0.05% + Neomycin 0.5% + Miconazole 2%',      pack:'Tube of 15g',            mrp:118 },
+    {id:791,co:'wellgo',cat:'ointment',  name:'Weliderm B Cream',              comp:'Betamethasone 0.05% + Clotrimazole 1% + Neomycin 0.5%',            pack:'Tube of 20g',            mrp:135 },
+    {id:792,co:'wellgo',cat:'ointment',  name:'Weliderm G Cream',              comp:'Gentamicin Sulphate 0.1% + Betamethasone Valerate 0.1%',           pack:'Tube of 20g',            mrp:98  },
+    {id:793,co:'wellgo',cat:'ointment',  name:'Welvolini Gel',                 comp:'Diclofenac Sodium 1% + Methyl Salicylate 10% + Menthol 5%',        pack:'Tube of 30g',            mrp:125 },
+    {id:794,co:'wellgo',cat:'ointment',  name:'Welvolini Plus Gel',            comp:'Diclofenac Diethylamine 1.16% + Linseed Oil 3%',                   pack:'Tube of 30g',            mrp:148 },
+    {id:795,co:'wellgo',cat:'ointment',  name:'Welscab Lotion',                comp:'Permethrin 5% Lotion (Anti-Scabies)',                               pack:'Bottle of 60ml',         mrp:175 },
+    {id:796,co:'wellgo',cat:'ointment',  name:'Welfung Cream',                 comp:'Clotrimazole 1% + Beclomethasone 0.025% + Neomycin 0.5%',          pack:'Tube of 15g',            mrp:108 },
+    {id:797,co:'wellgo',cat:'ointment',  name:'Welacne Gel',                   comp:'Clindamycin 1% + Nicotinamide 4% Gel',                             pack:'Tube of 15g',            mrp:155 },
+    {id:798,co:'wellgo',cat:'ointment',  name:'Welskin Cream',                 comp:'Fluocinolone Acetonide 0.01% + Hydroquinone 2% + Tretinoin 0.05%', pack:'Tube of 15g',            mrp:195 },
+    {id:799,co:'wellgo',cat:'ointment',  name:'Welzit Gel',                    comp:'Salicylic Acid 0.5% + Zinc Acetate 1.2% (Acne Gel)',              pack:'Tube of 15g',            mrp:128 },
+
+    /* ═══════════════════════════════════════════════════════ */
+    /* ═══ NEW ADDITIONS — PEDIAZONE ════════════════════════ */
+    /* ═══════════════════════════════════════════════════════ */
+
+    /* TABLETS — REQUESTED (PEDIA) */
+    {id:800,co:'pedia', cat:'tablet',    name:'Lemonto-Kid Tablet',            comp:'Levocetirizine 2.5mg + Montelukast 4mg (Chewable)',                 pack:'Strip of 10 Tablets',    mrp:115 },
+    {id:801,co:'pedia', cat:'tablet',    name:'Fluwel-Kid Tablet',             comp:'Paracetamol 125mg + Chlorpheniramine 1mg (Chewable)',               pack:'Strip of 10 Tablets',    mrp:48  },
+    {id:802,co:'pedia', cat:'tablet',    name:'Nimpwel Kid 50mg',              comp:'Nimesulide 50mg (Paediatric) Mouth Dissolving',                     pack:'Strip of 10 Tablets',    mrp:55  },
+    {id:803,co:'pedia', cat:'tablet',    name:'Pedifex 200mg',                 comp:'Cefixime 200mg',                                                    pack:'Strip of 6 Tablets',     mrp:178 },
+    {id:804,co:'pedia', cat:'tablet',    name:'Pedipan 40mg Tab',              comp:'Pantoprazole Sodium 40mg (EC Tablet)',                              pack:'Strip of 10 Tablets',    mrp:88  },
+    {id:805,co:'pedia', cat:'tablet',    name:'Pedivit D3 1000',               comp:'Cholecalciferol 1000 IU + Calcium Carbonate 500mg',                 pack:'Strip of 15 Tablets',    mrp:128 },
+    {id:806,co:'pedia', cat:'tablet',    name:'Pedifolic 5mg',                 comp:'Folic Acid 5mg',                                                    pack:'Strip of 30 Tablets',    mrp:32  },
+    {id:807,co:'pedia', cat:'tablet',    name:'Pediiron XT',                   comp:'Ferrous Ascorbate 30mg + Folic Acid 0.5mg + Zinc 7.5mg (Paed)',    pack:'Strip of 30 Tablets',    mrp:95  },
+
+    /* SYRUPS — PEDIA NEW */
+    {id:820,co:'pedia', cat:'syrup',     name:'Lemonto-Kid Syrup',             comp:'Montelukast 4mg + Levocetirizine 2.5mg / 5ml — Strawberry',        pack:'Bottle of 60ml',         mrp:125 },
+    {id:821,co:'pedia', cat:'syrup',     name:'Fluwel-Kid Syrup',              comp:'Ambroxol 15mg + Levosalbutamol 1mg + Guaifenesin 25mg / 5ml',      pack:'Bottle of 100ml',        mrp:98  },
+    {id:822,co:'pedia', cat:'syrup',     name:'Nimpwel Kid Syrup',             comp:'Nimesulide 50mg / 5ml (Strawberry)',                                pack:'Bottle of 60ml',         mrp:72  },
+    {id:823,co:'pedia', cat:'syrup',     name:'Multiwel-Kid Syrup',            comp:'Multivitamin + Zinc + Taurine + DHA / 5ml — Mixed Fruit',          pack:'Bottle of 200ml',        mrp:168 },
+    {id:824,co:'pedia', cat:'syrup',     name:'Pedicalm Plus Syrup',           comp:'Cyproheptadine 2mg + Tricholine Citrate 275mg / 5ml — Pineapple',  pack:'Bottle of 110ml',        mrp:138 },
+    {id:825,co:'pedia', cat:'syrup',     name:'Pedivit D3 Syrup',              comp:'Cholecalciferol 400 IU + Calcium Gluconate / 5ml',                  pack:'Bottle of 100ml',        mrp:95  },
+    {id:826,co:'pedia', cat:'syrup',     name:'Pediiron DS Syrup',             comp:'Ferrous Sulphate 30mg + Folic Acid 0.75mg + Zinc 5mg / 5ml',       pack:'Bottle of 100ml',        mrp:88  },
+
+    /* DRY SYRUPS — PEDIA NEW */
+    {id:840,co:'pedia', cat:'drysyrup',  name:'Lemonto CV 50mg DS',            comp:'Amoxicillin 200mg + Clavulanic Acid 28.5mg + LAB / 5ml',           pack:'Bottle 30ml + WFI',      mrp:128 },
+    {id:841,co:'pedia', cat:'drysyrup',  name:'Fixiwel-Kid 50mg DS',           comp:'Cefixime 50mg + LAB (Lactic Acid Bacillus) / 5ml',                 pack:'Bottle 30ml + WFI',      mrp:112 },
+    {id:842,co:'pedia', cat:'drysyrup',  name:'Pedizith 200mg DS',             comp:'Azithromycin 200mg / 5ml Suspension',                              pack:'Bottle 15ml + WFI',      mrp:115 },
+
+    /* OINTMENTS — PEDIA NEW */
+    {id:850,co:'pedia', cat:'ointment',  name:'Pediderm Cream',                comp:'Zinc Oxide 10% + Calamine 8% + Boric Acid 3% (Nappy Rash)',       pack:'Tube of 30g',            mrp:88  },
+    {id:851,co:'pedia', cat:'ointment',  name:'Pedifung Cream',                comp:'Miconazole Nitrate 2% (Paediatric Antifungal Cream)',              pack:'Tube of 15g',            mrp:75  },
+    {id:852,co:'pedia', cat:'ointment',  name:'Pedimoist Lotion',              comp:'Glycerin 5% + Lactic Acid 2% + Urea 2% (Baby Moisturiser)',       pack:'Bottle of 100ml',        mrp:115 },
+    {id:853,co:'pedia', cat:'ointment',  name:'Pedisep Cream',                 comp:'Mupirocin 2% (Topical Antibacterial)',                             pack:'Tube of 5g',             mrp:95  },
+    {id:854,co:'pedia', cat:'ointment',  name:'Pedicortex Cream',              comp:'Hydrocortisone Acetate 1% + Clioquinol 1%',                        pack:'Tube of 15g',            mrp:88  },
+
+    /* ── WELLGO — CAPSULES (from price list) ── */
+    {id:900,co:'wellgo',cat:'capsule',  name:'Esomowel Capsules',             comp:'Esomeprazole 40mg + Domperidone SR',                               pack:'10×10 Alu Strip',        mrp:1150},
+    {id:901,co:'wellgo',cat:'capsule',  name:'Itrawel 200 Capsules',          comp:'Itraconazole 200mg',                                               pack:'1×4×10',                 mrp:1250},
+    {id:902,co:'wellgo',cat:'capsule',  name:'Dextigo Softgel Capsules',      comp:'Dextromethorphan + Chlorpheniramine + Phenylephrine (Softgel)',     pack:'10×10 Blister',          mrp:790 },
+    {id:903,co:'wellgo',cat:'capsule',  name:'Fezigo XT Softgel',             comp:'Ferrous Ascorbate 100mg + Folic Acid 1.5mg + Zinc 22.5mg',         pack:'10×1×10 Blister',        mrp:1390},
+    {id:904,co:'wellgo',cat:'capsule',  name:'Lypwel Softgel',                comp:'Lycopene 10% 5000mg + Lutein 8% + Grape Seed + Beta Carotene + Zinc + Selenium', pack:'10×10 Alu', mrp:1250},
+    {id:905,co:'wellgo',cat:'capsule',  name:'Multiwel Softgel',              comp:'Multivitamin + Multimineral Softgel',                              pack:'10×1×10 Alu',            mrp:1400},
+    {id:906,co:'wellgo',cat:'capsule',  name:'Calowel K27 Softgel',           comp:'L-Methylfolate + Vitamin K2-7 + Methylcobalamin + Calcium Citrate Malate', pack:'10×1×10 Blister', mrp:1990},
+    {id:907,co:'wellgo',cat:'capsule',  name:'Calowel Softgel',               comp:'Calcitriol 0.25mcg + Calcium Citrate 500mg + Magnesium 50mg + Zinc 7.5mg', pack:'10×10 Alu',    mrp:1300},
+    {id:908,co:'wellgo',cat:'capsule',  name:'Welsun D3 Softgel',             comp:'Cholecalciferol Soft Gel',                                         pack:'1×4×10 Blister',         mrp:1200},
+    {id:909,co:'wellgo',cat:'capsule',  name:'Benfotiamine Capsules',         comp:'Benfotiamine',                                                     pack:'10×1×10 Blister',        mrp:2100},
+
+    /* ── WELLGO — CAPSULES / PPI COMBOS ── */
+    {id:910,co:'wellgo',cat:'capsule',  name:'Omewel Capsules',               comp:'Omeprazole IP 20mg',                                               pack:'10×15',                  mrp:500 },
+    {id:911,co:'wellgo',cat:'capsule',  name:'Omewel-D Capsules',             comp:'Omeprazole 20mg + Domperidone 10mg',                               pack:'15×20 Alu Alu',          mrp:1400},
+    {id:912,co:'wellgo',cat:'capsule',  name:'Welpanto-DSR Capsules',         comp:'Pantoprazole (EC) 40mg + Domperidone (SR) 30mg',                   pack:'10×10 Alu Alu',          mrp:990 },
+    {id:913,co:'wellgo',cat:'capsule',  name:'Rabuwel-DSR Capsules',          comp:'Rabeprazole (EC) 20mg + Domperidone (SR) 30mg',                    pack:'10×10 Alu Alu',          mrp:950 },
+    {id:914,co:'wellgo',cat:'capsule',  name:'Rabuwel-LS Capsules',           comp:'Rabeprazole (EC) 20mg + Levosulpiride (SR) 75mg',                  pack:'10×10 Alu Alu',          mrp:1600},
+
+    /* ── WELLGO — DROPS ── */
+    {id:920,co:'wellgo',cat:'drop',     name:'Wbrox Drops',                   comp:'Ambroxol 7.5mg + Levosalbutamol 0.25mg + Guaiphenesin 12.5mg',    pack:'15ml + Dropper',         mrp:55  },
+
+    /* ── WELLGO — DRY INJ ── */
+    {id:930,co:'wellgo',cat:'injection',name:'Gimoxy 1.2 Inj',                comp:'Amoxycillin 1g + Potassium Clavulanate 200mg',                     pack:'Vial with WFI',          mrp:137 },
+    {id:931,co:'wellgo',cat:'injection',name:'Welicef 1Gm Inj',               comp:'Ceftriaxone Sodium Sterile 1000mg',                                pack:'Vial with WFI',          mrp:59  },
+    {id:932,co:'wellgo',cat:'injection',name:'Welicef 500 Inj',               comp:'Ceftriaxone Sodium Sterile 500mg',                                 pack:'Vial',                   mrp:50  },
+    {id:933,co:'wellgo',cat:'injection',name:'Welicef-S 1.5 Inj',             comp:'Ceftriaxone 1000mg + Sulbactam 500mg',                             pack:'Vial with WFI',          mrp:162 },
+    {id:934,co:'wellgo',cat:'injection',name:'Welicef-S 750 Inj',             comp:'Ceftriaxone 500mg + Sulbactam Sodium 250mg',                       pack:'Vial with WFI',          mrp:80  },
+    {id:935,co:'wellgo',cat:'injection',name:'Merowel Inj',                   comp:'Meropenem 1gm',                                                    pack:'Vial + Water',           mrp:1400},
+    {id:936,co:'wellgo',cat:'injection',name:'Welpanto Inj',                  comp:'Pantoprazole 40mg Injection',                                      pack:'Vial with WFI',          mrp:46  },
+    {id:937,co:'wellgo',cat:'injection',name:'Pipzowel 4.5 Inj',              comp:'Piperacillin 4gm + Tazobactam 0.5gm',                             pack:'Vial with WFI',          mrp:490 },
+
+    /* ── WELLGO — DRY SYRUPS ── */
+    {id:940,co:'wellgo',cat:'drysyrup', name:'Gimoxy DS',                     comp:'Amoxycillin + Clavulanic Acid Dry Syrup',                          pack:'30ml with WFI',          mrp:120 },
+    {id:941,co:'wellgo',cat:'drysyrup', name:'Fixiwel CV Dry Syrup',          comp:'Cefixime 50mg + Clavulanic Acid 31.25mg / 5ml',                   pack:'30ml with WFI',          mrp:80  },
+    {id:942,co:'wellgo',cat:'drysyrup', name:'Fixiwel 50 Dry Syrup',          comp:'Cefixime Trihydrate 50mg',                                         pack:'30ml with WFI',          mrp:80  },
+    {id:943,co:'wellgo',cat:'drysyrup', name:'Welcefo 100 DS',                comp:'Cefpodoxime 100mg Dry Syrup',                                      pack:'30ml with WFI',          mrp:140 },
+    {id:944,co:'wellgo',cat:'drysyrup', name:'Welcefo 50 DS',                 comp:'Cefpodoxime 50mg Dry Syrup',                                       pack:'30ml with WFI',          mrp:70  },
+
+    /* ── WELLGO — INJECTIONS ── */
+    {id:950,co:'wellgo',cat:'injection',name:'Amixan 500 Inj',                comp:'Amikacin 500mg Injection',                                         pack:'Vial',                   mrp:90  },
+    {id:951,co:'wellgo',cat:'injection',name:'Woxitil 1.5 Inj',               comp:'Cefuroxime 1500mg Injection',                                      pack:'Vial + Water 1.5gm',     mrp:379 },
+    {id:952,co:'wellgo',cat:'injection',name:'Difwel Aqua Inj',               comp:'Diclofenac Sodium 75mg Aqua',                                      pack:'10×1ml',                 mrp:25  },
+    {id:953,co:'wellgo',cat:'injection',name:'Welmic-Plus Inj',               comp:'Mecobalamin 1500mcg + Pyridoxine 100mg + Niacinamide 100mg',       pack:'Dispo Pack',             mrp:65  },
+    {id:954,co:'wellgo',cat:'injection',name:'Welmic 1500 D Inj',             comp:'Methylcobalamin 1500mcg (Dispo)',                                   pack:'Dispo Pack',             mrp:60  },
+    {id:955,co:'wellgo',cat:'injection',name:'Welmic 1500 Inj',               comp:'Methylcobalamin 1500mcg (Tray Pack)',                               pack:'5×2ml',                  mrp:50  },
+    {id:956,co:'wellgo',cat:'injection',name:'Welmic 2500 D Inj',             comp:'Methylcobalamin 2500mcg (Dispo)',                                   pack:'Dispo Pack',             mrp:85  },
+    {id:957,co:'wellgo',cat:'injection',name:'Welipred 125 Inj',              comp:'Methylprednisolone 125mg Injection',                               pack:'30ml with WFI',          mrp:450 },
+    {id:958,co:'wellgo',cat:'injection',name:'Nandgo-50 Inj',                 comp:'Nandrolone Decanoate 50mg',                                         pack:'Dispo Pack',             mrp:145 },
+    {id:959,co:'wellgo',cat:'injection',name:'Welixe Inj',                    comp:'Tranexamic Acid 100mg Injection',                                   pack:'5×5ml Tray Pack',        mrp:70  },
+
+    /* ── WELLGO — OINTMENTS ── */
+    {id:960,co:'wellgo',cat:'ointment', name:'Volwel Ointment',               comp:'Linseed Oil 3% + Diclofenac Diethylamine 1% + Methyl Salicylate 10% + Menthol 5%', pack:'30gm', mrp:75  },
+    {id:961,co:'wellgo',cat:'ointment', name:'Weliderm Anti-Fungal Cream',    comp:'Itraconazole Anti-Fungal Cream',                                   pack:'15gm',                   mrp:80  },
+    {id:962,co:'wellgo',cat:'ointment', name:'Weluli Cream',                  comp:'Luliconazole 1% Cream',                                             pack:'10gm',                   mrp:170 },
+
+    /* ── WELLGO — PROTEIN ── */
+    {id:963,co:'wellgo',cat:'syrup',    name:'Progene Protein Powder',        comp:'Sugar Free Protein Powder with DHA',                               pack:'200gm',                  mrp:250 },
+
+    /* ── WELLGO — SUSPENSION ── */
+    {id:970,co:'wellgo',cat:'syrup',    name:'Welbacto Suspension',           comp:'Bacillus Clausii Spores Suspension',                               pack:'12×5ml',                 mrp:52  },
+    {id:971,co:'wellgo',cat:'syrup',    name:'Laxofin Suspension',            comp:'Liquid Paraffin + Milk of Magnesia + Sodium Picosulphate',         pack:'170ml Bottle',           mrp:125 },
+
+    /* ── WELLGO — SYRUPS ── */
+    {id:980,co:'wellgo',cat:'syrup',    name:'Broxiwel Syrup',                comp:'Ambroxol HCl 15mg + Terbutaline 1.5mg + Guaiphenesin 50mg + Menthol 1mg', pack:'100ml',         mrp:65  },
+    {id:981,co:'wellgo',cat:'syrup',    name:'Hemwel Syrup',                  comp:'Herbal Blood Purifier',                                             pack:'200ml',                  mrp:105 },
+    {id:982,co:'wellgo',cat:'syrup',    name:'Calowel Syrup',                 comp:'Calcium Carbonate 600mg + Magnesium Hydroxide 85mg + Zinc Gluconate 14mg + Vitamin D3 100IU', pack:'200ml', mrp:90 },
+    {id:983,co:'wellgo',cat:'syrup',    name:'Cypwel Syrup',                  comp:'Cyproheptadine HCl + Tricholine Citrate',                          pack:'200ml',                  mrp:110 },
+    {id:984,co:'wellgo',cat:'syrup',    name:'Dextigo Syrup',                 comp:'Dextromethorphan 10mg + Phenylephrine 5mg + Chlorpheniramine 2mg', pack:'100ml',                  mrp:80  },
+    {id:985,co:'wellgo',cat:'syrup',    name:'Zymigo Syrup',                  comp:'Fungal Diastase 1:600 + Pepsin 1:3000',                            pack:'200ml',                  mrp:85  },
+    {id:986,co:'wellgo',cat:'syrup',    name:'Ferugo Syrup',                  comp:'Ferrous Ascorbate 300mg + Zinc Sulphate 22.5mg + Folic Acid 140mcg', pack:'200ml',               mrp:120 },
+    {id:987,co:'wellgo',cat:'syrup',    name:'Welacto Syrup',                 comp:'Lactulose 100ml Syrup',                                             pack:'100ml',                  mrp:110 },
+    {id:988,co:'wellgo',cat:'syrup',    name:'Wbrox-LS Syrup',                comp:'Levosalbutamol 1mg + Ambroxol 30mg + Guaiphenesin 30mg',           pack:'100ml',                  mrp:80  },
+    {id:989,co:'wellgo',cat:'syrup',    name:'Lypwel Syrup',                  comp:'Lycopene 10% + Vitamins E,C,B1,B6,A + Zinc + Manganese + Copper + Potassium + Sodium', pack:'200ml', mrp:140},
+    {id:990,co:'wellgo',cat:'syrup',    name:'Magiwel Suspension',            comp:'Magaldrate 400mg + Simethicone 20mg + Sorbitol',                   pack:'170ml',                  mrp:80  },
+    {id:991,co:'wellgo',cat:'syrup',    name:'Mafemol Suspension',            comp:'Mefenamic Acid 50mg + Paracetamol 125mg',                          pack:'60ml',                   mrp:50  },
+    {id:992,co:'wellgo',cat:'syrup',    name:'Oflimet Suspension',            comp:'Ofloxacin 50mg + Metronidazole 120mg + Simethicone 10mg',          pack:'60ml',                   mrp:65  },
+    {id:993,co:'wellgo',cat:'syrup',    name:'Fluwel Syrup',                  comp:'Paracetamol 250mg + Phenylephrine 5mg + Chlorpheniramine 2mg',     pack:'60ml',                   mrp:48  },
+    {id:994,co:'wellgo',cat:'syrup',    name:'Teribro-M Syrup',               comp:'Terbutaline 125mg + Bromhexine 2mg + Guaiphenesin 50mg + Menthol 0.5mg', pack:'100ml',           mrp:65  },
+    {id:995,co:'wellgo',cat:'syrup',    name:'Atrimol Suspension',            comp:'Aceclofenac 50mg + Paracetamol 125mg per 5ml',                     pack:'60ml PET Bottle',        mrp:55  },
+
+    /* ── WELLGO — TABLETS ── */
+    {id:1000,co:'wellgo',cat:'tablet',  name:'Atrimol Tablets',               comp:'Aceclofenac 100mg + Paracetamol 325mg',                            pack:'10×10 Blister',          mrp:490 },
+    {id:1001,co:'wellgo',cat:'tablet',  name:'Welitel AM Tablets',            comp:'Telmisartan 40mg + Amlodipine 5mg',                                pack:'10×10 Alu Alu',          mrp:850 },
+    {id:1002,co:'wellgo',cat:'tablet',  name:'Gimoxy CV 625 Tablets',         comp:'Amoxycillin 500mg + Clavulanic Acid 125mg',                        pack:'10×6',                   mrp:1180},
+    {id:1003,co:'wellgo',cat:'tablet',  name:'Fluwel Tablets',                comp:'Paracetamol 325mg + Phenylephrine 5mg + Chlorpheniramine 2mg + Caffeine 16mg', pack:'10×10',     mrp:650 },
+    {id:1004,co:'wellgo',cat:'tablet',  name:'Atrimol-TP Tablets',            comp:'Aceclofenac + Paracetamol + Thiocolchicoside',                     pack:'10×10 Alu Alu',          mrp:2100},
+    {id:1005,co:'wellgo',cat:'tablet',  name:'Wazzi 250 Tablets',             comp:'Azithromycin 250mg',                                               pack:'10×6',                   mrp:650 },
+    {id:1006,co:'wellgo',cat:'tablet',  name:'Wazzi 500 Tablets',             comp:'Azithromycin 500mg',                                               pack:'10×3',                   mrp:700 },
+    {id:1007,co:'wellgo',cat:'tablet',  name:'Wertine-16 Tablets',            comp:'Betahistine 16mg',                                                 pack:'10×10 Alu Alu',          mrp:950 },
+    {id:1008,co:'wellgo',cat:'tablet',  name:'Calowel D3 Tablets',            comp:'Calcium 500mg + Vitamin D3 250 IU',                                pack:'10×10',                  mrp:1300},
+    {id:1009,co:'wellgo',cat:'tablet',  name:'Fixiwel-OX Tablets',            comp:'Cefixime 200mg + Ofloxacin 200mg',                                 pack:'10×10 Alu Alu',          mrp:1900},
+    {id:1010,co:'wellgo',cat:'tablet',  name:'Fixiwel 100 Tablets',           comp:'Cefixime Trihydrate 100mg',                                        pack:'10×10',                  mrp:850 },
+    {id:1011,co:'wellgo',cat:'tablet',  name:'Fixiwel 200 LB Tablets',        comp:'Cefixime 200mg + Lactic Acid Bacillus 60 Million Spores',          pack:'10×10 Alu Alu',          mrp:1550},
+    {id:1012,co:'wellgo',cat:'tablet',  name:'Welcefo-CV Tablets',            comp:'Cefpodoxime Proxetil + Potassium Clavulanate',                     pack:'10×1×6 Alu Alu',         mrp:2350},
+    {id:1013,co:'wellgo',cat:'tablet',  name:'Welcefo 200 Tablets',           comp:'Cefpodoxime 200mg',                                                pack:'10×10 Alu Alu',          mrp:2200},
+    {id:1014,co:'wellgo',cat:'tablet',  name:'Woxitil 500 Tablets',           comp:'Cefuroxime 500mg',                                                 pack:'10×10 Alu Alu',          mrp:6200},
+    {id:1015,co:'wellgo',cat:'tablet',  name:'Atrimol MR Tablets',            comp:'Aceclofenac + Chlorzoxazone + Paracetamol',                        pack:'10×10 Blister',          mrp:750 },
+    {id:1016,co:'wellgo',cat:'tablet',  name:'Tendawel Tablets',              comp:'Collagen Peptide + Rosehip Extract',                               pack:'10×1×10 Alu Alu',        mrp:3000},
+    {id:1017,co:'wellgo',cat:'tablet',  name:'Defowel 6mg Tablets',           comp:'Deflazacort 6mg',                                                  pack:'10×10 Alu Alu',          mrp:980 },
+    {id:1018,co:'wellgo',cat:'tablet',  name:'Difwel-S Tablets',              comp:'Diclofenac Potassium 50mg + Paracetamol 325mg + Serratiopeptidase 15mg', pack:'10×10 Alu Alu', mrp:850 },
+    {id:1019,co:'wellgo',cat:'tablet',  name:'Difwel-P Tablets',              comp:'Diclofenac Potassium 50mg + Paracetamol 325mg',                   pack:'10×10',                  mrp:350 },
+    {id:1020,co:'wellgo',cat:'tablet',  name:'Mafewel-D Tablets',             comp:'Drotaverine HCl 80mg + Mefenamic Acid 250mg',                      pack:'10×10 Alu Alu',          mrp:800 },
+    {id:1021,co:'wellgo',cat:'tablet',  name:'Wetori 90 Tablets',             comp:'Etoricoxib 90mg',                                                  pack:'10×10 Alu Alu',          mrp:950 },
+    {id:1022,co:'wellgo',cat:'tablet',  name:'Fezigo XT Tablets',             comp:'Ferrous Ascorbate 100mg + Folic Acid 1.5mg + Zinc Sulphate 22.5mg', pack:'10×10 Alu',            mrp:900 },
+    {id:1023,co:'wellgo',cat:'tablet',  name:'Diametic-G1 Tablets',           comp:'Glimepiride 1mg + Metformin HCl 500mg SR (Bilayered)',             pack:'10×10 Blister',          mrp:590 },
+    {id:1024,co:'wellgo',cat:'tablet',  name:'Welzine 10 Tablets',            comp:'Levocetirizine Hydrochloride 10mg',                                pack:'10×10',                  mrp:500 },
+    {id:1025,co:'wellgo',cat:'tablet',  name:'Welzine 5 Tablets',             comp:'Levocetirizine Hydrochloride 5mg',                                 pack:'10×10 Alu Alu',          mrp:280 },
+    {id:1026,co:'wellgo',cat:'tablet',  name:'Linzwel 600 Tablets',           comp:'Linezolid 600mg',                                                  pack:'10×1×10 Alu Alu',        mrp:3500},
+    {id:1027,co:'wellgo',cat:'tablet',  name:'Welorni Tablets',               comp:'L-Ornithine + L-Aspartate 250mg + B-Complex + Niacinamide + Silymarin', pack:'10×1×10',          mrp:1850},
+    {id:1028,co:'wellgo',cat:'tablet',  name:'Welipred-8 Tablets',            comp:'Methylprednisolone 8mg',                                           pack:'10×10 Alu Alu',          mrp:633 },
+    {id:1029,co:'wellgo',cat:'tablet',  name:'Lemonto Tablets',               comp:'Montelukast Sodium 10mg + Levocetirizine 5mg',                     pack:'10×10 Alu Alu',          mrp:1100},
+    {id:1030,co:'wellgo',cat:'tablet',  name:'Weloxen-D Tablets',             comp:'Naproxen + Domperidone',                                           pack:'10×10 Blister',          mrp:1050},
+    {id:1031,co:'wellgo',cat:'tablet',  name:'Nimpwel Tablets',               comp:'Nimesulide 100mg + Paracetamol 325mg',                             pack:'10×10 Alu Alu',          mrp:425 },
+    {id:1032,co:'wellgo',cat:'tablet',  name:'Oflawel Tablets',               comp:'Ofloxacin 200mg + Ornidazole 500mg',                               pack:'10×10 Alu Alu',          mrp:850 },
+    {id:1033,co:'wellgo',cat:'tablet',  name:'Welpanto-D Tablets',            comp:'Pantoprazole 40mg + Domperidone 10mg',                             pack:'10×10 Alu Alu',          mrp:800 },
+    {id:1034,co:'wellgo',cat:'tablet',  name:'Rabuwel-D Tablets',             comp:'Rabeprazole 20mg + Domperidone 10mg',                              pack:'10×10 Alu Alu',          mrp:650 },
+    {id:1035,co:'wellgo',cat:'tablet',  name:'Wiximin-400 Tablets',           comp:'Rifaximin 400mg',                                                  pack:'10×10 Alu Alu',          mrp:3200},
+    {id:1036,co:'wellgo',cat:'tablet',  name:'Welvasta-10 Tablets',           comp:'Rosuvastatin Calcium 10mg',                                        pack:'10×10 Alu Alu',          mrp:1240},
+    {id:1037,co:'wellgo',cat:'tablet',  name:'Welitel-40 Tablets',            comp:'Telmisartan 40mg',                                                 pack:'10×10 Alu Alu',          mrp:750 },
+    {id:1038,co:'wellgo',cat:'tablet',  name:'Welitel H Tablets',             comp:'Telmisartan 40mg + Hydrochlorothiazide 12.5mg',                    pack:'10×10 Alu Alu',          mrp:860 },
+    {id:1039,co:'wellgo',cat:'tablet',  name:'Atrimol S Tablets',             comp:'Aceclofenac 100mg + Paracetamol 325mg + Serratiopeptidase 15mg',   pack:'10×10 Alu Alu',          mrp:800 },
+    {id:1040,co:'wellgo',cat:'tablet',  name:'Nym Cold Tablets',              comp:'Cold & Flu Combination Tablet',                                    pack:'10×10 Alu Alu',          mrp:700 },
   ];
+
+
+  // Deduplicate: keep only the first product per unique composition
+  const seenComp = new Set();
+  const DEDUPED = RAW.filter(p => {
+    const key = p.comp.trim().toLowerCase();
+    if(seenComp.has(key)) return false;
+    seenComp.add(key);
+    return true;
+  });
+
+  const r = mrp => Math.round(Math.round(mrp * 0.72) / 5) * 5;
 
   const iconMap = {
     tablet:'💊', capsule:'🔵', syrup:'🍶', drysyrup:'🧪',
     injection:'💉', drop:'💧', ointment:'🧴'
   };
 
-  const products = RAW.map(p => ({
+  const products = DEDUPED.map(p => ({
     ...p,
     rate: r(p.mrp),
     icon: iconMap[p.cat] || '💊',
@@ -1077,6 +1817,7 @@ function pharmaStore(){
 
   return {
     products,
+    activePage:'products',
     q:'',
     aCo:null,
     aCat:null,
@@ -1084,11 +1825,21 @@ function pharmaStore(){
     sortBy:'default',
     cart:[],
     cartOpen:false,
+    mobFilterOpen:false,
+    checkoutOpen:false,
     receiptOpen:false,
     receiptItems:[],
     receiptMrpTotal:0,
     receiptFinalTotal:0,
     receiptOrderId:'',
+    receiptCustomer:null,
+    coPlacing:false,
+
+    coForm:{
+      name:'', phone:'', clinic:'', address:'', city:'', pin:'',
+      notes:'', payment:'cod'
+    },
+    coErrors:{name:false, phone:false, address:false, city:false, pin:false},
 
     companies:[
       {id:'wellgo', name:'Wellgo Pharmaceuticals', sub:'Chandigarh · Est. 2005', color:'#1a6fc4'},
@@ -1102,6 +1853,7 @@ function pharmaStore(){
       {id:'drysyrup',  name:'Dry Syrup',  icon:'🧪'},
       {id:'injection', name:'Injections', icon:'💉'},
       {id:'drop',      name:'Drops',      icon:'💧'},
+      {id:'ointment',  name:'Ointments',  icon:'🧴'},
     ],
 
     priceRanges:[
@@ -1158,6 +1910,19 @@ function pharmaStore(){
       else this.cart.splice(idx,1);
     },
 
+    remAll(id){
+      const idx=this.cart.findIndex(c=>c.id===id);
+      if(idx!==-1) this.cart.splice(idx,1);
+    },
+
+    setQty(p, val){
+      const n = parseInt(val);
+      if(!n || n < 1){ this.remAll(p.id); return; }
+      const i = this.cart.find(c=>c.id===p.id);
+      if(i) i.qty = n;
+      else this.cart.push({...p, qty:n});
+    },
+
     clearAll(){ this.q=''; this.aCo=null; this.aCat=null; this.aPr=null; },
 
     genOrderId(){
@@ -1167,15 +1932,72 @@ function pharmaStore(){
       return id;
     },
 
-    checkout(){
+    validateForm(){
+      let ok = true;
+      this.coErrors.name    = !this.coForm.name.trim();
+      this.coErrors.phone   = !/^\d{10}$/.test(this.coForm.phone.trim());
+      this.coErrors.address = !this.coForm.address.trim();
+      this.coErrors.city    = !this.coForm.city.trim();
+      this.coErrors.pin     = !/^\d{6}$/.test(this.coForm.pin.trim());
+      return !Object.values(this.coErrors).some(Boolean);
+    },
+
+    async placeOrder(){
+      if(!this.validateForm()) return;
       if(this.cart.length===0) return;
-      this.receiptItems = this.cart.map(i=>({...i}));
-      this.receiptMrpTotal = Math.round(this.mrpTotal);
-      this.receiptFinalTotal = Math.round(this.cartTotal);
-      this.receiptOrderId = this.genOrderId();
-      this.cartOpen = false;
-      this.receiptOpen = true;
+      this.coPlacing = true;
+
+      const orderId = this.genOrderId();
+      const items = this.cart.map(i=>({...i}));
+      const mrpTot = Math.round(this.mrpTotal);
+      const finalTot = Math.round(this.cartTotal);
+      const payLabel = {cod:'Cash on Delivery', upi:'UPI / QR'}[this.coForm.payment]||this.coForm.payment;
+
+      const itemsTable = items.map(i=>
+        `${i.icon} ${i.name}  ×${i.qty}  @₹${i.rate} = ₹${(i.rate*i.qty).toFixed(0)}`
+      ).join('\n');
+
+      const emailParams = {
+        to_email: 'aarush.op9988@gmail.com',
+        order_id: orderId,
+        customer_name: this.coForm.name,
+        customer_phone: this.coForm.phone,
+        clinic_name: this.coForm.clinic || 'N/A',
+        delivery_address: `${this.coForm.address}, ${this.coForm.city} - ${this.coForm.pin}`,
+        payment_method: payLabel,
+        order_notes: this.coForm.notes || 'None',
+        items_list: itemsTable,
+        mrp_total: `₹${mrpTot}`,
+        final_total: `₹${finalTot}`,
+        order_date: new Date().toLocaleString('en-IN',{timeZone:'Asia/Kolkata'}),
+      };
+
+      try {
+        emailjs.init('kNpnvgx0Gfj5b7tIH');
+        await emailjs.send('service_medicure','template_medicure', emailParams);
+      } catch(e) {
+        console.warn('Email send skipped:', e);
+      }
+
+      this.receiptItems = items;
+      this.receiptMrpTotal = mrpTot;
+      this.receiptFinalTotal = finalTot;
+      this.receiptOrderId = orderId;
+      this.receiptCustomer = {
+        name: this.coForm.name,
+        phone: this.coForm.phone,
+        address: `${this.coForm.address}, ${this.coForm.city} - ${this.coForm.pin}`,
+        clinic: this.coForm.clinic,
+        payment: payLabel,
+        notes: this.coForm.notes,
+      };
+
       this.cart = [];
+      this.coPlacing = false;
+      this.checkoutOpen = false;
+      this.coForm = {name:'',phone:'',clinic:'',address:'',city:'',pin:'',notes:'',payment:'cod'};
+      this.coErrors = {name:false,phone:false,address:false,city:false,pin:false};
+      this.receiptOpen = true;
     },
 
     closeReceipt(){
