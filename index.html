@@ -192,8 +192,52 @@ main{flex:1;padding:24px;min-width:0;overflow:hidden}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(218px,1fr));gap:16px;}
 .prod-card{background:var(--c-card);border:1px solid var(--c-border);border-radius:var(--r);display:flex;flex-direction:column;overflow:hidden;transition:transform .2s,box-shadow .25s,border-color .2s,background .2s;cursor:default;position:relative;}
 .prod-card::before{content:'';position:absolute;inset:0;border-radius:var(--r);background:radial-gradient(circle 200px at var(--mx,50%) var(--my,50%),rgba(26,111,196,.18) 0%,transparent 70%);opacity:0;transition:opacity .3s;pointer-events:none;z-index:0;}
-.prod-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-hover),0 2px 8px rgba(0,0,0,.4);border-color:var(--c-blue);background:var(--c-card-hover);}
+/* Rotating conic shine that travels around the border */
+@property --angle{
+  syntax:'<angle>';
+  initial-value:0deg;
+  inherits:false;
+}
+.prod-card::after{
+  content:'';
+  position:absolute;
+  inset:-14px;
+  border-radius:calc(var(--r) + 14px);
+  background:conic-gradient(from var(--angle),
+    transparent 0deg,
+    transparent 25deg,
+    rgba(255,255,255,.08) 38deg,
+    rgba(255,255,255,.5) 50deg,
+    white 62deg,
+    white 118deg,
+    rgba(255,255,255,.5) 130deg,
+    rgba(255,255,255,.08) 142deg,
+    transparent 155deg,
+    transparent 360deg
+  );
+  opacity:0;
+  transition:opacity .25s;
+  pointer-events:none;
+  z-index:0;
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite:xor;
+  mask-composite:exclude;
+  padding:14px;
+}
+.prod-card:hover{
+  transform:translateY(-4px);
+  box-shadow:var(--shadow-hover),0 2px 8px rgba(0,0,0,.4),0 0 50px rgba(255,255,255,.18);
+  border-color:rgba(255,255,255,.35);
+  background:var(--c-card-hover);
+}
 .prod-card:hover::before{opacity:1}
+.prod-card:hover::after{opacity:1;animation:borderTravel 1.4s linear infinite;}
+@keyframes borderTravel{
+  from{--angle:0deg}
+  to{--angle:360deg}
+}
 .card-img{position:relative;padding:22px 16px 18px;display:flex;align-items:center;justify-content:center;height:115px;z-index:1;}
 .card-img.wellgo-bg{background:linear-gradient(145deg,rgba(10,30,60,.8) 0%,rgba(20,50,100,.6) 100%);}
 .card-img.pedia-bg{background:linear-gradient(145deg,rgba(5,35,30,.8) 0%,rgba(10,60,50,.6) 100%);}
@@ -510,19 +554,21 @@ select.co-input option{background:var(--c-card)}
   .qf-grid{grid-template-columns:1fr}
   .badge-rx{display:none}
 
-  /* Two-row header: no fixed height, wrap naturally */
+  /* Two-row header on mobile */
   .header-inner{
-    height:auto;padding:10px 14px 0;
-    flex-direction:column;align-items:stretch;gap:0;
+    height:auto !important;
+    padding:10px 14px 0 !important;
+    flex-direction:column !important;
+    align-items:stretch !important;
+    gap:0 !important;
   }
   .header-row1{
     display:flex;align-items:center;gap:8px;
-    padding-bottom:8px;
+    padding-bottom:10px;
   }
-  .logo-text{font-size:1rem}
-  .logo-mark{width:32px;height:32px}
-  .logo-mark svg{width:16px;height:16px}
-  .hd-right{margin-left:auto;flex-shrink:0}
+  .header-row1 .logo{flex:1}
+  .header-row1 .nav-tabs{display:none !important}
+  .hd-right{margin-left:0;flex-shrink:0}
   .cart-btn{padding:7px 12px;font-size:.82rem;gap:5px}
 
   /* Tabs row: full width under logo/cart row */
@@ -551,29 +597,36 @@ select.co-input option{background:var(--c-card)}
 <!-- HEADER -->
 <header>
   <div class="header-inner">
-    <a class="logo" href="#" @click.prevent="activePage='products'">
-      <div class="logo-mark">
-        <svg viewBox="0 0 24 24"><path d="M19 3H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V5a2 2 0 00-2-2zm-7 3a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H8a1 1 0 110-2h3V7a1 1 0 011-1z"/></svg>
+    <!-- Row 1: Logo + Nav (desktop) + Cart -->
+    <div class="header-row1">
+      <a class="logo" href="#" @click.prevent="activePage='products'">
+        <div class="logo-mark">
+          <svg viewBox="0 0 24 24"><path d="M19 3H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V5a2 2 0 00-2-2zm-7 3a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H8a1 1 0 110-2h3V7a1 1 0 011-1z"/></svg>
+        </div>
+        <span class="logo-text">Medi<span>Cure</span></span>
+      </a>
+      <!-- Nav tabs: visible in row1 on desktop, hidden on mobile -->
+      <nav class="nav-tabs">
+        <button class="nav-tab" :class="{active:activePage==='products'}" @click="activePage='products'">🏥 Products</button>
+        <button class="nav-tab" :class="{active:activePage==='about'}" @click="activePage='about'">ℹ️ About Us</button>
+        <button class="nav-tab" :class="{active:activePage==='contact'}" @click="activePage='contact'">📞 Contact</button>
+      </nav>
+      <div class="hd-right">
+        <span class="badge-rx">⭐ Best Retail Price</span>
+        <button class="cart-btn" @click="cartOpen=true">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+          Cart
+          <span class="cart-badge" x-show="cartCount>0" x-text="cartCount"></span>
+        </button>
       </div>
-      <span class="logo-text">Medi<span>Cure</span></span>
-    </a>
-
-    <!-- NAV TABS -->
-    <nav class="nav-tabs">
-      <button class="nav-tab" :class="{active:activePage==='products'}" @click="activePage='products'">🏥 Products</button>
-      <button class="nav-tab" :class="{active:activePage==='about'}" @click="activePage='about'">ℹ️ About Us</button>
-      <button class="nav-tab" :class="{active:activePage==='contact'}" @click="activePage='contact'">📞 Contact</button>
-    </nav>
-
-
-
-    <div class="hd-right">
-      <span class="badge-rx">⭐ Best Retail Price</span>
-      <button class="cart-btn" @click="cartOpen=true">
-        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
-        Cart
-        <span class="cart-badge" x-show="cartCount>0" x-text="cartCount"></span>
-      </button>
+    </div>
+    <!-- Row 2: Tabs only — shown on mobile, hidden on desktop -->
+    <div class="header-row2">
+      <nav class="nav-tabs">
+        <button class="nav-tab" :class="{active:activePage==='products'}" @click="activePage='products'">🏥 Products</button>
+        <button class="nav-tab" :class="{active:activePage==='about'}" @click="activePage='about'">ℹ️ About Us</button>
+        <button class="nav-tab" :class="{active:activePage==='contact'}" @click="activePage='contact'">📞 Contact</button>
+      </nav>
     </div>
   </div>
 </header>
@@ -970,7 +1023,7 @@ select.co-input option{background:var(--c-card)}
             <div class="qf-grid">
               <div class="qf-field">
                 <label class="qf-label">Your Name *</label>
-                <input class="qf-input" :class="{'error':qErr.name}" type="text" placeholder="Dr. Rajesh Sharma" x-model="name" @input="qErr.name=false"/>
+                <input class="qf-input" :class="{'error':qErr.name}" type="text" placeholder="Dr. Binder Kachura" x-model="name" @input="qErr.name=false"/>
                 <span class="co-err" :class="{show:qErr.name}">Please enter your name</span>
               </div>
               <div class="qf-field">
@@ -1101,7 +1154,7 @@ select.co-input option{background:var(--c-card)}
       <div class="co-form-grid">
         <div class="co-field">
           <label class="co-label">Full Name *</label>
-          <input class="co-input" :class="{'error': coErrors.name}" type="text" placeholder="Dr. Rajesh Sharma" x-model="coForm.name" @input="coErrors.name=false"/>
+          <input class="co-input" :class="{'error': coErrors.name}" type="text" placeholder="Dr. Binder macchi wala" x-model="coForm.name" @input="coErrors.name=false"/>
           <span class="co-err" :class="{'show': coErrors.name}">Please enter your name</span>
         </div>
         <div class="co-field">
@@ -1111,7 +1164,7 @@ select.co-input option{background:var(--c-card)}
         </div>
         <div class="co-field full">
           <label class="co-label">Clinic / Hospital / Shop Name</label>
-          <input class="co-input" type="text" placeholder="City Medical Store, Sector 17" x-model="coForm.clinic"/>
+          <input class="co-input" type="text" placeholder="City Medical Store, Jalalabad" x-model="coForm.clinic"/>
         </div>
         <div class="co-field full">
           <label class="co-label">Delivery Address *</label>
@@ -1120,12 +1173,12 @@ select.co-input option{background:var(--c-card)}
         </div>
         <div class="co-field">
           <label class="co-label">City *</label>
-          <input class="co-input" :class="{'error': coErrors.city}" type="text" placeholder="Chandigarh" x-model="coForm.city" @input="coErrors.city=false"/>
+          <input class="co-input" :class="{'error': coErrors.city}" type="text" placeholder="Jalalabad" x-model="coForm.city" @input="coErrors.city=false"/>
           <span class="co-err" :class="{'show': coErrors.city}">Enter city</span>
         </div>
         <div class="co-field">
           <label class="co-label">PIN Code *</label>
-          <input class="co-input" :class="{'error': coErrors.pin}" type="text" placeholder="160001" x-model="coForm.pin" @input="coErrors.pin=false" maxlength="6"/>
+          <input class="co-input" :class="{'error': coErrors.pin}" type="text" placeholder="152024" x-model="coForm.pin" @input="coErrors.pin=false" maxlength="6"/>
           <span class="co-err" :class="{'show': coErrors.pin}">Enter valid 6-digit PIN</span>
         </div>
         <div class="co-field full">
