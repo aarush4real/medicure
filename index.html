@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -435,6 +434,51 @@ select.co-input option{background:var(--c-card)}
 .hours-row .time{color:var(--c-blue-light);font-family:'DM Mono',monospace;font-size:.78rem}
 .hours-row .closed{color:var(--c-red);font-size:.78rem}
 
+/* ── PAGE TRANSITIONS ── */
+.page-section{animation:pageFadeIn .32s cubic-bezier(.4,0,.2,1);}
+@keyframes pageFadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── PRODUCT SEARCHBAR (inside product section) ── */
+.product-searchbar{
+  display:flex;align-items:center;
+  background:rgba(255,255,255,.06);
+  border:1px solid var(--c-border-light);
+  border-radius:9px;overflow:hidden;
+  transition:border-color .2s,box-shadow .2s;
+  margin-bottom:16px;
+}
+.product-searchbar:focus-within{border-color:var(--c-blue);box-shadow:0 0 0 3px rgba(26,111,196,.15)}
+.product-searchbar input{flex:1;background:transparent;border:none;outline:none;color:var(--c-text);padding:11px 16px;font-size:.93rem;font-family:inherit;}
+.product-searchbar input::placeholder{color:var(--c-text-dim)}
+.product-searchbar button{background:var(--c-blue);border:none;padding:11px 16px;color:white;cursor:pointer;transition:background .2s;display:flex;align-items:center;}
+.product-searchbar button:hover{background:var(--c-blue-mid)}
+
+/* ── MOBILE FILTER DRAWER ── */
+.mob-filter-toggle{
+  display:none;align-items:center;gap:8px;
+  background:rgba(26,111,196,.12);border:1px solid rgba(26,111,196,.3);
+  color:var(--c-blue-light);padding:8px 14px;border-radius:8px;
+  font-size:.83rem;font-weight:700;cursor:pointer;font-family:inherit;transition:all .18s;
+}
+.mob-filter-toggle:hover{background:rgba(26,111,196,.22)}
+.mob-filter-overlay{position:fixed;inset:0;z-index:250;background:rgba(0,0,0,.6);backdrop-filter:blur(6px);}
+.mob-filter-drawer{
+  position:absolute;left:0;top:0;bottom:0;width:min(300px,88vw);
+  background:linear-gradient(180deg,#0d1f40 0%,#091525 100%);
+  border-right:1px solid var(--c-border-light);
+  overflow-y:auto;padding-bottom:32px;
+  animation:slideInLeft .26s cubic-bezier(.4,0,.2,1);
+}
+@keyframes slideInLeft{from{transform:translateX(-100%)}to{transform:translateX(0)}}
+.mob-filter-head{
+  padding:18px 16px 14px;border-bottom:1px solid var(--c-border);
+  display:flex;align-items:center;justify-content:space-between;
+  background:rgba(26,111,196,.06);
+}
+.mob-filter-head h2{font-size:.85rem;font-weight:800;color:var(--c-text)}
+.mob-filter-close{background:rgba(255,255,255,.06);border:1px solid var(--c-border-light);color:var(--c-text-muted);width:28px;height:28px;border-radius:7px;cursor:pointer;font-size:.9rem;display:flex;align-items:center;justify-content:center;transition:all .15s;}
+.mob-filter-close:hover{background:rgba(232,72,90,.15);border-color:var(--c-red);color:var(--c-red)}
+
 /* ── RESPONSIVE ── */
 @media(max-width:1060px){
   .about-grid{grid-template-columns:1fr}
@@ -445,15 +489,13 @@ select.co-input option{background:var(--c-card)}
 }
 @media(max-width:960px){
   aside{display:none}
+  .mob-filter-toggle{display:flex}
   .hero{padding:20px}
   .hero-pills{display:none}
   .about-hero-inner{flex-direction:column;gap:20px}
 }
 @media(max-width:640px){
   main{padding:12px}
-  .header-inner{padding:0 12px}
-  .header-inner .searchbar{display:none}
-  .mobile-searchbar{display:flex;align-items:center;gap:8px}
   .cart-drawer{width:100vw}
   .receipt-box{border-radius:14px}
   .receipt-body{padding:16px 18px}
@@ -462,7 +504,36 @@ select.co-input option{background:var(--c-card)}
   .co-form-grid{grid-template-columns:1fr !important}
   .stat-strip{grid-template-columns:repeat(2,1fr)}
   .qf-grid{grid-template-columns:1fr}
-  .nav-tabs{display:none}
+  .badge-rx{display:none}
+
+  /* Two-row mobile header */
+  header{position:sticky;top:0;z-index:200}
+  .header-inner{
+    flex-wrap:wrap;height:auto;padding:10px 14px 0;gap:0;
+  }
+  .logo{flex:1;min-width:0}
+  .logo-text{font-size:1rem}
+  .logo-mark{width:32px;height:32px}
+  .logo-mark svg{width:16px;height:16px}
+  .hd-right{margin-left:auto;flex-shrink:0}
+  .cart-btn{padding:7px 12px;font-size:.8rem;gap:5px}
+
+  /* Nav tabs go full width on second row */
+  .nav-tabs{
+    display:flex;gap:0;margin-left:0;
+    width:100%;margin-top:8px;
+    border-top:1px solid var(--c-border);
+    padding:6px 0 6px;
+    overflow-x:auto;-webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
+  }
+  .nav-tabs::-webkit-scrollbar{display:none}
+  .nav-tab{
+    flex:1;text-align:center;
+    padding:7px 4px;font-size:.78rem;font-weight:700;
+    border-radius:6px;white-space:nowrap;
+    min-width:0;
+  }
 }
 </style>
 </head>
@@ -485,10 +556,7 @@ select.co-input option{background:var(--c-card)}
       <button class="nav-tab" :class="{active:activePage==='contact'}" @click="activePage='contact'">📞 Contact</button>
     </nav>
 
-    <div class="searchbar" x-show="activePage==='products'">
-      <input type="text" placeholder="Search by name or composition…" x-model="q"/>
-      <button><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></button>
-    </div>
+
 
     <div class="hd-right">
       <span class="badge-rx">⭐ Best Retail Price</span>
@@ -501,19 +569,56 @@ select.co-input option{background:var(--c-card)}
   </div>
 </header>
 
-<!-- MOBILE SEARCH -->
-<div class="mobile-searchbar" x-show="activePage==='products'">
-  <div class="searchbar" style="flex:1;max-width:100%">
-    <input type="text" placeholder="Search medicines, composition…" x-model="q"/>
-    <button><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></button>
-  </div>
-</div>
-
-<!-- MOBILE NAV BAR (bottom) -->
-<div style="display:none" class="mobile-nav-bottom">
-</div>
 
 <div class="page-wrap">
+
+<!-- MOBILE FILTER DRAWER -->
+<div class="mob-filter-overlay" x-show="mobFilterOpen" @click.self="mobFilterOpen=false" style="display:none">
+  <div class="mob-filter-drawer">
+    <div class="mob-filter-head">
+      <h2>🔬 Refine Results</h2>
+      <button class="mob-filter-close" @click="mobFilterOpen=false">✕</button>
+    </div>
+    <div class="sb-section">
+      <p class="sb-label">Company</p>
+      <div class="company-card" :class="{active:aCo===null}" @click="aCo=null">
+        <div class="co-dot" style="background:linear-gradient(135deg,#1a6fc4,#0d9e90)"></div>
+        <div class="co-info">
+          <div class="co-name">All Companies</div>
+          <div class="co-sub">Show all <span x-text="products.length"></span> products</div>
+        </div>
+      </div>
+      <template x-for="c in companies" :key="c.id">
+        <div class="company-card" :class="{active:aCo===c.id}" @click="aCo=aCo===c.id?null:c.id">
+          <div class="co-dot" :style="'background:'+c.color"></div>
+          <div class="co-info">
+            <div class="co-name" x-text="c.name"></div>
+            <div class="co-sub" x-text="c.sub"></div>
+          </div>
+        </div>
+      </template>
+    </div>
+    <div class="sb-section">
+      <p class="sb-label">Dosage Form</p>
+      <template x-for="cat in categories" :key="cat.id">
+        <div class="filter-pill" :class="{active:aCat===cat.id}" @click="aCat=aCat===cat.id?null:cat.id">
+          <div class="fp-left"><span x-text="cat.icon"></span><span x-text="cat.name"></span></div>
+          <span class="fp-count" x-text="cntByCat(cat.id)"></span>
+        </div>
+      </template>
+    </div>
+    <div class="sb-section">
+      <p class="sb-label">Price Range (Our Rate)</p>
+      <template x-for="pr in priceRanges" :key="pr.id">
+        <div class="filter-pill" :class="{active:aPr===pr.id}" @click="aPr=aPr===pr.id?null:pr.id">
+          <div class="fp-left">💰 <span x-text="pr.label"></span></div>
+          <span class="fp-count" x-text="cntByPr(pr)"></span>
+        </div>
+      </template>
+    </div>
+    <button class="clear-all-btn" @click="clearAll()">✕ Clear All Filters</button>
+  </div>
+</div>
 
 <!-- SIDEBAR (only on products) -->
 <aside x-show="activePage==='products'">
@@ -562,7 +667,18 @@ select.co-input option{background:var(--c-card)}
 <main>
 
   <!-- ══ PRODUCTS PAGE ══ -->
-  <div x-show="activePage==='products'">
+  <div x-show="activePage==='products'" class="page-section" x-cloak>
+    <!-- Search bar in product section -->
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px">
+      <div class="product-searchbar" style="flex:1">
+        <input type="text" placeholder="🔍  Search medicines by name or composition…" x-model="q"/>
+        <button><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></button>
+      </div>
+      <button class="mob-filter-toggle" @click="mobFilterOpen=true">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="11" y1="18" x2="13" y2="18"/></svg>
+        Filters<template x-if="aCo||aCat||aPr"><span style="background:var(--c-blue);color:white;border-radius:50%;width:17px;height:17px;font-size:.65rem;display:inline-flex;align-items:center;justify-content:center;font-weight:800">!</span></template>
+      </button>
+    </div>
     <div class="hero">
       <div class="hero-grid">
         <div class="hero-text">
@@ -656,7 +772,7 @@ select.co-input option{background:var(--c-card)}
   </div>
 
   <!-- ══ ABOUT PAGE ══ -->
-  <div x-show="activePage==='about'" class="about-page">
+  <div x-show="activePage==='about'" class="about-page page-section" x-cloak>
 
     <!-- Hero -->
     <div class="about-hero">
@@ -770,7 +886,7 @@ select.co-input option{background:var(--c-card)}
   </div>
 
   <!-- ══ CONTACT PAGE ══ -->
-  <div x-show="activePage==='contact'" class="about-page">
+  <div x-show="activePage==='contact'" class="about-page page-section" x-cloak>
 
     <div class="about-hero" style="padding:32px 36px">
       <div class="about-hero-inner">
@@ -818,8 +934,8 @@ select.co-input option{background:var(--c-card)}
             <div class="ci-card-icon">📍</div>
             <div class="ci-card-body">
               <h4>Our Location</h4>
-              <span>Chandigarh – Panchkula Region</span>
-              <span style="font-size:.76rem;color:var(--c-text-dim);display:block;margin-top:2px">Serving Chandigarh, Panchkula, Mohali &amp; surrounding areas</span>
+              <span>Jalalabad, Punjab</span>
+              <span style="font-size:.76rem;color:var(--c-text-dim);display:block;margin-top:2px">Serving Jalalabad &amp; surrounding areas of Punjab</span>
             </div>
           </div>
           <!-- Business Hours -->
@@ -845,11 +961,13 @@ select.co-input option{background:var(--c-card)}
             <div class="qf-grid">
               <div class="qf-field">
                 <label class="qf-label">Your Name *</label>
-                <input class="qf-input" type="text" placeholder="Dr. Rajesh Sharma" x-model="name"/>
+                <input class="qf-input" :class="{'error':qErr.name}" type="text" placeholder="Dr. Rajesh Sharma" x-model="name" @input="qErr.name=false"/>
+                <span class="co-err" :class="{show:qErr.name}">Please enter your name</span>
               </div>
               <div class="qf-field">
                 <label class="qf-label">Phone Number *</label>
-                <input class="qf-input" type="tel" placeholder="9876543210" x-model="phone" maxlength="10"/>
+                <input class="qf-input" :class="{'error':qErr.phone}" type="tel" placeholder="9876543210" x-model="phone" maxlength="10" @input="qErr.phone=false"/>
+                <span class="co-err" :class="{show:qErr.phone}">Enter a valid 10-digit phone number</span>
               </div>
               <div class="qf-field full">
                 <label class="qf-label">Email Address</label>
@@ -861,7 +979,8 @@ select.co-input option{background:var(--c-card)}
               </div>
               <div class="qf-field full">
                 <label class="qf-label">Query / Message *</label>
-                <textarea class="qf-textarea" placeholder="Tell us what you need — product enquiry, pricing, bulk order, delivery, or anything else…" x-model="message"></textarea>
+                <textarea class="qf-textarea" :class="{'error':qErr.message}" placeholder="Tell us what you need — product enquiry, pricing, bulk order, delivery, or anything else…" x-model="message" @input="qErr.message=false"></textarea>
+                <span class="co-err" :class="{show:qErr.message}">Please enter your message</span>
               </div>
             </div>
             <button class="qf-submit" @click="submit()">
@@ -1132,17 +1251,18 @@ function queryForm(){
   return {
     name:'', phone:'', email:'', org:'', message:'',
     sending:false, sent:false,
+    qErr:{name:false, phone:false, message:false},
     submit(){
-      if(!this.name.trim()||!this.phone.trim()||!this.message.trim()){
-        alert('Please fill in Name, Phone and Message.');
-        return;
-      }
+      this.qErr.name    = !this.name.trim();
+      this.qErr.phone   = !/^\d{10}$/.test(this.phone.trim());
+      this.qErr.message = !this.message.trim();
+      if(this.qErr.name || this.qErr.phone || this.qErr.message) return;
       this.sending = true;
-      // Simulate send
       setTimeout(()=>{
         this.sending = false;
         this.sent = true;
         this.name=''; this.phone=''; this.email=''; this.org=''; this.message='';
+        this.qErr={name:false,phone:false,message:false};
       }, 1200);
     }
   }
@@ -1682,7 +1802,7 @@ function pharmaStore(){
     return true;
   });
 
-  const r = mrp => Math.round(mrp * 0.72);
+  const r = mrp => Math.round(Math.round(mrp * 0.72) / 5) * 5;
 
   const iconMap = {
     tablet:'💊', capsule:'🔵', syrup:'🍶', drysyrup:'🧪',
@@ -1705,6 +1825,7 @@ function pharmaStore(){
     sortBy:'default',
     cart:[],
     cartOpen:false,
+    mobFilterOpen:false,
     checkoutOpen:false,
     receiptOpen:false,
     receiptItems:[],
