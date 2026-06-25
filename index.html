@@ -1350,10 +1350,10 @@ main{overflow:hidden}
         </div>
 
         <div class="rg-field-label">Date</div>
-        <input class="rg-input" type="date" id="rg-inp-date" oninput="rgUpdate()" />
+        <input class="rg-input" type="date" id="rg-inp-date" oninput="rgUpdate();rgMarkDirty()" />
 
         <div class="rg-field-label">Clinic Name</div>
-        <input class="rg-input" type="text" id="rg-inp-clinic" placeholder="e.g. Greenleaf Family Clinic" oninput="rgUpdate()" />
+        <input class="rg-input" type="text" id="rg-inp-clinic" placeholder="e.g. Greenleaf Family Clinic" oninput="rgUpdate();rgMarkDirty()" />
 
         <div class="rg-field-label">Receipt Number</div>
         <input class="rg-input" type="text" id="rg-inp-receipt-no" readonly style="background:#0b1e38;color:var(--c-text-dim);cursor:not-allowed;" />
@@ -2618,11 +2618,11 @@ function rgRenderRows(){
     div.className = 'rg-product-row';
     div.innerHTML = `
       <input class="rg-input" type="text" placeholder="Product name" value="${rgEscHtml(row.name)}"
-        oninput="rgRows[${i}].name=this.value;rgUpdate()" />
+        oninput="rgRows[${i}].name=this.value;rgUpdate();rgMarkDirty()" />
       <input class="rg-input" type="number" min="0" step="1" placeholder="0" value="${row.qty}"
-        oninput="rgRows[${i}].qty=this.value;rgUpdate()" style="text-align:center" />
+        oninput="rgRows[${i}].qty=this.value;rgUpdate();rgMarkDirty()" style="text-align:center" />
       <input class="rg-input" type="number" min="0" step="0.01" placeholder="0.00" value="${row.rate}"
-        oninput="rgRows[${i}].rate=this.value;rgUpdate()" style="text-align:right" />
+        oninput="rgRows[${i}].rate=this.value;rgUpdate();rgMarkDirty()" style="text-align:right" />
       <button class="rg-del-btn" onclick="rgDelRow(${i})">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
           <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/>
@@ -2736,82 +2736,134 @@ function rgPrintReceipt(){
   setTimeout(()=>{ document.body.removeChild(wrap); document.head.removeChild(style); },500);
 }
 
-// ── Fast canvas capture — scale 1 on mobile, 1.5 on desktop ──
-function rgCapture(){
-  const isMobile = window.innerWidth <= 768;
-  const scale = isMobile ? 1 : 1.5;
-  const el = document.getElementById('rg-receipt-preview');
-  return html2canvas(el, {
-    scale,
-    backgroundColor: '#fff',
-    useCORS: true,
-    logging: false,
-    imageTimeout: 0,
-    removeContainer: true
-  });
+// ══ PRE-RENDER SYSTEM ══
+// Canvas is rendered in background whenever receipt content changes.
+// Button clicks just encode the already-ready canvas — feels instant.
+
+let _rgCanvas      = null;   // cached canvas
+let _rgCacheDirty  = true;   // needs re-render?
+let _rgRenderTimer = null;   // debounce handle
+let _rgRendering   = false;  // render in progress?
+
+// Call this whenever receipt content changes (inputs, rows)
+function rgMarkDirty(){
+  _rgCacheDirty = true;
+  // debounce — re-render 400ms after last keystroke
+  clearTimeout(_rgRenderTimer);
+  _rgRenderTimer = setTimeout(rgPreRender, 400);
+}
+
+// Silently render at 4K scale in the background
+async function rgPreRender(){
+  if(_rgRendering) return;
+  _rgRendering = true;
+  try{
+    const el = document.getElementById('rg-receipt-preview');
+    if(!el){ _rgRendering=false; return; }
+    _rgCanvas = await html2canvas(el,{
+      scale: 4,                // 4K — 4× pixel density, crisp on any screen
+      backgroundColor: '#fff',
+      useCORS: true,
+      logging: false,
+      imageTimeout: 0,
+      removeContainer: true,
+      allowTaint: false,
+    });
+    _rgCacheDirty = false;
+  }catch(e){ console.warn('rgPreRender:', e); }
+  _rgRendering = false;
+}
+
+// Get raw canvas — uses cache if clean, else renders now
+async function rgGetCanvas(){
+  if(!_rgCacheDirty && _rgCanvas) return _rgCanvas;
+  rgShowToast('Rendering…');
+  await rgPreRender();
+  return _rgCanvas;
+}
+
+// Composite the receipt canvas into a fixed 3:4 portrait frame
+// Receipt is centered horizontally, anchored near top with padding
+function rgFramedCanvas(src){
+  const W = src.width;                  // receipt natural width at scale:4
+  const H = Math.round(W * (4/3));     // 3:4 → height = width × 4/3
+
+  const out = document.createElement('canvas');
+  out.width  = W;
+  out.height = H;
+  const ctx = out.getContext('2d');
+
+  // White background
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(0, 0, W, H);
+
+  // Place receipt: centered horizontally, with ~4% top padding
+  const padTop = Math.round(H * 0.04);
+  const drawH  = Math.min(src.height, H - padTop * 2); // don't overflow
+  const drawW  = Math.round(drawH * (src.width / src.height));
+  const x      = Math.round((W - drawW) / 2);
+
+  ctx.drawImage(src, x, padTop, drawW, drawH);
+  return out;
 }
 
 function rgClinicName(){
   return ((document.getElementById('rg-inp-clinic')||{}).value||'').trim()||'receipt';
 }
 
-// ── Trigger an instant browser download — no location picker ──
+// Instant browser download — no location picker, no dialog
 function rgTriggerDownload(url, filename){
   const a = document.createElement('a');
   a.href = url; a.download = filename;
   a.style.display = 'none';
   document.body.appendChild(a);
   a.click();
-  // small delay before cleanup so mobile browsers can grab the blob
-  setTimeout(()=>{ document.body.removeChild(a); URL.revokeObjectURL(url); }, 2000);
+  setTimeout(()=>{ document.body.removeChild(a); URL.revokeObjectURL(url); }, 3000);
 }
 
 async function rgSaveAsImage(){
-  rgShowToast('Saving image…');
   try{
-    const canvas = await rgCapture();
-    const name   = `${rgClinicName().replace(/\s+/g,'_')}_receipt.png`;
-    canvas.toBlob(blob=>{
+    const raw    = await rgGetCanvas();
+    const framed = rgFramedCanvas(raw);
+    const name   = `${rgClinicName().replace(/\s+/g,'_')}_receipt.jpg`;
+    framed.toBlob(blob=>{
       rgTriggerDownload(URL.createObjectURL(blob), name);
       rgShowToast('Image saved! ✓');
-    }, 'image/png');
+    }, 'image/jpeg', 0.97);
   }catch(e){ rgShowToast('Failed — try again'); console.error(e); }
 }
 
 async function rgDownloadPDF(){
-  rgShowToast('Saving PDF…');
   try{
-    const canvas  = await rgCapture();
-    const imgData = canvas.toDataURL('image/jpeg', 0.92); // JPEG = much smaller/faster than PNG for PDF
+    const raw     = await rgGetCanvas();
+    const framed  = rgFramedCanvas(raw);
+    const imgData = framed.toDataURL('image/jpeg', 0.97);
     const {jsPDF} = window.jspdf;
+    // A4 portrait — receipt will sit at the top, rest is white space (like a real receipt printout)
     const pdf  = new jsPDF({ orientation:'portrait', unit:'mm', format:'a4', compress:true });
     const pdfW = pdf.internal.pageSize.getWidth();
-    const pdfH = (canvas.height * pdfW) / canvas.width;
+    const pdfH = (framed.height * pdfW) / framed.width;
     pdf.addImage(imgData, 'JPEG', 0, 0, pdfW, pdfH);
     const name = `${rgClinicName().replace(/\s+/g,'_')}_receipt.pdf`;
-    // output as blob → objectURL → instant download (no location picker)
-    const blob = pdf.output('blob');
-    rgTriggerDownload(URL.createObjectURL(blob), name);
+    rgTriggerDownload(URL.createObjectURL(pdf.output('blob')), name);
     rgShowToast('PDF saved! ✓');
   }catch(e){ rgShowToast('Failed — try again'); console.error(e); }
 }
 
 async function rgShareReceipt(){
-  rgShowToast('Preparing…');
   try{
-    const canvas = await rgCapture();
-    const name   = `${rgClinicName().replace(/\s+/g,'_')}_receipt.png`;
-    canvas.toBlob(async blob=>{
-      const file = new File([blob], name, { type:'image/png' });
-      // Native share sheet on mobile (WhatsApp, etc.)
+    const raw    = await rgGetCanvas();
+    const framed = rgFramedCanvas(raw);
+    const name   = `${rgClinicName().replace(/\s+/g,'_')}_receipt.jpg`;
+    framed.toBlob(async blob=>{
+      const file = new File([blob], name, { type:'image/jpeg' });
       if(navigator.canShare && navigator.canShare({ files:[file] })){
         try{ await navigator.share({ title:'MediCure Receipt', files:[file] }); rgShowToast('Shared! ✓'); return; }
         catch(e){ if(e.name==='AbortError') return; }
       }
-      // Desktop fallback — just download
       rgTriggerDownload(URL.createObjectURL(blob), name);
       rgShowToast('Saved! ✓');
-    }, 'image/png');
+    }, 'image/jpeg', 0.97);
   }catch(e){ rgShowToast('Failed — try again'); console.error(e); }
 }
 
@@ -2819,18 +2871,19 @@ async function rgShareReceipt(){
 document.addEventListener('click',function(e){
   const btn=e.target.closest('.nav-tab');
   if(btn&&btn.textContent.toLowerCase().includes('receipt')){
-    setTimeout(rgInit,50);
+    setTimeout(()=>{ rgInit(); setTimeout(rgPreRender, 300); }, 50);
   }
 });
 
 // Also init on first load in case it's the active tab
 window.addEventListener('DOMContentLoaded',function(){
-  // lazy init — only runs once when the tab is first opened
   let rgInitialized=false;
   const observer=new MutationObserver(function(){
     const el=document.querySelector('[data-tab="receipt"]');
     if(el&&el.style.display!=='none'&&!rgInitialized){
-      rgInitialized=true;rgInit();
+      rgInitialized=true;
+      rgInit();
+      setTimeout(rgPreRender, 300);
     }
   });
   observer.observe(document.body,{attributes:true,subtree:true,attributeFilter:['style']});
