@@ -1353,7 +1353,7 @@ main{overflow:hidden}
         <input class="rg-input" type="date" id="rg-inp-date" oninput="rgUpdate()" />
 
         <div class="rg-field-label">Clinic Name</div>
-        <input class="rg-input" type="text" id="rg-inp-clinic" placeholder="Harish Medicos" oninput="rgUpdate()" />
+        <input class="rg-input" type="text" id="rg-inp-clinic" placeholder="e.g. Greenleaf Family Clinic" oninput="rgUpdate()" />
 
         <div class="rg-field-label">Receipt Number</div>
         <input class="rg-input" type="text" id="rg-inp-receipt-no" readonly style="background:#0b1e38;color:var(--c-text-dim);cursor:not-allowed;" />
@@ -2736,79 +2736,83 @@ function rgPrintReceipt(){
   setTimeout(()=>{ document.body.removeChild(wrap); document.head.removeChild(style); },500);
 }
 
+// ── Fast canvas capture — scale 1 on mobile, 1.5 on desktop ──
+function rgCapture(){
+  const isMobile = window.innerWidth <= 768;
+  const scale = isMobile ? 1 : 1.5;
+  const el = document.getElementById('rg-receipt-preview');
+  return html2canvas(el, {
+    scale,
+    backgroundColor: '#fff',
+    useCORS: true,
+    logging: false,
+    imageTimeout: 0,
+    removeContainer: true
+  });
+}
+
+function rgClinicName(){
+  return ((document.getElementById('rg-inp-clinic')||{}).value||'').trim()||'receipt';
+}
+
+// ── Trigger an instant browser download — no location picker ──
+function rgTriggerDownload(url, filename){
+  const a = document.createElement('a');
+  a.href = url; a.download = filename;
+  a.style.display = 'none';
+  document.body.appendChild(a);
+  a.click();
+  // small delay before cleanup so mobile browsers can grab the blob
+  setTimeout(()=>{ document.body.removeChild(a); URL.revokeObjectURL(url); }, 2000);
+}
+
 async function rgSaveAsImage(){
-  rgShowToast('Generating image…');
+  rgShowToast('Saving image…');
   try{
-    const el=document.getElementById('rg-receipt-preview');
-    const canvas=await html2canvas(el,{scale:2,backgroundColor:'#fff',useCORS:true});
-    const clinic=(document.getElementById('rg-inp-clinic')||{}).value?.trim()||'receipt';
-    const defaultName=`${clinic.replace(/\s+/g,'_')}_receipt.png`;
-    const blob=await new Promise(res=>canvas.toBlob(res,'image/png'));
-    if(window.showSaveFilePicker){
-      try{
-        const fh=await window.showSaveFilePicker({suggestedName:defaultName,types:[{description:'PNG Image',accept:{'image/png':['.png']}}]});
-        const w=await fh.createWritable();await w.write(blob);await w.close();
-        rgShowToast('Image saved!');return;
-      }catch(e){if(e.name==='AbortError')return;}
-    }
-    const url=URL.createObjectURL(blob);
-    const a=document.createElement('a');a.href=url;a.download=defaultName;
-    document.body.appendChild(a);a.click();document.body.removeChild(a);
-    setTimeout(()=>URL.revokeObjectURL(url),1000);
-    rgShowToast('Image saved!');
-  }catch(e){rgShowToast('Failed to generate image');console.error(e);}
+    const canvas = await rgCapture();
+    const name   = `${rgClinicName().replace(/\s+/g,'_')}_receipt.png`;
+    canvas.toBlob(blob=>{
+      rgTriggerDownload(URL.createObjectURL(blob), name);
+      rgShowToast('Image saved! ✓');
+    }, 'image/png');
+  }catch(e){ rgShowToast('Failed — try again'); console.error(e); }
 }
 
 async function rgDownloadPDF(){
-  rgShowToast('Generating PDF…');
+  rgShowToast('Saving PDF…');
   try{
-    const el=document.getElementById('rg-receipt-preview');
-    const canvas=await html2canvas(el,{scale:2,backgroundColor:'#fff',useCORS:true});
-    const imgData=canvas.toDataURL('image/png');
-    const {jsPDF}=window.jspdf;
-    const pdf=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
-    const pdfW=pdf.internal.pageSize.getWidth();
-    const pdfH=(canvas.height*pdfW)/canvas.width;
-    pdf.addImage(imgData,'PNG',0,0,pdfW,pdfH);
-    const clinic=(document.getElementById('rg-inp-clinic')||{}).value?.trim()||'receipt';
-    const defaultName=`${clinic.replace(/\s+/g,'_')}_receipt.pdf`;
-    if(window.showSaveFilePicker){
-      try{
-        const pdfBlob=pdf.output('blob');
-        const fh=await window.showSaveFilePicker({suggestedName:defaultName,types:[{description:'PDF Document',accept:{'application/pdf':['.pdf']}}]});
-        const w=await fh.createWritable();await w.write(pdfBlob);await w.close();
-        rgShowToast('PDF saved!');return;
-      }catch(e){if(e.name==='AbortError')return;}
-    }
-    pdf.save(defaultName);
-    rgShowToast('PDF downloaded!');
-  }catch(e){rgShowToast('Failed to generate PDF');console.error(e);}
+    const canvas  = await rgCapture();
+    const imgData = canvas.toDataURL('image/jpeg', 0.92); // JPEG = much smaller/faster than PNG for PDF
+    const {jsPDF} = window.jspdf;
+    const pdf  = new jsPDF({ orientation:'portrait', unit:'mm', format:'a4', compress:true });
+    const pdfW = pdf.internal.pageSize.getWidth();
+    const pdfH = (canvas.height * pdfW) / canvas.width;
+    pdf.addImage(imgData, 'JPEG', 0, 0, pdfW, pdfH);
+    const name = `${rgClinicName().replace(/\s+/g,'_')}_receipt.pdf`;
+    // output as blob → objectURL → instant download (no location picker)
+    const blob = pdf.output('blob');
+    rgTriggerDownload(URL.createObjectURL(blob), name);
+    rgShowToast('PDF saved! ✓');
+  }catch(e){ rgShowToast('Failed — try again'); console.error(e); }
 }
 
 async function rgShareReceipt(){
   rgShowToast('Preparing…');
   try{
-    const el=document.getElementById('rg-receipt-preview');
-    const canvas=await html2canvas(el,{scale:2,backgroundColor:'#fff',useCORS:true});
-    const clinic=(document.getElementById('rg-inp-clinic')||{}).value?.trim()||'receipt';
-    const defaultName=`${clinic.replace(/\s+/g,'_')}_receipt.png`;
-    canvas.toBlob(async(blob)=>{
-      const file=new File([blob],defaultName,{type:'image/png'});
-      if(navigator.canShare&&navigator.canShare({files:[file]})){
-        try{await navigator.share({title:'MediCure Receipt',files:[file]});rgShowToast('Shared!');return;}
-        catch(e){if(e.name==='AbortError')return;}
+    const canvas = await rgCapture();
+    const name   = `${rgClinicName().replace(/\s+/g,'_')}_receipt.png`;
+    canvas.toBlob(async blob=>{
+      const file = new File([blob], name, { type:'image/png' });
+      // Native share sheet on mobile (WhatsApp, etc.)
+      if(navigator.canShare && navigator.canShare({ files:[file] })){
+        try{ await navigator.share({ title:'MediCure Receipt', files:[file] }); rgShowToast('Shared! ✓'); return; }
+        catch(e){ if(e.name==='AbortError') return; }
       }
-      if(window.showSaveFilePicker){
-        try{
-          const fh=await window.showSaveFilePicker({suggestedName:defaultName,types:[{description:'PNG Image',accept:{'image/png':['.png']}}]});
-          const w=await fh.createWritable();await w.write(blob);await w.close();
-          rgShowToast('Receipt saved!');return;
-        }catch(e){if(e.name==='AbortError')return;}
-      }
-      try{await navigator.clipboard.write([new ClipboardItem({'image/png':blob})]);rgShowToast('Copied to clipboard!');}
-      catch{rgShowToast('Share not supported on this device');}
-    });
-  }catch(e){rgShowToast('Failed to prepare receipt');console.error(e);}
+      // Desktop fallback — just download
+      rgTriggerDownload(URL.createObjectURL(blob), name);
+      rgShowToast('Saved! ✓');
+    }, 'image/png');
+  }catch(e){ rgShowToast('Failed — try again'); console.error(e); }
 }
 
 // Initialize when the receipt tab becomes visible
