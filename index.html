@@ -2760,15 +2760,25 @@ async function rgPreRender(){
   try{
     const el = document.getElementById('rg-receipt-preview');
     if(!el){ _rgRendering=false; return; }
+
+    // Force element to its natural size so html2canvas doesn't capture surrounding whitespace
+    const prevW = el.style.width;
+    el.style.width = 'max-content';
+
     _rgCanvas = await html2canvas(el,{
-      scale: 4,                // 4K — 4× pixel density, crisp on any screen
-      backgroundColor: '#fff',
+      scale: 4,
+      backgroundColor: '#ffffff',
       useCORS: true,
       logging: false,
       imageTimeout: 0,
       removeContainer: true,
       allowTaint: false,
+      width: el.scrollWidth,
+      height: el.scrollHeight,
+      windowWidth: el.scrollWidth,
     });
+
+    el.style.width = prevW;
     _rgCacheDirty = false;
   }catch(e){ console.warn('rgPreRender:', e); }
   _rgRendering = false;
@@ -2782,28 +2792,65 @@ async function rgGetCanvas(){
   return _rgCanvas;
 }
 
-// Composite the receipt canvas into a fixed 3:4 portrait frame
-// Receipt is centered horizontally, anchored near top with padding
+// Smart framing: scan row-by-row to find first/last non-white row,
+// crop tightly, then pad a little and auto-pick 3:4 or 9:16.
 function rgFramedCanvas(src){
-  const W = src.width;                  // receipt natural width at scale:4
-  const H = Math.round(W * (4/3));     // 3:4 → height = width × 4/3
+  const sw = src.width, sh = src.height;
+  const ctx0 = src.getContext('2d');
+
+  // Scan row by row from top → find first row with any non-white pixel
+  const THRESH = 245;
+  let top = 0, bot = sh - 1;
+
+  outer_top:
+  for(let y = 0; y < sh; y++){
+    const row = ctx0.getImageData(0, y, sw, 1).data;
+    for(let x = 0; x < sw * 4; x += 4){
+      if(row[x] < THRESH || row[x+1] < THRESH || row[x+2] < THRESH){
+        top = y; break outer_top;
+      }
+    }
+  }
+
+  outer_bot:
+  for(let y = sh - 1; y >= top; y--){
+    const row = ctx0.getImageData(0, y, sw, 1).data;
+    for(let x = 0; x < sw * 4; x += 4){
+      if(row[x] < THRESH || row[x+1] < THRESH || row[x+2] < THRESH){
+        bot = y; break outer_bot;
+      }
+    }
+  }
+
+  // Small padding: 12px at scale:4 = 3px visual
+  const PAD = 0; // no top pad — banner IS the top edge
+  const padBot = 24; // tiny bottom breathing room
+
+  const cy = Math.max(0, top - PAD);
+  const ch = Math.min(sh - cy, bot - top + PAD + padBot);
+  const cw = sw; // full width — don't crop sides
+
+  // Auto ratio based on cropped content shape
+  const ratio = cw / ch;
+  // ratio > 0.75 → squarish → use 3:4 (H = W × 4/3)
+  // ratio ≤ 0.75 → already tall → use 9:16 (H = W × 16/9)
+  const targetH = ratio > 0.75
+    ? Math.round(cw * 4/3)
+    : Math.round(cw * 16/9);
+
+  const outH = Math.max(targetH, ch); // never clip content
 
   const out = document.createElement('canvas');
-  out.width  = W;
-  out.height = H;
-  const ctx = out.getContext('2d');
+  out.width  = cw;
+  out.height = outH;
+  const ctx  = out.getContext('2d');
 
-  // White background
   ctx.fillStyle = '#ffffff';
-  ctx.fillRect(0, 0, W, H);
+  ctx.fillRect(0, 0, cw, outH);
 
-  // Place receipt: centered horizontally, with ~4% top padding
-  const padTop = Math.round(H * 0.04);
-  const drawH  = Math.min(src.height, H - padTop * 2); // don't overflow
-  const drawW  = Math.round(drawH * (src.width / src.height));
-  const x      = Math.round((W - drawW) / 2);
+  // Draw cropped content flush to top
+  ctx.drawImage(src, 0, cy, cw, ch, 0, 0, cw, ch);
 
-  ctx.drawImage(src, x, padTop, drawW, drawH);
   return out;
 }
 
