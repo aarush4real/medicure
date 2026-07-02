@@ -1931,7 +1931,7 @@ function pharmaStore(){
     return true;
   });
 
-  const r = mrp => Math.round(Math.round(mrp * 0.4) / 5) * 5;
+  const r = mrp => Math.round(Math.round((mrp * 0.4) / 5) * 5)-1;
 
   const iconMap = {
     tablet:'💊', capsule:'🔵', syrup:'🍶', drysyrup:'🧪',
